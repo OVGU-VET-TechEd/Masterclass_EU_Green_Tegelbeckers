@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Readiness self-check — Workshop 4</title>
+<style>
+:root{
+  --paper:#fbfcfd; --card:#fff; --sunk:#f2f5f9;
+  --ink:#16202b; --dim:#45566a; --mute:#5b6b7c; --line:#d6dee8;
+  --blue:#1a4a88; --blue-s:#e7eefa; --violet:#6b4a9e; --violet-s:#f1ebf9;
+  --green:#0f7a5a; --green-s:#e3f3ee; --amber:#7a4f0a; --amber-s:#fdf3e2;
+  --red:#8a3324; --red-s:#fbe9e6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.55 "Segoe UI",Calibri,system-ui,Helvetica,Arial,sans-serif}
+main{max-width:880px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:1.35rem;color:var(--blue);margin:0 0 2px}
+h2{font-size:1.05rem;color:var(--violet);margin:22px 0 8px}
+.kicker{font-size:.82rem;color:var(--mute)}
+.frame{border-left:4px solid var(--violet);background:var(--violet-s);border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:12px 0;font-size:.92rem;color:#3f2c61}
+.priv{font-size:.88rem;color:var(--dim);background:var(--sunk);border-radius:8px;padding:8px 12px;margin:10px 0 16px}
+fieldset{border:1px solid var(--line);border-radius:12px;background:var(--card);margin:0 0 12px;padding:10px 12px 8px}
+legend{font-weight:650;color:var(--blue);padding:0 6px}
+legend .n{display:inline-block;min-width:1.6em;height:1.6em;line-height:1.6em;text-align:center;border-radius:50%;
+  background:var(--blue-s);font-size:.85rem;margin-right:4px}
+label.opt{display:flex;gap:10px;align-items:flex-start;min-height:44px;padding:8px 10px;margin:4px 0;
+  border:1px solid transparent;border-radius:9px;cursor:pointer}
+label.opt:hover{background:var(--sunk)}
+label.opt.on{border-color:var(--blue);background:var(--blue-s)}
+label.opt input{margin-top:5px;width:18px;height:18px;flex:none}
+.lv{flex:none;width:5.2em;font-size:.8rem;font-weight:700;padding-top:2px}
+.lv0{color:var(--mute)} .lv1{color:var(--blue)} .lv2{color:var(--green)} .lv3{color:var(--violet)}
+.tx{font-size:.95rem}
+.summary{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px 16px;margin-top:18px}
+.counts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.count{border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.88rem}
+.gap{border-left:4px solid var(--amber);background:var(--amber-s);border-radius:0 8px 8px 0;padding:9px 13px;color:var(--amber)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;margin-top:10px}
+th,td{border-bottom:1px solid var(--line);text-align:left;padding:6px 8px;vertical-align:top}
+th{color:var(--mute);font-weight:650}
+.tw{overflow-x:auto}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 6px}
+button{font:inherit;font-weight:650;min-height:44px;padding:9px 16px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--blue);background:var(--blue);color:#fff}
+button.sec{background:#fff;color:var(--blue)}
+button:hover{filter:brightness(.95)}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+textarea{width:100%;min-height:150px;font:13px/1.45 ui-monospace,Consolas,monospace;border:1px solid var(--line);
+  border-radius:8px;padding:8px;background:#fff;color:var(--ink)}
+.status{font-size:.85rem;color:var(--green);min-height:1.3em}
+.say{font-size:.85rem;color:var(--mute);margin-top:18px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{background:#fff} .priv,.actions,textarea,.status,.say,.exp{display:none}
+  label.opt:not(.on){display:none} fieldset{break-inside:avoid} label.opt input{display:none}
+}
+</style>
+</head>
+<body>
+<main>
+<div class="kicker">EU GREEN · Workshop 4 · AI in Teaching · page 1 of 3</div>
+<h1>Readiness self-check</h1>
+<div class="frame"><b>UNESCO AI CFT, Aspect 5 · Acquire.</b> The named activity for this level is self-assessment of readiness for teaching in the AI era. Doing it is the first documented step, not a warm-up.</div>
+<div class="priv">Nothing you choose here is sent anywhere or saved. Close the page and it is gone — export first if you want to keep it. Nobody sees it but you.</div>
+
+<p>Eight statements. For each, pick the one that describes where you <i>actually</i> are, not where a strategy paper says you should be.</p>
+
+<form id="form" onsubmit="return false"></form>
+
+<section class="summary" aria-live="polite">
+  <h2 style="margin-top:0">Your profile</h2>
+  <div id="progress" class="kicker"></div>
+  <div class="counts" id="counts"></div>
+  <div class="gap" id="gaps" hidden></div>
+  <div class="tw"><table><thead><tr><th>Area</th><th>Level</th></tr></thead><tbody id="table"></tbody></table></div>
+  <div class="actions">
+    <button type="button" id="dl">Download as Markdown</button>
+    <button type="button" class="sec" id="copy">Copy</button>
+    <button type="button" class="sec" id="print">Print</button>
+  </div>
+  <div class="status" id="status"></div>
+  <label class="kicker exp" for="md">The same profile as text — the last line seeds the 90-day plan page</label>
+  <textarea id="md" class="exp" readonly></textarea>
+</section>
+
+<p class="say">Block 4 asks you to compare this with what the session changed, and the <a href="p3_cpd_plan.html">90-day plan</a> is seeded from it.</p>
+</main>
+
+<script>
+/* All wording lives here, so it can be corrected without touching the logic. */
+const DATA = {
+  levels: ["Not yet", "Acquire", "Deepen", "Create"],
+  notYet: "None of these describes me yet.",
+  statements: [
+    {id: "s1", area: "How these systems work", levels: [
+      "I can explain in plain words what a token, a context window and a temperature setting are.",
+      "I can predict where a tool will fail on my own material — long documents, other languages — and I check before relying on it.",
+      "I help colleagues or students test these properties themselves, on material from our discipline."]},
+    {id: "s2", area: "Deciding whether to use AI for a task", levels: [
+      "For a given task, I can say what using AI would gain and what it would cost me or the student.",
+      "I decide task by task, including deciding not to, and I can give the reason in writing.",
+      "My programme or team makes these decisions together, and the reasons are written where others can see them."]},
+    {id: "s3", area: "Choosing between tools", levels: [
+      "I know which tools my institution provides and which it does not.",
+      "I compare tools against written criteria — hosting, accessibility, fit, cost, exit — before adopting one.",
+      "I contribute to how my department evaluates and recommends tools."]},
+    {id: "s4", area: "Knowing what leaves the institution", levels: [
+      "I know which route my text takes with each tool I use: my machine, my institution, or a third party.",
+      "I keep student work and personal data on institutional or local routes, and I say so in the module handbook.",
+      "I help set these rules for my department and explain them to colleagues."]},
+    {id: "s5", area: "Steering a model beyond a single prompt", levels: [
+      "I can write a prompt that names the audience, the task and the limits.",
+      "I keep skill prompts — saved instructions — that I reuse and revise, rather than starting from a blank prompt each time.",
+      "I set up agent workflows with a written specification, checks and a stop condition, keep any wiki or memory they write where I can read it, and share them so colleagues can reuse them."]},
+    {id: "s6", area: "The legal boundary around assessment", levels: [
+      "I know that grading support falls under Annex III, that inferring emotions in education is prohibited, and that Art. 4 applies to my institution.",
+      "I design assessment so that every decision about a mark is made by a person with the authority and the information to decide differently.",
+      "I help my programme write assessment rules for AI use that a marker can actually apply."]},
+    {id: "s7", area: "Sharing practice with colleagues", levels: [
+      "I talk about what I try with AI when colleagues ask.",
+      "I regularly exchange practice with at least one colleague, and we look at each other's work.",
+      "I mentor colleagues, or run sessions like this one for my department."]},
+    {id: "s8", area: "Keeping current", levels: [
+      "I notice when tools or rules change, usually after the fact.",
+      "I have a routine for keeping up — a source I read, a group I belong to — and I test what changes.",
+      "I contribute to what others read: a local framework, an open resource, a practice group's decisions."]}
+  ]
+};
+
+const answers = {};
+
+function h(tag, attrs) {
+  const n = document.createElement(tag);
+  for (const k in (attrs || {})) n.setAttribute(k, attrs[k]);
+  for (let i = 2; i < arguments.length; i++) {
+    const c = arguments[i];
+    if (c != null) n.append(c.nodeType ? c : String(c));
+  }
+  return n;
+}
+
+function build() {
+  const form = document.getElementById("form");
+  DATA.statements.forEach(function (s, i) {
+    const fs = h("fieldset", {});
+    fs.append(h("legend", {}, h("span", {class: "n", "aria-hidden": "true"}, i + 1), s.area));
+    DATA.levels.forEach(function (lv, k) {
+      const id = s.id + "_" + k;
+      const input = h("input", {type: "radio", name: s.id, id: id, value: k});
+      input.addEventListener("change", function () {
+        answers[s.id] = k;
+        fs.querySelectorAll("label.opt").forEach(function (l) { l.classList.remove("on"); });
+        input.parentNode.classList.add("on");
+        update();
+      });
+      fs.append(h("label", {for: id, class: "opt"}, input,
+        h("span", {class: "lv lv" + k}, lv),
+        h("span", {class: "tx"}, k === 0 ? DATA.notYet : s.levels[k - 1])));
+    });
+    form.append(fs);
+  });
+}
+
+function answered() { return DATA.statements.filter(function (s) { return s.id in answers; }); }
+
+function gaps() {
+  // The largest gaps are the lowest-rated areas; ties go to the earlier statement.
+  return answered().slice().sort(function (a, b) { return answers[a.id] - answers[b.id]; }).slice(0, 2);
+}
+
+function gapSentence() {
+  const g = gaps();
+  if (answered().length < DATA.statements.length) return "";
+  if (answers[g[0].id] === 3 && answers[g[1].id] === 3)
+    return "You rated every area at Create. Before you plan from that, ask a colleague whether they would rate you the same way.";
+  return "Your two largest gaps: " + g[0].area.toLowerCase() + " (" + DATA.levels[answers[g[0].id]] +
+    "), and " + g[1].area.toLowerCase() + " (" + DATA.levels[answers[g[1].id]] + "). Those are the two areas for the 90-day plan.";
+}
+
+function counts() {
+  const c = [0, 0, 0, 0];
+  answered().forEach(function (s) { c[answers[s.id]]++; });
+  return c;
+}
+
+function markdown() {
+  const today = new Date().toISOString().slice(0, 10);
+  const c = counts();
+  let md = "# Readiness self-check\n\nWorkshop 4 · AI in Teaching · " + today + "\n\n";
+  md += "| Area | Level | The statement I chose |\n| --- | --- | --- |\n";
+  DATA.statements.forEach(function (s) {
+    const k = answers[s.id];
+    md += "| " + s.area + " | " + (k === undefined ? "—" : DATA.levels[k]) + " | " +
+      (k === undefined ? "not answered" : k === 0 ? DATA.notYet : s.levels[k - 1]) + " |\n";
+  });
+  md += "\nCounts: " + DATA.levels.map(function (l, k) { return l + " " + c[k]; }).join(" · ") + "\n";
+  const g = gapSentence();
+  if (g) md += "\n" + g + "\n";
+  md += "\nPaste this line into the 90-day plan page to seed it:\n\n    W4-PROFILE " +
+    DATA.statements.map(function (s) { return s.id in answers ? answers[s.id] : "-"; }).join(",") + "\n";
+  return md;
+}
+
+function update() {
+  const n = answered().length, total = DATA.statements.length, c = counts();
+  document.getElementById("progress").textContent =
+    n === total ? "All eight answered." : n + " of " + total + " answered.";
+  document.getElementById("counts").replaceChildren.apply(document.getElementById("counts"),
+    DATA.levels.map(function (l, k) { return h("span", {class: "count"}, l + ": ", h("b", {}, c[k])); }));
+  const g = gapSentence(), gd = document.getElementById("gaps");
+  gd.hidden = !g; gd.textContent = g;
+  const tb = document.getElementById("table");
+  tb.replaceChildren.apply(tb, DATA.statements.map(function (s) {
+    const k = answers[s.id];
+    return h("tr", {}, h("td", {}, s.area), h("td", {class: k === undefined ? "" : "lv" + k},
+      k === undefined ? "—" : DATA.levels[k]));
+  }));
+  document.getElementById("md").value = markdown();
+}
+
+function say(msg) {
+  const s = document.getElementById("status");
+  s.textContent = msg;
+  setTimeout(function () { if (s.textContent === msg) s.textContent = ""; }, 4000);
+}
+
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], {type: type}));
+  const a = h("a", {href: url, download: name});
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  say("If nothing downloaded, copy the text below instead.");
+}
+
+document.getElementById("dl").addEventListener("click", function () {
+  download("readiness_self_check_" + new Date().toISOString().slice(0, 10) + ".md", markdown(), "text/markdown");
+});
+document.getElementById("copy").addEventListener("click", function () {
+  const ta = document.getElementById("md");
+  const done = function () { say("Copied."); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(ta.value).then(done, function () { ta.select(); document.execCommand("copy"); done(); });
+  } else { ta.select(); document.execCommand("copy"); done(); }
+});
+document.getElementById("print").addEventListener("click", function () { window.print(); });
+
+build();
+update();
+</script>
+</body>
+</html>
