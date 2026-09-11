@@ -1,0 +1,4 @@
+Kirkpatrick's model is widely used to evaluate training, but its four levels
+assume that reaction predicts learning, and the evidence for that link is weak
+(Alliger et al., 1997). This study therefore reports levels two and three
+separately rather than treating satisfaction as a proxy for transfer.

@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "llmlab · open the browser interface",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/run.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "llmlab · check what is installed",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "llmlab",
+      "args": ["check"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "llmlab · run all seven in the terminal",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "llmlab",
+      "args": ["all"],
+      "console": "integratedTerminal"
+    }
+  ]
+}

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>90-day plan — Workshop 4</title>
+<style>
+:root{
+  --paper:#fbfcfd; --card:#fff; --sunk:#f2f5f9;
+  --ink:#16202b; --dim:#45566a; --mute:#5b6b7c; --line:#d6dee8;
+  --blue:#1a4a88; --blue-s:#e7eefa; --violet:#6b4a9e; --violet-s:#f1ebf9;
+  --green:#0f7a5a; --green-s:#e3f3ee; --amber:#7a4f0a; --amber-s:#fdf3e2;
+  --red:#8a3324; --red-s:#fbe9e6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.55 "Segoe UI",Calibri,system-ui,Helvetica,Arial,sans-serif}
+main{max-width:880px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:1.35rem;color:var(--blue);margin:0 0 2px}
+h2{font-size:1.05rem;color:var(--violet);margin:0 0 8px}
+.kicker{font-size:.82rem;color:var(--mute)}
+.frame{border-left:4px solid var(--violet);background:var(--violet-s);border-radius:0 8px 8px 0;
+  padding:9px 13px;margin:12px 0;font-size:.92rem;color:#3f2c61}
+.priv{font-size:.88rem;color:var(--dim);background:var(--sunk);border-radius:8px;padding:8px 12px;margin:10px 0 16px}
+.step{border:1px solid var(--line);border-radius:12px;background:var(--card);margin:0 0 14px;padding:14px 16px}
+.small{font-size:.84rem;color:var(--dim)}
+textarea,input[type=text],input[type=date],select{font:inherit;font-size:.95rem;border:1px solid var(--line);
+  border-radius:8px;padding:8px 10px;background:#fff;color:var(--ink);min-height:44px}
+textarea{width:100%;min-height:70px;resize:vertical}
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-top:6px}
+label.card{display:flex;gap:10px;align-items:flex-start;min-height:44px;padding:9px 12px;border:1px solid var(--line);
+  border-radius:10px;cursor:pointer;background:#fff}
+label.card.on{border-color:var(--blue);background:var(--blue-s)}
+label.card.off{opacity:.55;cursor:not-allowed}
+label.card input{margin-top:4px;width:18px;height:18px;flex:none}
+.lvl{font-size:.8rem;color:var(--mute)}
+.two{font-weight:650;color:var(--amber);min-height:1.4em;margin-top:6px}
+.targets{display:grid;gap:10px;margin-top:10px}
+.target{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.target b{min-width:15em}
+.tasks{margin-top:8px}
+.task{display:grid;grid-template-columns:10.5em 1fr 44px;gap:8px;align-items:start;padding:7px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.task input[type=text]{width:100%}
+.task .tag{grid-column:2;font-size:.78rem;color:var(--mute);margin-top:-4px}
+@media(max-width:560px){.task{grid-template-columns:1fr 44px}.task input[type=date]{grid-column:1/-1}.task .tag{grid-column:1}}
+button{font:inherit;font-weight:650;min-height:44px;padding:9px 16px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--blue);background:var(--blue);color:#fff}
+button.sec{background:#fff;color:var(--blue)}
+button.x{padding:0;width:44px;background:#fff;color:var(--red);border-color:var(--line)}
+button[disabled]{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 6px}
+.why{border-left:4px solid var(--amber);background:var(--amber-s);border-radius:0 8px 8px 0;padding:10px 13px;color:#5c3d08;font-size:.92rem}
+.why ul{margin:6px 0 0 18px;padding:0}
+textarea.md{font:13px/1.45 ui-monospace,Consolas,monospace;min-height:150px}
+.status{font-size:.85rem;color:var(--green);min-height:1.3em}
+.err{color:var(--red);font-size:.88rem;min-height:1.3em}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{background:#fff} .noprint{display:none!important}
+  .step{border:0;padding:0} button.x{display:none}
+  input,select{border:0;padding:0;min-height:0}
+}
+</style>
+</head>
+<body>
+<main>
+<div class="kicker">EU GREEN · Workshop 4 · AI in Teaching · page 3 of 3</div>
+<h1>Your 90-day plan</h1>
+<div class="frame"><b>UNESCO AI CFT, Aspect 5 — AI for professional development.</b> Acquire is done alone; Deepen and Create are done with other people and over time. That is why this plan has dates and a name on it.</div>
+<div class="priv noprint">Nothing you type here is sent anywhere or saved. Close the page and it is gone — export first if you want to keep it.</div>
+
+<section class="step noprint">
+  <h2>1 · Start from your self-check (optional)</h2>
+  <p class="small">Paste the self-check export from page 1, or only its last line (it starts <code>W4-PROFILE</code>). Your two largest gaps become the two areas.</p>
+  <textarea id="import" aria-label="Self-check export"></textarea>
+  <div class="actions"><button type="button" class="sec" id="useImport">Use my self-check</button></div>
+  <div class="err" id="importMsg" aria-live="polite"></div>
+</section>
+
+<section class="step">
+  <h2>2 · Two areas. Not five.</h2>
+  <p class="small noprint">A plan with five areas is abandoned in week three, and the abandonment feels like a personal failure rather than an arithmetic one.</p>
+  <div class="areas noprint" id="areas" role="group" aria-label="Areas"></div>
+  <div class="two noprint" id="twoMsg" aria-live="polite"></div>
+  <div class="targets" id="targets"></div>
+</section>
+
+<section class="step">
+  <h2>3 · Dates</h2>
+  <div class="noprint"><label for="start" class="small" style="font-weight:650">Day one</label><br>
+  <input type="date" id="start"></div>
+  <p class="small">The tasks below are a starting point. Change the wording, move the dates, delete what does not fit, add your own.</p>
+  <div class="tasks" id="tasks"></div>
+  <div class="actions noprint"><button type="button" class="sec" id="add">Add a task</button></div>
+</section>
+
+<section class="step why">
+  <b>Why Create usually takes longer than ninety days.</b> Its activities need other people, a review cycle and a published artefact: a community to co-create with, a colleague to coach, a second iteration after feedback. Ninety days is enough to start each of those and rarely enough to finish one. The exceptions that do fit:
+  <ul>
+    <li>running this session for your own department — the materials are CC BY, adapting them takes an afternoon;</li>
+    <li>publishing one artefact you already have, with a licence and a commit history;</li>
+    <li>joining an existing practice group rather than founding one.</li>
+  </ul>
+</section>
+
+<div class="noprint">
+  <div class="actions">
+    <button type="button" id="dl">Download as Markdown</button>
+    <button type="button" class="sec" id="ics">Download calendar (.ics)</button>
+    <button type="button" class="sec" id="copy">Copy</button>
+    <button type="button" class="sec" id="print">Print</button>
+  </div>
+  <div class="status" id="status" aria-live="polite"></div>
+  <label class="kicker" for="md" style="display:block">The same plan as text</label>
+  <textarea id="md" class="md" readonly></textarea>
+</div>
+</main>
+
+<script>
+/* All wording lives here, so it can be corrected without touching the logic.
+   The areas match the eight statements on page 1, in the same order. */
+const DATA = {
+  levels: ["Not yet", "Acquire", "Deepen", "Create"],
+  areas: [
+    {id: "s1", name: "How these systems work", tasks: {
+      1: ["Run python -m llmlab all and write one sentence per lab on what you saw.", "Explain tokens and the context window to one colleague in five minutes."],
+      2: ["Run the tokens and context labs on a document from your own module, and write down where a tool would fail on it.", "Test a tool you already use on text in another language your students write in, and note the difference."],
+      3: ["Run two llmlab exercises with colleagues or students, on material from your discipline.", "Write a one-page note on what your module's tool does with student text, and publish it with a licence."]}},
+    {id: "s2", name: "Deciding whether to use AI for a task", tasks: {
+      1: ["For three tasks in one module, write what AI would gain and what it would cost.", "Read the four job families again and place each of your current uses in one."],
+      2: ["Go through one module's tasks and write, for each, whether AI is used, not used, or used under conditions — with the reason.", "Name one task you will keep doing by hand, and change the environment that protects it: a review step, a deadline, a task design."],
+      3: ["Bring the task-by-task decisions to your programme team and agree them together, in writing.", "Publish the programme's decisions where students can read them, with dates and reasons."]}},
+    {id: "s3", name: "Choosing between tools", tasks: {
+      1: ["Find out which tools your institution provides, and under which agreement.", "Complete a tool decision record (page 2) for one tool you already use."],
+      2: ["Complete a tool decision record (page 2) for the tool you use most.", "Complete a second record for an alternative, and compare the two."],
+      3: ["Share your decision records with your department and propose written criteria for recommending tools.", "Join or start the group that evaluates tools for your faculty."]}},
+    {id: "s4", name: "Knowing what leaves the institution", tasks: {
+      1: ["For each tool you use, write down where the text goes: your machine, your institution, or a third party.", "Run the route lab and read the obligations it lists."],
+      2: ["List every tool you use with student material, and the route each one takes.", "Move any student work on a third-party route to an institutional or local one, and say so in the module handbook."],
+      3: ["Draft the data-route rules for your department with your data protection officer.", "Explain the rules at a department meeting, with one worked example."]}},
+    {id: "s5", name: "Steering a model beyond a single prompt", tasks: {
+      1: ["Rewrite one prompt you use so it names the audience, the task and the limits.", "Run the steer and ladder labs and read the checks."],
+      2: ["Write one standing instruction for a task you repeat, save it, and use it three times.", "Revise it after the third use, and keep the old version beside the new one."],
+      3: ["Put the instruction and a folder of test inputs under version control and run it with the llmlab harness.", "Hand the specification to a colleague, with a licence, and collect their changes."]}},
+    {id: "s6", name: "The legal boundary around assessment", tasks: {
+      1: ["Read the legal panel again and write down which article touches each of your uses.", "Find out who at your institution answers questions on Art. 4 and on data protection."],
+      2: ["Read your assessment regulations against Annex III §3 and GDPR Art. 22, and mark where AI could touch a mark.", "Redesign one assessment so a person with the authority and the information decides every mark, and students can contest it."],
+      3: ["Draft assessment rules for AI use that a marker can apply at 11pm, with your programme team.", "Get them adopted, dated, and put where students can see them."]}},
+    {id: "s7", name: "Sharing practice with colleagues", tasks: {
+      1: ["Tell one colleague about one thing you tried and what went wrong with it.", "Ask one colleague what they have tried."],
+      2: ["Name one colleague and hold the first of four conversations about what each of you tries.", "Look at each other's work once — a task, a rubric, an instruction — and write down one change."],
+      3: ["Mentor one colleague to the point where they can complete the tool triage themselves.", "Run this session for your own department."]}},
+    {id: "s8", name: "Keeping current", tasks: {
+      1: ["Choose one source you will read once a month.", "Put a date in the calendar to re-run the self-check."],
+      2: ["Choose one source you will read monthly and one group you will attend.", "Re-run one llmlab exercise after a tool update and note what changed."],
+      3: ["Contribute one reviewed item to a local framework, an open resource or a practice group's decisions.", "Join or start a practice group with a recurring hour and a shared record of decisions."]}}
+  ],
+  opening: "Send this plan to one named person, and ask them to ask you about it on day 90.",
+  closing: "Review: re-run the self-check (page 1), compare it with the first one, and write the next plan.",
+  // days after day one for: opening, area 1 task 1, area 2 task 1, area 1 task 2, area 2 task 2, closing
+  schedule: [7, 14, 28, 50, 64, 90]
+};
+
+const S = {chosen: [], current: {}, target: {}, tasks: [], profile: null};
+
+function h(tag, attrs) {
+  const n = document.createElement(tag);
+  for (const k in (attrs || {})) n.setAttribute(k, attrs[k]);
+  for (let i = 2; i < arguments.length; i++) {
+    const c = arguments[i];
+    if (c != null) n.append(c.nodeType ? c : String(c));
+  }
+  return n;
+}
+const $ = function (id) { return document.getElementById(id); };
+const area = function (id) { return DATA.areas.filter(function (a) { return a.id === id; })[0]; };
+
+function iso(d) {
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function addDays(isoDate, n) {
+  const p = isoDate.split("-").map(Number);
+  return iso(new Date(p[0], p[1] - 1, p[2] + n));
+}
+
+function buildAreas() {
+  const box = $("areas");
+  box.replaceChildren();
+  DATA.areas.forEach(function (a) {
+    const id = "a_" + a.id, on = S.chosen.indexOf(a.id) >= 0, full = S.chosen.length >= 2 && !on;
+    const cb = h("input", {type: "checkbox", id: id});
+    cb.checked = on; cb.disabled = full;
+    cb.addEventListener("change", function () {
+      if (cb.checked) S.chosen.push(a.id); else S.chosen = S.chosen.filter(function (x) { return x !== a.id; });
+      const focusId = id;
+      refresh(true);
+      $(focusId).focus();
+    });
+    const lvl = S.profile ? " · you rated this " + DATA.levels[S.profile[a.id]] : "";
+    box.append(h("label", {for: id, class: "card" + (on ? " on" : "") + (full ? " off" : "")}, cb,
+      h("span", {}, a.name, h("span", {class: "lvl"}, lvl))));
+  });
+  $("twoMsg").textContent = S.chosen.length === 2 ? "Two chosen. The rest are closed until you untick one." :
+    S.chosen.length === 1 ? "One more." : "";
+}
+
+function buildTargets() {
+  const box = $("targets");
+  box.replaceChildren();
+  S.chosen.forEach(function (id) {
+    const a = area(id);
+    const cur = S.current[id] != null ? S.current[id] : (S.profile ? S.profile[id] : 1);
+    S.current[id] = cur;
+    if (S.target[id] == null || S.target[id] <= cur) S.target[id] = Math.min(3, Math.max(1, cur + 1));
+    const curSel = h("select", {id: "cur_" + id, "aria-label": "Where you are now in " + a.name});
+    const tgtSel = h("select", {id: "tgt_" + id, "aria-label": "Target in 90 days for " + a.name});
+    DATA.levels.forEach(function (l, k) {
+      const o1 = h("option", {value: k}, l); if (k === cur) o1.selected = true; curSel.append(o1);
+      if (k >= 1) { const o2 = h("option", {value: k}, l); if (k === S.target[id]) o2.selected = true; tgtSel.append(o2); }
+    });
+    curSel.addEventListener("change", function () { S.current[id] = Number(curSel.value); refresh(true); $("cur_" + id).focus(); });
+    tgtSel.addEventListener("change", function () { S.target[id] = Number(tgtSel.value); refresh(true); $("tgt_" + id).focus(); });
+    box.append(h("div", {class: "target"}, h("b", {}, a.name), h("span", {class: "small"}, "now"), curSel,
+      h("span", {class: "small"}, "in 90 days"), tgtSel));
+  });
+}
+
+function generate() {
+  const start = $("start").value || iso(new Date());
+  const sc = DATA.schedule, t = [];
+  if (S.chosen.length === 0) { S.tasks = []; return; }
+  t.push({date: addDays(start, sc[0]), text: DATA.opening, tag: "commitment"});
+  const picks = S.chosen.map(function (id) { return {a: area(id), list: area(id).tasks[S.target[id]]}; });
+  picks.forEach(function (p, i) { t.push({date: addDays(start, sc[1 + i]), text: p.list[0], tag: p.a.name + " → " + DATA.levels[S.target[p.a.id]]}); });
+  picks.forEach(function (p, i) { t.push({date: addDays(start, sc[3 + i]), text: p.list[1], tag: p.a.name + " → " + DATA.levels[S.target[p.a.id]]}); });
+  t.push({date: addDays(start, sc[5]), text: DATA.closing, tag: "review"});
+  S.tasks = t.sort(function (x, y) { return x.date < y.date ? -1 : 1; });
+}
+
+function buildTasks() {
+  const box = $("tasks");
+  box.replaceChildren();
+  if (!S.tasks.length) { box.append(h("p", {class: "small"}, "Choose your areas in step 2 and the tasks appear here.")); return; }
+  S.tasks.forEach(function (t, i) {
+    const d = h("input", {type: "date", "aria-label": "Date for task " + (i + 1)});
+    d.value = t.date;
+    d.addEventListener("change", function () { t.date = d.value; outputs(); });
+    const tx = h("input", {type: "text", "aria-label": "Task " + (i + 1)});
+    tx.value = t.text;
+    tx.addEventListener("input", function () { t.text = tx.value; outputs(); });
+    const x = h("button", {type: "button", class: "x", "aria-label": "Remove task " + (i + 1)}, "✕");
+    x.addEventListener("click", function () { S.tasks.splice(i, 1); buildTasks(); outputs(); });
+    box.append(h("div", {class: "task"}, d, tx, x, t.tag ? h("div", {class: "tag"}, t.tag) : null));
+  });
+}
+
+function refresh(regenerate) {
+  buildAreas();
+  buildTargets();
+  if (regenerate) generate();
+  buildTasks();
+  outputs();
+}
+
+function ok() { return S.chosen.length === 2 && S.tasks.length > 0; }
+
+function markdown() {
+  let md = "# 90-day plan\n\nWorkshop 4 · AI in Teaching · day one " + ($("start").value || "—") + "\n\n## Two areas\n\n";
+  S.chosen.forEach(function (id) {
+    md += "- **" + area(id).name + "** — from " + DATA.levels[S.current[id]] + " to " + DATA.levels[S.target[id]] + "\n";
+  });
+  md += "\n## Tasks\n\n| Date | Task |\n| --- | --- |\n";
+  S.tasks.slice().sort(function (x, y) { return x.date < y.date ? -1 : 1; }).forEach(function (t) {
+    md += "| " + t.date + " | " + String(t.text).replace(/\|/g, "\\|") + " |\n";
+  });
+  md += "\n_A commitment without a date is a preference. A commitment without another person in it is a private intention._\n";
+  return md;
+}
+
+/* iCalendar: CRLF line ends, escaped text, lines folded at 75 octets. */
+function icsEscape(s) { return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n"); }
+function fold(line) {
+  const enc = new TextEncoder(), out = [];
+  let cur = "", bytes = 0;
+  for (const ch of line) {
+    const b = enc.encode(ch).length, limit = out.length ? 74 : 75;
+    if (bytes + b > limit) { out.push(cur); cur = ""; bytes = 0; }
+    cur += ch; bytes += b;
+  }
+  out.push(cur);
+  return out.join("\r\n ");
+}
+function ics() {
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//EU GREEN Workshop 4//90-day plan//EN", "CALSCALE:GREGORIAN"];
+  S.tasks.forEach(function (t) {
+    if (!t.date) return;
+    const rnd = Array.from(crypto.getRandomValues(new Uint8Array(8))).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+    lines.push("BEGIN:VEVENT", "UID:" + rnd + "@w4-plan.invalid", "DTSTAMP:" + stamp,
+      "DTSTART;VALUE=DATE:" + t.date.replace(/-/g, ""), "DTEND;VALUE=DATE:" + addDays(t.date, 1).replace(/-/g, ""),
+      fold("SUMMARY:" + icsEscape(t.text)),
+      fold("DESCRIPTION:" + icsEscape("90-day plan, Workshop 4" + (t.tag ? " · " + t.tag : ""))), "END:VEVENT");
+  });
+  lines.push("END:VCALENDAR");
+  return lines.join("\r\n") + "\r\n";
+}
+
+function outputs() {
+  $("md").value = markdown();
+  ["dl", "ics", "copy", "print"].forEach(function (id) { $(id).disabled = !ok(); });
+  if (!ok()) $("status").textContent = S.chosen.length === 2 ? "" : "Choose two areas to build the plan.";
+}
+
+function say(msg) {
+  const s = $("status");
+  s.textContent = msg;
+  setTimeout(function () { if (s.textContent === msg) s.textContent = ""; }, 4000);
+}
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], {type: type}));
+  const a = h("a", {href: url, download: name});
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  say("If nothing downloaded, copy the text below instead.");
+}
+
+$("useImport").addEventListener("click", function () {
+  const m = /W4-PROFILE\s+([0-3-](?:\s*,\s*[0-3-]){7})/.exec($("import").value);
+  const msg = $("importMsg");
+  if (!m) { msg.textContent = "No W4-PROFILE line found. Paste the whole export from page 1, or its last line."; return; }
+  const vals = m[1].split(",").map(function (x) { return x.trim(); });
+  if (vals.indexOf("-") >= 0) { msg.textContent = "That self-check has unanswered statements. Finish it on page 1 first."; return; }
+  S.profile = {};
+  DATA.areas.forEach(function (a, i) { S.profile[a.id] = Number(vals[i]); });
+  const order = DATA.areas.slice().sort(function (x, y) { return S.profile[x.id] - S.profile[y.id]; });
+  S.chosen = [order[0].id, order[1].id];
+  S.current = {}; S.target = {};
+  msg.textContent = "";
+  refresh(true);
+  say("Seeded from your self-check: your two largest gaps.");
+});
+$("start").addEventListener("change", function () { refresh(true); });
+$("add").addEventListener("click", function () {
+  S.tasks.push({date: addDays($("start").value || iso(new Date()), 30), text: "", tag: "your own"});
+  buildTasks(); outputs();
+  const inputs = $("tasks").querySelectorAll("input[type=text]");
+  inputs[inputs.length - 1].focus();
+});
+$("dl").addEventListener("click", function () { download("90_day_plan.md", markdown(), "text/markdown"); });
+$("ics").addEventListener("click", function () { download("90_day_plan.ics", ics(), "text/calendar"); });
+$("copy").addEventListener("click", function () {
+  const ta = $("md");
+  const done = function () { say("Copied."); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(ta.value).then(done, function () { ta.select(); document.execCommand("copy"); done(); });
+  } else { ta.select(); document.execCommand("copy"); done(); }
+});
+$("print").addEventListener("click", function () { window.print(); });
+
+$("start").value = iso(new Date());
+refresh(true);
+</script>
+</body>
+</html>

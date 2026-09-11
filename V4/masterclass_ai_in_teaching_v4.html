@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Teaching — Tools, Strategies and Reflection · EU GREEN Masterclass</title>
+<meta name="description" content="EU GREEN / EduGreenLabs WP2 Training Lab. A 90-minute masterclass for higher education teaching staff. Self-contained, offline, CC BY 4.0.">
+<style>
+:root{
+  --paper:#fbfcfd; --card:#fff; --sunk:#f2f5f9;
+  --ink:#16202b; --dim:#45566a; --mute:#7b8b9c; --line:#d6dee8;
+  --blue:#1a4a88; --blue-s:#e7eefa; --blue-m:#b9d0ec;
+  --violet:#6b4a9e; --violet-s:#f1ebf9; --violet-m:#d8c8ee;
+  --green:#0f7a5a; --green-s:#e3f3ee;
+  --amber:#a86a12; --amber-s:#fdf3e2;
+  --red:#8a3324; --red-s:#fbe9e6;
+  --rail:64px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-size:17px;line-height:1.62;
+  font-family:"Segoe UI",Calibri,system-ui,-apple-system,Helvetica,Arial,sans-serif}
+
+/* ---------- masthead ---------- */
+.mast{background:linear-gradient(118deg,#e7eefa 0%,#eef2f8 55%,#f1ebf9 100%);
+      border-bottom:2px solid var(--blue);padding:26px 26px 20px}
+.mast-in{max-width:1160px;margin:0 auto;display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end;
+         justify-content:space-between}
+.mast h1{margin:0;font-size:1.72rem;line-height:1.2;color:var(--blue);letter-spacing:-.02em;max-width:20ch}
+.mast h1 em{font-style:normal;color:var(--violet)}
+.mast .series{color:var(--dim);font-size:.86rem;margin-bottom:6px}
+.mast .facts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.fact{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 13px;
+      font-size:.76rem;color:var(--dim)}
+.fact b{color:var(--ink);font-weight:650}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.tbtn{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 13px;
+      font:inherit;font-size:.79rem;color:var(--dim);cursor:pointer;min-height:40px}
+.tbtn:hover{border-color:var(--blue);color:var(--blue)}
+.tbtn[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ---------- shell + time rail ---------- */
+.shell{max-width:1160px;margin:0 auto;padding:0 26px 70px;display:grid;
+       grid-template-columns:var(--rail) minmax(0,1fr);gap:28px;align-items:start}
+main{min-width:0}
+.railwrap{position:sticky;top:14px;padding-top:22px}
+.rail{display:flex;flex-direction:column;height:66vh;min-height:420px;
+      border-left:2px solid var(--line);padding-left:0}
+.rail a{position:relative;display:flex;align-items:flex-start;gap:6px;text-decoration:none;
+        color:var(--mute);font-size:.68rem;padding-left:12px;border-left:5px solid var(--line);
+        margin-left:-2px;transition:border-color .18s,color .18s}
+.rail a:hover,.rail a:focus-visible{color:var(--blue);border-left-color:var(--blue-m)}
+.rail a[aria-current="true"]{color:var(--blue);border-left-color:var(--blue);font-weight:700}
+.rail a .n{font-size:.95rem;line-height:1.1;font-weight:700}
+.rail a .m{display:block;font-size:.62rem;font-weight:400;color:var(--mute)}
+.rail .dot{position:absolute;left:-11px;top:2px;width:9px;height:9px;border-radius:50%;
+           background:var(--violet);border:2px solid var(--paper)}
+.railkey{font-size:.63rem;color:var(--mute);margin-top:12px;padding-left:12px;line-height:1.35}
+.railkey i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--violet)}
+
+/* ---------- blocks ---------- */
+section.block{padding-top:26px;margin-bottom:14px;scroll-margin-top:14px}
+.bhead{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;
+       border-bottom:2px solid var(--blue-m);padding-bottom:8px;margin-bottom:4px}
+.bhead .idx{font-size:2.1rem;font-weight:800;color:var(--blue-m);line-height:1;letter-spacing:-.04em}
+.bhead h2{margin:0;font-size:1.32rem;color:var(--blue);letter-spacing:-.01em}
+.bhead .time{margin-left:auto;font-size:.78rem;color:var(--mute);white-space:nowrap}
+.lede{font-size:1.02rem;color:var(--dim);margin:14px 0 4px;max-width:66ch}
+.lede strong{color:var(--ink);font-weight:650}
+h3{font-size:1rem;color:#2b4a72;margin:26px 0 8px}
+p{max-width:66ch}
+
+/* ---------- Aspect 5 tag ---------- */
+.cpd{display:flex;gap:12px;align-items:flex-start;background:var(--violet-s);
+     border-left:4px solid var(--violet);border-radius:0 9px 9px 0;padding:10px 15px;margin:14px 0;
+     font-size:.82rem;color:#4b3573;max-width:74ch}
+.cpd .lvl{background:var(--violet);color:#fff;border-radius:6px;padding:2px 9px;font-size:.7rem;
+          font-weight:700;white-space:nowrap}
+
+/* ---------- concept strip (the fold-out layer) ---------- */
+.strip{display:grid;gap:11px;margin:16px 0 4px;
+       grid-template-columns:repeat(auto-fit,minmax(232px,1fr))}
+details.c{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--blue-m);
+          border-radius:9px;overflow:hidden}
+details.c[open]{border-top-color:var(--blue);box-shadow:0 1px 3px rgba(26,74,136,.09)}
+details.c>summary{list-style:none;cursor:pointer;padding:13px 15px;display:grid;
+                  grid-template-columns:26px 1fr;gap:10px;align-items:start}
+details.c>summary::-webkit-details-marker{display:none}
+details.c>summary:hover .t{color:var(--blue)}
+summary .t{font-weight:660;font-size:.93rem;line-height:1.3;display:block}
+summary .s{font-size:.79rem;color:var(--mute);display:block;margin-top:3px}
+summary .plus{grid-column:2;font-size:.71rem;color:var(--blue);margin-top:7px;font-weight:650}
+details.c[open] summary .plus{color:var(--mute)}
+details.c[open] summary .plus::after{content:" — close"}
+details.c[open] summary .plus::before{content:"open "}
+.cbody{padding:0 15px 15px;font-size:.89rem;color:var(--dim);border-top:1px dashed var(--line);
+       margin:0 15px;padding-left:0;padding-right:0}
+.cbody>*:first-child{margin-top:11px}
+.cbody p{max-width:100%}
+details.c.warn{border-top-color:var(--amber)}
+details.c.warn[open]{border-top-color:var(--amber)}
+details.c.legal{border-top-color:var(--red)}
+details.c.lab{border-top-color:var(--violet)}
+details.c.good{border-top-color:var(--green)}
+
+/* ---------- long-form disclosure ---------- */
+details.more{border:1px solid var(--line);border-radius:9px;background:var(--card);margin:14px 0;
+             max-width:74ch}
+details.more>summary{cursor:pointer;list-style:none;padding:11px 15px;font-size:.87rem;
+                     font-weight:640;color:var(--blue);display:flex;gap:9px;align-items:center}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"▸";color:var(--blue-m);font-size:.9rem}
+details.more[open]>summary::before{content:"▾"}
+details.more[open]>summary{border-bottom:1px dashed var(--line)}
+.mbody{padding:13px 15px;font-size:.9rem;color:var(--dim)}
+.mbody>*:first-child{margin-top:0}
+.mbody>*:last-child{margin-bottom:0}
+.mbody p{max-width:100%}
+
+/* ---------- panels ---------- */
+.panel{border-left:4px solid var(--blue);background:var(--blue-s);border-radius:0 9px 9px 0;
+       padding:12px 16px;margin:15px 0;font-size:.89rem;color:#1d3557;max-width:74ch}
+.panel.legal{border-color:var(--red);background:var(--red-s);color:#6d2a1e}
+.panel.warn{border-color:var(--amber);background:var(--amber-s);color:#6b4712}
+.panel.good{border-color:var(--green);background:var(--green-s);color:#14513e}
+.panel.lab{border-color:var(--violet);background:var(--violet-s);color:#4b3573}
+.panel h4{margin:0 0 5px;font-size:.9rem}
+.panel p{max-width:100%}
+.panel ul{margin:7px 0 0;padding-left:19px}
+.panel li{margin-bottom:4px}
+
+/* ---------- lab call ---------- */
+.labcall{border:1px solid var(--violet-m);border-left:5px solid var(--violet);
+         background:linear-gradient(100deg,var(--violet-s),#fff 70%);border-radius:0 11px 11px 0;
+         padding:14px 17px;margin:18px 0;max-width:74ch}
+.labcall .hd{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.labcall .badge{background:var(--violet);color:#fff;font-size:.68rem;font-weight:700;
+                border-radius:6px;padding:3px 9px;white-space:nowrap}
+.labcall .ttl{font-weight:660;font-size:.95rem;color:#4b3573}
+.labcall .mins{margin-left:auto;font-size:.74rem;color:var(--mute)}
+.labcall p{font-size:.87rem;color:var(--dim);margin:6px 0;max-width:100%}
+code,kbd{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace}
+.cmd{display:block;background:#241a33;color:#f0eaf8;border-radius:7px;padding:10px 13px;
+     font-size:.8rem;overflow-x:auto;margin:8px 0;white-space:pre}
+.cmd .c{color:#b79ede}
+code.inl{background:var(--sunk);border:1px solid var(--line);border-radius:4px;padding:1px 5px;
+         font-size:.83em}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:520px}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:var(--sunk);color:var(--blue);font-size:.79rem;font-weight:700}
+td{color:var(--dim);background:#fff}
+tr:nth-child(even) td{background:#fafcfe}
+td b,th b{color:var(--ink)}
+td.no{color:var(--red)}
+td.yes{color:var(--green)}
+
+/* ---------- hover terms ---------- */
+.term{border-bottom:2px dotted var(--blue-m);cursor:help;position:relative;color:inherit;
+      background:none;border-top:0;border-left:0;border-right:0;font:inherit;padding:0}
+.term::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 7px);z-index:40;
+  width:min(310px,72vw);background:#1b2735;color:#eef3f9;font-size:.79rem;line-height:1.45;
+  padding:9px 12px;border-radius:8px;box-shadow:0 5px 18px rgba(16,28,44,.24);
+  opacity:0;visibility:hidden;transition:opacity .13s;pointer-events:none;font-weight:400}
+.term:hover::after,.term:focus-visible::after{opacity:1;visibility:visible}
+
+/* ---------- quiz ---------- */
+.quiz{border:1px solid var(--line);border-radius:11px;background:var(--card);padding:15px 17px;
+      margin:20px 0;max-width:74ch}
+.quiz h4{margin:0 0 3px;font-size:.95rem;color:var(--blue)}
+.q{margin:14px 0 0}
+.q p{font-size:.9rem;margin:0 0 7px;font-weight:600;color:var(--ink);max-width:100%}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);
+     border-radius:8px;padding:9px 12px;margin-bottom:6px;font:inherit;font-size:.86rem;
+     color:var(--dim);cursor:pointer;min-height:44px}
+.opt:hover{border-color:var(--blue-m)}
+.opt.right{background:var(--green-s);border-color:var(--green);color:#14513e}
+.opt.wrong{background:var(--red-s);border-color:var(--red);color:#6d2a1e}
+.why{font-size:.83rem;color:var(--dim);margin-top:6px;padding-left:12px;
+     border-left:3px solid var(--line);display:none}
+.why.on{display:block}
+
+/* ---------- notes ---------- */
+.note{border-left:4px solid var(--mute);background:#f7f9fb;border-radius:0 8px 8px 0;
+      padding:10px 15px;margin:13px 0;font-size:.84rem;color:var(--dim);max-width:74ch}
+.note b{color:#4a5b6d}
+body:not(.notes) .note{display:none}
+.svgwrap{margin:18px 0;overflow-x:auto}
+svg{max-width:100%;height:auto;display:block}
+.cap{font-size:.76rem;color:var(--mute);margin-top:5px;max-width:70ch}
+footer{border-top:1px solid var(--line);margin-top:30px;padding-top:18px;font-size:.79rem;color:var(--mute)}
+footer a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:14px;top:14px;position:fixed;z-index:99;background:#fff;padding:10px 15px;
+            border:2px solid var(--blue);border-radius:8px}
+
+/* ---------- v4: placement router ---------- */
+.router{border:1px solid var(--violet-m);border-radius:12px;background:var(--card);
+        padding:15px 17px;margin:18px 0}
+.router h4{margin:0 0 3px;font-size:.95rem;color:var(--violet)}
+.router .hint{font-size:.8rem;color:var(--mute);margin:0 0 11px;max-width:70ch}
+.rchoices{display:grid;gap:7px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-bottom:4px}
+.rbtn{text-align:left;background:var(--sunk);border:1px solid var(--line);border-radius:8px;
+      padding:9px 12px;font:inherit;font-size:.83rem;color:var(--dim);cursor:pointer;min-height:44px}
+.rbtn:hover{border-color:var(--violet);color:var(--violet)}
+.rbtn[aria-pressed="true"]{background:var(--violet);border-color:var(--violet);color:#fff}
+.rout{margin-top:14px;border-top:1px dashed var(--line);padding-top:13px;font-size:.87rem}
+.rout[hidden]{display:none}
+.rverdict{display:inline-block;border-radius:6px;padding:3px 10px;font-size:.7rem;font-weight:700;
+          margin-bottom:7px}
+.rverdict.good{background:var(--green-s);color:#14513e}
+.rverdict.warn{background:var(--amber-s);color:#6b4712}
+.rverdict.stop{background:var(--red-s);color:#6d2a1e}
+.rverdict.neutral{background:var(--sunk);color:var(--dim)}
+.rsum{font-weight:640;color:var(--ink);margin:0 0 11px;max-width:74ch}
+.rgrid{display:grid;gap:13px;grid-template-columns:repeat(auto-fit,minmax(276px,1fr))}
+.rcol h5{margin:0 0 7px;font-size:.79rem;text-transform:uppercase;letter-spacing:.04em}
+.rcol.has h5{color:var(--green)}
+.rcol.needs h5{color:var(--amber)}
+.rcol ul{margin:0;padding-left:0;list-style:none}
+.rcol li{margin-bottom:9px;padding-left:11px;border-left:3px solid var(--line);font-size:.84rem;
+         color:var(--dim);line-height:1.5}
+.rcol.has li{border-left-color:var(--green)}
+.rcol.needs li{border-left-color:var(--amber)}
+.cid{font-family:ui-monospace,Consolas,monospace;font-size:.76rem;font-weight:700;color:var(--blue)}
+.lvpill{display:inline-block;background:var(--violet-s);color:#4b3573;border-radius:5px;
+        padding:0 6px;font-size:.68rem;font-weight:700;margin-left:4px;vertical-align:1px}
+.rmeta{margin-top:12px;font-size:.81rem;color:var(--dim);border-top:1px dashed var(--line);padding-top:9px}
+.rmeta b{color:var(--ink)}
+.rmeta div{margin-bottom:4px;max-width:80ch}
+
+/* ---------- v4: domain cards ---------- */
+.doms{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));margin:16px 0}
+.dom{border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:9px;
+     background:var(--card);padding:12px 14px}
+.dom.x{border-top-color:var(--red)}
+.dom .dn{font-weight:670;font-size:.92rem;color:var(--blue)}
+.dom.x .dn{color:var(--red)}
+.dom .dde{font-size:.75rem;color:var(--mute);margin-bottom:5px}
+.dom p{font-size:.82rem;color:var(--dim);margin:0;max-width:100%}
+.dom .ids{font-size:.72rem;color:var(--mute);margin-top:7px;font-family:ui-monospace,Consolas,monospace}
+
+/* ---------- v4: bibliography ---------- */
+.bib h4{margin:22px 0 6px;font-size:.92rem;color:var(--blue);
+        border-bottom:1px solid var(--line);padding-bottom:4px}
+.bib ol{font-size:.85rem;color:var(--dim);max-width:82ch;padding-left:20px}
+.bib li{margin-bottom:9px;line-height:1.55}
+.bib a{color:var(--blue);word-break:break-word}
+.new{background:var(--violet-s);color:#4b3573;border-radius:4px;padding:0 5px;font-size:.66rem;
+     font-weight:700;letter-spacing:.03em;vertical-align:2px;margin-left:5px}
+
+@media (max-width:880px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:8px;padding:0 16px 50px}
+  .railwrap{position:static;padding-top:12px;min-width:0}
+  .rail{flex-direction:row;height:auto;min-height:0;min-width:0;border-left:0;
+        border-top:2px solid var(--line);overflow-x:auto;gap:4px}
+  .rail a{flex:0 0 auto}
+  .bhead .time{margin-left:0;flex-basis:100%}
+  .rail a{border-left:0;border-top:5px solid var(--line);margin:0;padding:9px 12px 6px;white-space:nowrap}
+  .rail a[aria-current="true"]{border-top-color:var(--blue)}
+  .rail .dot{left:6px;top:-7px}
+  .railkey{display:none}
+  body{font-size:16px}
+}
+@media print{
+  .railwrap,.toolbar,.skip{display:none}
+  .shell{display:block}
+  details{open:true}
+  details>summary{font-weight:700}
+  .cbody,.mbody{display:block!important}
+  body{font-size:11pt}
+}
+</style>
+</head>
+<body class="notes">
+<a class="skip" href="#b0">Skip to the session</a>
+
+<div class="mast"><div class="mast-in">
+  <div>
+    <div class="series">EU GREEN · Transformative Teaching and Learning · WP2 Training Lab · Workshop 4</div>
+    <h1>AI in Teaching:<br>Tools, Strategies and <em>Reflection</em></h1>
+    <div class="facts">
+      <span class="fact"><b>90</b> minutes</span>
+      <span class="fact"><b>6</b> blocks</span>
+      <span class="fact"><b>7</b> lab exercises on your own machine</span>
+      <span class="fact"><b>2</b> appendices &middot; placement map and references</span>
+      <span class="fact">CC BY 4.0</span>
+      <span class="fact">v4 &middot; September 2026</span>
+    </div>
+  </div>
+  <div class="toolbar">
+    <button class="tbtn" id="tNotes" aria-pressed="true">Facilitator notes</button>
+    <button class="tbtn" id="tOpen" aria-pressed="false">Open everything</button>
+    <button class="tbtn" onclick="window.print()">Print</button>
+  </div>
+</div></div>
+
+<div class="shell">
+<div class="railwrap">
+  <nav class="rail" id="rail" aria-label="Session timeline"></nav>
+  <div class="railkey"><i></i> minutes spent in the lab, not on this page</div>
+</div>
+<main id="main">
+<!-- ══════════════════════════ BLOCK 0 ══════════════════════════ -->
+<section class="block" id="b0" data-title="Why these three words" data-mins="10" data-lab="2">
+<div class="bhead"><span class="idx">0</span><h2>Why these three words</h2><span class="time">0:00 – 0:10</span></div>
+
+<div class="cpd"><span class="lvl">Acquire</span><div><b>5.1 Enabling lifelong professional learning</b> — awareness of teachers' rights and obligations in the AI era. Every block on this page carries a tag like this. Professional development is not the last item on the agenda; it is what the other blocks are for.</div></div>
+
+<p class="lede">The title is not a list of three topics. It is a sequence, and each pair without the third fails in a way you will recognise.</p>
+
+<div class="svgwrap">
+<svg viewBox="0 0 720 250" role="img" aria-label="Tools leads to strategies leads to reflection. Tools without strategies is shopping. Strategies without reflection is compliance theatre. Reflection without tools changes nothing on Monday.">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0 0 L9 4.5 L0 9 z" fill="#b9d0ec"/></marker></defs>
+  <g font-family="Segoe UI,sans-serif">
+    <rect x="8" y="18" width="196" height="70" rx="10" fill="#e7eefa" stroke="#1a4a88" stroke-width="1.5"/>
+    <text x="106" y="52" text-anchor="middle" font-size="21" font-weight="700" fill="#1a4a88">Tools</text>
+    <text x="106" y="72" text-anchor="middle" font-size="12" fill="#45566a">what exists, and what it costs</text>
+
+    <rect x="262" y="18" width="196" height="70" rx="10" fill="#e7eefa" stroke="#1a4a88" stroke-width="1.5"/>
+    <text x="360" y="52" text-anchor="middle" font-size="21" font-weight="700" fill="#1a4a88">Strategies</text>
+    <text x="360" y="72" text-anchor="middle" font-size="12" fill="#45566a">how to steer and when to stop</text>
+
+    <rect x="516" y="18" width="196" height="70" rx="10" fill="#f1ebf9" stroke="#6b4a9e" stroke-width="1.5"/>
+    <text x="614" y="52" text-anchor="middle" font-size="21" font-weight="700" fill="#6b4a9e">Reflection</text>
+    <text x="614" y="72" text-anchor="middle" font-size="12" fill="#45566a">what you will still do by hand</text>
+
+    <line x1="210" y1="53" x2="254" y2="53" stroke="#b9d0ec" stroke-width="2.5" marker-end="url(#ar)"/>
+    <line x1="464" y1="53" x2="508" y2="53" stroke="#b9d0ec" stroke-width="2.5" marker-end="url(#ar)"/>
+
+    <g font-size="12.5" fill="#8a3324">
+      <rect x="8" y="118" width="228" height="52" rx="8" fill="#fbe9e6"/>
+      <text x="22" y="139">Tools without strategies</text>
+      <text x="22" y="157" font-weight="700">is shopping.</text>
+
+      <rect x="246" y="118" width="228" height="52" rx="8" fill="#fbe9e6"/>
+      <text x="260" y="139">Strategies without reflection</text>
+      <text x="260" y="157" font-weight="700">is compliance theatre.</text>
+
+      <rect x="484" y="118" width="228" height="52" rx="8" fill="#fbe9e6"/>
+      <text x="498" y="139">Reflection without tools</text>
+      <text x="498" y="157" font-weight="700">changes nothing on Monday.</text>
+    </g>
+    <text x="8" y="205" font-size="12.5" fill="#45566a">Ninety minutes buys you the first two properly and the beginning of the third.</text>
+    <text x="8" y="226" font-size="12.5" fill="#45566a">It does not buy you a transformed module. Anyone who promises that is selling something.</text>
+  </g>
+</svg>
+</div>
+
+<div class="strip">
+  <details class="c"><summary><span aria-hidden="true">◆</span><span><span class="t">Who this is for</span><span class="s">Mixed disciplines, mixed experience, no coding assumed</span><span class="plus">what that changes</span></span></summary>
+  <div class="cbody"><p>You are not being trained as a developer, and the session does not assume you want to be. It assumes you make decisions — about a tool, an assessment, a module handbook — that are now technical decisions whether or not you experience them that way. The competence being built is the competence to make those decisions and defend them.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">◆</span><span><span class="t">The contract</span><span class="s">What you leave with, stated in advance</span><span class="plus">the four items</span></span></summary>
+  <div class="cbody"><ul>
+  <li>A readiness profile you filled in yourself, not a score somebody gave you — <a href="pages/p1_self_check.html">the self-check page</a>.</li>
+  <li>A decision record for one tool, started in the session and finished within the week, in a form your head of programme can read — <a href="pages/p2_tool_triage.html">the tool triage page</a>.</li>
+  <li>Seven claims you can check on your own machine rather than take on trust. The session runs some of them in the room; <code class="inl">python -m llmlab all</code> runs all seven.</li>
+  <li>A dated 90-day plan with two areas on it, and no more than two — <a href="pages/p4_cpd_plan.html">the plan page</a>.</li>
+  </ul></div></details>
+
+  <details class="c lab"><summary><span aria-hidden="true">▣</span><span><span class="t">The lab</span><span class="s">A small tool that runs a model on your laptop</span><span class="plus">why it exists</span></span></summary>
+  <div class="cbody"><p>Most of what this session claims is checkable. Rather than assert that a token is not a word, or that a context window silently drops what does not fit, the lab puts each claim in front of a model on your own machine and shows you the result. It needs no account, no key and no network. If nothing is installed it still runs, and says clearly that its output is scaffolding rather than a model.</p></div></details>
+</div>
+
+<div class="note"><b>Say this in Block 0, once:</b> "Everything on this page is open. The one thing I will ask you not to reuse without checking is the local framework in Block 1, and I will say why when we get there."</div>
+
+<div class="labcall">
+  <div class="hd"><span class="badge">Lab · setup</span><span class="ttl">Start it now, so downloads happen while we talk</span><span class="mins">2 min</span></div>
+  <p>Open a terminal in the unzipped folder. If Workshop 3 left you with Ollama and Gemma, this will find them.</p>
+  <span class="cmd"><span class="c"># does anything answer?</span>
+python -m llmlab check</span>
+  <p>A green line means a live model. An amber line means simulated mode, which is fine — the exercises still work and every screen will say so.</p>
+</div>
+
+<div class="panel good">
+<h4>The readiness self-check — page 1 of 3</h4>
+<p>Eight statements, in silence, about three minutes. For each, pick where you actually are — Not yet, Acquire, Deepen or Create — not where a strategy paper says you should be. You get a profile back with your two largest gaps named, and the 90-day plan in Block 5 is seeded from it. Nothing is sent anywhere or saved; export it before you close the page.</p>
+<p><a href="pages/p1_self_check.html">Open the self-check</a> · UNESCO AI CFT Aspect 5, Acquire: self-assessment of readiness is the named activity for this level, so this is not a warm-up.</p>
+</div>
+</section>
+
+<!-- ══════════════════════════ BLOCK 1 ══════════════════════════ -->
+<section class="block" id="b1" data-title="Competencies" data-mins="17" data-lab="3">
+<div class="bhead"><span class="idx">1</span><h2>Competencies — which frameworks exist, and why you need one</h2><span class="time">0:10 – 0:27</span></div>
+
+<div class="cpd"><span class="lvl">Acquire</span><div><b>5.1 Enabling lifelong professional learning</b> — self-assessment of readiness for teaching in the AI era.</div></div>
+
+<p class="lede">A framework is not a compliance document. It is a way of finding out <strong>which specific thing you cannot yet do</strong>, so that the next ninety days have a subject.</p>
+
+<div class="strip">
+  <details class="c"><summary><span aria-hidden="true">▤</span><span><span class="t">UNESCO AI CFT (2024)</span><span class="s">Teachers · 5 aspects · Acquire / Deepen / Create</span><span class="plus">what it covers</span></span></summary>
+  <div class="cbody"><p>Miao &amp; Cukurova, <i>AI competency framework for teachers</i>. Five aspects, each at three levels. Aspect 5, AI for professional development, is the spine of this session. Written with school teachers in view, and adaptation to context is UNESCO's own stated implementation route rather than a workaround.</p>
+  <p><b>Licence note:</b> CC BY-SA. This page paraphrases it and attributes it rather than reproducing its wording at length, because this course is CC BY.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">▤</span><span><span class="t">AILit (2026)</span><span class="s">OECD and European Commission · learners</span><span class="plus">what it covers</span></span></summary>
+  <div class="cbody"><p><i>Empowering Learners for the Age of AI.</i> Built on DigComp, UNESCO, AI4K12 and Digital Promise. Its subject is primary and secondary <b>learners</b> — not teachers, and not higher education. Useful to you as a statement of what arriving students will have been taught, which is not nothing.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">▤</span><span><span class="t">DigCompEdu (2017)</span><span class="s">Educators · 22 competences · A1 to C2</span><span class="plus">what it covers</span></span></summary>
+  <div class="cbody"><p>The reference framework for educators' digital competence across the EU, and the one your institution most likely already maps to. It predates generative systems. Its categories still hold; its examples do not reach the problems in Block 2.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">▤</span><span><span class="t">DigComp 2.2 · ICT-CFT</span><span class="s">Citizens · and the digital-professional strand</span><span class="plus">what they add</span></span></summary>
+  <div class="cbody"><p>DigComp 2.2 (2022) added examples concerning AI systems to the citizen framework. UNESCO's ICT-CFT (2018) contributed the three-level grammar — acquisition, deepening, creation — that the later frameworks reuse. Between them they cover the citizen and the digital-professional; neither addresses your lecture theatre.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">▤</span><span><span class="t">AI GO! (2025)<span class="new">new</span></span><span class="s">Npuls · education professionals, including universities</span><span class="plus">why this one is different</span></span></summary>
+  <div class="cbody"><p><i>AI Literacy in Education — a practical framework.</i> Built on an umbrella review and refined in practitioner workshops. Its addressee is the education professional in vocational colleges, universities of applied sciences and research universities — which is to say, you.</p>
+  <p>It is the closest published thing to the framework the next card says is missing, and it is honest to say so. What it does not carry is the German legal and examination-regulation context, which is exactly the difference a local adaptation has to write down.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">▤</span><span><span class="t">Reference Framework 2.0<span class="new">new</span></span><span class="s">Npuls · responsible use of education data and AI</span><span class="plus">what it is for</span></span></summary>
+  <div class="cbody"><p>The governance companion: written for the institution rather than the individual. Useful when the conversation moves from what you should be able to do to what your faculty has to have in place before you can do it. Take it to the committee, not to the lecture theatre.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">▤</span><span><span class="t">Wissenschaftsrat (2026)<span class="new">new</span></span><span class="s">Intellektuelle Souveränität · the German national frame</span><span class="plus">the one sentence that matters</span></span></summary>
+  <div class="cbody"><p>Not a competence framework but a set of recommendations, and the reference point a German colleague is most likely to have read. Its guiding idea is <i>intellectual sovereignty</i>: the capacity to judge independently, critically and with reasons in an algorithmically shaped world.</p>
+  <p>The sentence to carry into a faculty meeting: the central question is not how higher education is designed <i>with</i> generative AI, but how good higher education is designed in a world shaped by it. That is the same move this session makes when it puts reflection last rather than first.</p>
+  <p><b>Drs. 3319-26</b>, July 2026. There is a short version if the full text is more than the meeting needs.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">The gap</span><span class="s">None of them was written for a university lecturer</span><span class="plus">why this matters</span></span></summary>
+  <div class="cbody"><p>Learner-facing, school-teacher-facing, citizen-facing, digital-professional-facing. The higher education teaching role — with its research obligations, its examination regulations, its academic freedom and its doctoral supervision — sits between them.</p><p>That gap is the argument for local adaptation. It is also the reason to be sceptical of any document that claims to have closed it, including the one in the next card.</p><p><b>One qualification, added in v4.</b> AI GO! narrows this gap considerably: it is addressed to education professionals in higher education and it is published. The residue is national — examination regulations, the German legal frame, the supervision relationship. That residue is small enough to write down, which is the whole argument for local adaptation and against writing a new framework from scratch.</p></div></details>
+</div>
+
+<h3>How they line up</h3>
+<div class="svgwrap">
+<svg viewBox="0 0 720 236" role="img" aria-label="Four frameworks share a three-level grammar: acquisition, deepening, creation in ICT-CFT; acquire, deepen, create in the UNESCO AI framework for teachers; three progression levels in AILit; A, B and C bands in DigCompEdu.">
+ <g font-family="Segoe UI,sans-serif" font-size="12">
+  <rect x="170" y="8" width="176" height="26" rx="6" fill="#e7eefa"/>
+  <rect x="352" y="8" width="176" height="26" rx="6" fill="#dbe7f7"/>
+  <rect x="534" y="8" width="176" height="26" rx="6" fill="#cfdff3"/>
+  <text x="258" y="26" text-anchor="middle" font-weight="700" fill="#1a4a88">first level</text>
+  <text x="440" y="26" text-anchor="middle" font-weight="700" fill="#1a4a88">second level</text>
+  <text x="622" y="26" text-anchor="middle" font-weight="700" fill="#1a4a88">third level</text>
+
+  <g fill="#45566a">
+   <text x="8" y="61" font-weight="700" fill="#16202b">ICT-CFT 2018</text>
+   <text x="258" y="61" text-anchor="middle">acquisition</text>
+   <text x="440" y="61" text-anchor="middle">deepening</text>
+   <text x="622" y="61" text-anchor="middle">creation</text>
+
+   <text x="8" y="95" font-weight="700" fill="#16202b">UNESCO AI CFT 2024</text>
+   <text x="258" y="95" text-anchor="middle" font-weight="700" fill="#6b4a9e">Acquire</text>
+   <text x="440" y="95" text-anchor="middle" font-weight="700" fill="#6b4a9e">Deepen</text>
+   <text x="622" y="95" text-anchor="middle" font-weight="700" fill="#6b4a9e">Create</text>
+
+   <text x="8" y="129" font-weight="700" fill="#16202b">AILit 2026</text>
+   <text x="258" y="129" text-anchor="middle">three-level progression, learner-facing</text>
+
+   <text x="8" y="163" font-weight="700" fill="#16202b">DigCompEdu 2017</text>
+   <text x="258" y="163" text-anchor="middle">A1 · A2</text>
+   <text x="440" y="163" text-anchor="middle">B1 · B2</text>
+   <text x="622" y="163" text-anchor="middle">C1 · C2</text>
+  </g>
+  <line x1="0" y1="72" x2="720" y2="72" stroke="#e2e9f2"/>
+  <line x1="0" y1="106" x2="720" y2="106" stroke="#e2e9f2"/>
+  <line x1="0" y1="140" x2="720" y2="140" stroke="#e2e9f2"/>
+  <rect x="8" y="182" width="704" height="46" rx="8" fill="#fdf3e2"/>
+  <text x="22" y="203" fill="#6b4712" font-weight="700">The grammar is shared. The addressee is not.</text>
+  <text x="22" y="221" fill="#6b4712">Read across a row to compare levels; read down a column and you are comparing different professions.</text>
+ </g>
+</svg>
+</div>
+
+<details class="more"><summary>The competence stack — why "AI competence" is not a fourth skill</summary>
+<div class="mbody">
+<div class="svgwrap">
+<svg viewBox="0 0 620 190" role="img" aria-label="Three stacked layers: pedagogical judgement at the base, digital competence above it, and AI-specific competence at the top, which re-poses questions from the two layers below rather than replacing them.">
+ <g font-family="Segoe UI,sans-serif">
+  <rect x="20" y="126" width="470" height="46" rx="8" fill="#e3f3ee" stroke="#0f7a5a"/>
+  <text x="36" y="147" font-size="14" font-weight="700" fill="#0f7a5a">Pedagogical judgement</text>
+  <text x="36" y="164" font-size="11.5" fill="#45566a">what the assessment is for · what the student has to be able to do</text>
+
+  <rect x="20" y="70" width="470" height="46" rx="8" fill="#e7eefa" stroke="#1a4a88"/>
+  <text x="36" y="91" font-size="14" font-weight="700" fill="#1a4a88">Digital competence</text>
+  <text x="36" y="108" font-size="11.5" fill="#45566a">files, platforms, accessibility, data protection</text>
+
+  <rect x="20" y="14" width="470" height="46" rx="8" fill="#f1ebf9" stroke="#6b4a9e"/>
+  <text x="36" y="35" font-size="14" font-weight="700" fill="#6b4a9e">AI-specific competence</text>
+  <text x="36" y="52" font-size="11.5" fill="#45566a">what the system does, what it cannot be asked, who is accountable</text>
+
+  <path d="M505 37 L505 149" stroke="#6b4a9e" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <path d="M505 149 l-4 -8 h8 z" fill="#6b4a9e"/>
+  <text x="516" y="80" font-size="11.5" fill="#4b3573">the top layer</text>
+  <text x="516" y="96" font-size="11.5" fill="#4b3573">re-poses the</text>
+  <text x="516" y="112" font-size="11.5" fill="#4b3573">two below it</text>
+ </g>
+</svg>
+</div>
+<p>The layers are not independent, and the top one is the thinnest. Almost every hard question in this session turns out to be an old question — is this assessment measuring what I think it measures, who holds this data, can I justify this decision to the person affected — asked under conditions that make it harder to answer. That is why the session is not organised around the technology.</p>
+</div></details>
+
+<h3>One local adaptation, as an example only</h3>
+<div class="panel warn">
+<h4>HETAICF v0.11 — unpublished, in review</h4>
+<p>A working group at the OvGU centre for teacher education is drafting a higher-education-facing framework that maps the gap described above. It is shown here for ninety seconds and for one reason: to make local adaptation concrete rather than theoretical. It is a draft, it is under review, and its numbering will change. Do not cite a competence identifier from it as authority, including in your own materials. If you want the mechanism rather than the document, the mechanism is: take a published framework, find where its addressee differs from yours, and write down only the difference.</p>
+<p><b>New in v4:</b> the draft’s structure is now used for something concrete. <a href="#bA">Appendix A</a> takes the four domains and the three obligations outside them, and places this session’s own material and seven common practices into that grid — so you can see which competence you are exercising when you paste an essay into an assistant, and which ones you needed first. The warning above still holds for the identifiers. It does not hold for the exercise.</p>
+</div>
+
+<h3>Why the outputs cannot simply be trusted</h3>
+<p class="lede">Two failure classes. One is famous and easy to catch. The other survives checking, because it acts on <strong>you</strong> rather than on the text.</p>
+
+<div class="strip">
+  <details class="c"><summary><span aria-hidden="true">✦</span><span><span class="t">Fabrication</span><span class="s">The confident wrong citation</span><span class="plus">why it is the easy one</span></span></summary>
+  <div class="cbody"><p>A generated reference list can be checked in five minutes, and everyone now knows to check it. This failure is architectural rather than a bug to be patched: the system produces text that fits, and fitting is not the same relation as being true. It is also the failure your students have already been warned about, which is precisely why it is no longer the one to spend a session on.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">Homogenisation</span><span class="s">Individually fine, collectively identical</span><span class="plus">what it looks like</span></span></summary>
+  <div class="cbody"><p>Thirty essays that are each acceptable and share a structure, a register and a choice of example. And your own module descriptions, after a term of drafting them the same way.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">Illusion of consensus</span><span class="s">A contested field delivered without its seams</span><span class="plus">what it looks like</span></span></summary>
+  <div class="cbody"><p>A fluent synthesis of a live disagreement. The disagreement is not reported as absent. It is simply not reported.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">Automation complacency</span><span class="s">The tenth output is checked less than the first</span><span class="plus">what it looks like</span></span></summary>
+  <div class="cbody"><p>Verification effort decays with each output that turns out to be fine. The failure rate has not changed; your sampling of it has.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">Confirmation and anchoring</span><span class="s">You get the framing you supplied, then keep it</span><span class="plus">what it looks like</span></span></summary>
+  <div class="cbody"><p>Ask why a method is appropriate and you will receive reasons, because that is what you asked for. And the first draft sets the structure of everything after it, including the parts you write yourself.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">Sycophancy<span class="new">new</span></span><span class="s">Agreement, mistaken for confirmation</span><span class="plus">why warning people does not fix it</span></span></summary>
+  <div class="cbody"><p>These systems are measurably biased towards validating what the user has already said. Put a hypothesis to one and you will be told it is interesting; put the opposite hypothesis to it an hour later and you will be told the same.</p>
+  <p><b>The finding worth knowing.</b> Chandra and colleagues (2026) model a conversation between a chatbot and an <i>ideal Bayesian</i> user — a hypothetical person who updates perfectly rationally and should therefore be immune. Even that user spirals into unwarranted confidence, and the effect survives two obvious fixes: removing the system’s false claims, and telling the user in advance that it is sycophantic.</p>
+  <p>For teaching, the consequence is narrow and sharp. “I checked it with the AI” is not a check. And a colleague who has been warned is not thereby protected, which is why the response has to be procedural — a second reader, a disconfirming prompt, a source — rather than an attitude.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">The learning stall<span class="new">new</span></span><span class="s">The difficulty was the lesson</span><span class="plus">what it looks like in a student</span></span></summary>
+  <div class="cbody"><p>A student who never reaches the point of productive difficulty never gets the thing that difficulty produces. The work arrives finished, the confidence arrives with it, and the capability does not.</p>
+  <p>This is the student-facing twin of the deskilling card below, and it is the failure mode most likely to be invisible in your marks for a term or two before it is visible in your vivas.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">Borrowed values<span class="new">new</span></span><span class="s">The output has a politics you did not choose</span><span class="plus">what to do with this</span></span></summary>
+  <div class="cbody"><p>Model outputs carry positions — on contested questions in your discipline, on what counts as a good argument, on which authorities are worth citing. Reports of value drift in agent populations are a vivid version of an ordinary fact: you did not choose those positions and you have not audited them.</p>
+  <p>The practical form: when you generate a reading list, a seminar question or a case, ask what position it has quietly taken, and whether you would have taken it.</p></div></details>
+
+  <details class="c legal"><summary><span aria-hidden="true">■</span><span><span class="t">Deskilling</span><span class="s">This one compounds</span><span class="plus">the reason the other five matter</span></span></summary>
+  <div class="cbody"><p>The judgement you stop exercising is the judgement you need in order to evaluate the output. The competence that lets you audit the tool is the same competence the tool relieves you of using, and nothing warns you when it goes.</p>
+  <p><b>The practical response is not abstinence.</b> It is deciding, in advance and in writing, which parts of your work you will keep doing by hand precisely because you need to stay able to do them.</p><p><b>New in v4 — and it changes the response.</b> Ferdman (2026) argues that deskilling is structural rather than individual, and gives it a name: a <i>capacity-hostile environment</i> is one in which the mediation of a system blocks the slow cultivation of a capacity. The consequence for you is uncomfortable and useful. A private resolution to keep marking by hand does not survive a workload model, a submission deadline and a tool that is already in the VLE. What survives is a change to the environment: a task that is not routed through the tool, a review step that a person has to sign, a module design in which the difficulty is the point. Write the environment, not the intention.</p></div></details>
+</div>
+
+<div class="labcall">
+  <div class="hd"><span class="badge">Lab 5</span><span class="ttl">Grounded and ungrounded answers can read the same</span><span class="mins">3 min</span></div>
+  <p>The same legal question, asked twice: once with the source text supplied and once without. Compare the register of the two answers, not their content. Some models decline when they have no source — the good case, and one you cannot count on. The lab says so when it happens; run it again with <code class="inl">--model</code> and a second model to see the other case.</p>
+  <span class="cmd">python -m llmlab lab ground</span>
+  <p><b>Ask the room:</b> which of these would you have forwarded to a colleague without checking?</p>
+</div>
+
+<div class="quiz" data-quiz>
+<h4>Quick check — Block 1</h4>
+<div class="q" data-a="1">
+<p>Why does the higher-education gap between the frameworks matter practically?</p>
+<button class="opt">The frameworks contradict each other, so no single one can be followed</button>
+<button class="opt">The addressee of each is a different profession, so local adaptation is required rather than optional</button>
+<button class="opt">Higher education is exempt from the EU AI Act, so a different framework is needed</button>
+<button class="opt">The frameworks are too old to describe generative systems at all</button>
+<div class="why">They agree far more than they conflict, and their shared three-level grammar is the evidence. What differs is who each was written for. UNESCO treats adaptation to context as the implementation route, which makes the local step a designed feature rather than a gap in the literature.</div>
+</div>
+<div class="q" data-a="3">
+<p>Of the failure modes above, which is the reason the other five matter?</p>
+<button class="opt">Fabrication, because a false citation can be published</button>
+<button class="opt">Illusion of consensus, because it misrepresents a field</button>
+<button class="opt">Homogenisation, because it makes marking harder</button>
+<button class="opt">Deskilling, because it removes the capacity you need to notice the others</button>
+<div class="why">The other five are detectable by someone with intact judgement in the domain. Deskilling erodes the instrument you would detect them with, which is why it compounds and why the response to it has to be written down in advance.</div>
+</div>
+</div>
+</section>
+<!-- ══════════════════════════ BLOCK 2 ══════════════════════════ -->
+<section class="block" id="b2" data-title="Tools" data-mins="20" data-lab="3">
+<div class="bhead"><span class="idx">2</span><h2>Tools — four job families, and what each one costs you</h2><span class="time">0:27 – 0:47</span></div>
+
+<div class="cpd"><span class="lvl">Acquire → Deepen</span><div><b>5.1 → 5.2</b> — human-directed use of AI to open professional learning horizons, moving toward autonomous upskilling. The move from Acquire to Deepen happens here, when you stop asking what a tool can do and start asking what it obliges you to do.</div></div>
+
+<p class="lede">Sorted by <strong>the job</strong>, not by the vendor. The four families differ in exactly one way that matters: how much a mistake costs the student.</p>
+
+<div class="svgwrap">
+<svg viewBox="0 0 720 208" role="img" aria-label="Four tool families ordered by consequence: administration and preparation are low stakes for the student; in-class engages Article 5(1)(f); evaluation engages Annex III section 3 and GDPR Article 22.">
+ <g font-family="Segoe UI,sans-serif">
+  <rect x="8" y="6" width="704" height="40" rx="7" fill="#e3f3ee" stroke="#0f7a5a" stroke-width="1.2"/>
+  <text x="20" y="23" font-size="13" font-weight="700" fill="#0f7a5a">Administration</text>
+  <text x="20" y="39" font-size="11.5" fill="#45566a">minutes, agendas, translations, forms — nobody is graded by it</text>
+  <text x="700" y="31" font-size="11" text-anchor="end" fill="#0f7a5a">low stakes</text>
+
+  <rect x="8" y="54" width="704" height="40" rx="7" fill="#e3f3ee" stroke="#0f7a5a" stroke-width="1.2"/>
+  <text x="20" y="71" font-size="13" font-weight="700" fill="#0f7a5a">Preparation</text>
+  <text x="20" y="87" font-size="11.5" fill="#45566a">slides, reading lists, task variants, worked examples — you check before it ships</text>
+  <text x="700" y="79" font-size="11" text-anchor="end" fill="#0f7a5a">low stakes</text>
+
+  <rect x="8" y="102" width="704" height="40" rx="7" fill="#fdf3e2" stroke="#a86a12" stroke-width="1.2"/>
+  <text x="20" y="119" font-size="13" font-weight="700" fill="#a86a12">In-class</text>
+  <text x="20" y="135" font-size="11.5" fill="#45566a">live captioning, translation, polling — students are present and cannot opt out easily</text>
+  <text x="700" y="127" font-size="11" text-anchor="end" fill="#a86a12">Art. 5(1)(f)</text>
+
+  <rect x="8" y="150" width="704" height="46" rx="7" fill="#fbe9e6" stroke="#8a3324" stroke-width="1.5"/>
+  <text x="20" y="167" font-size="13" font-weight="700" fill="#8a3324">Evaluation</text>
+  <text x="20" y="183" font-size="11.5" fill="#45566a">feedback, marking support, detection — the output lands on a person's record</text>
+  <text x="700" y="175" font-size="11" text-anchor="end" fill="#8a3324">Annex III §3 · GDPR Art. 22</text>
+ </g>
+</svg>
+<div class="cap">Ordered by consequence, not by frequency. Most of your week is in the top two bands. Most of your exposure is in the bottom two.</div>
+</div>
+
+<div class="strip">
+  <details class="c good"><summary><span aria-hidden="true">▸</span><span><span class="t">Administration</span><span class="s">Start institutional: GWDG, HAWKI, local models</span><span class="plus">tools and their faults</span></span></summary>
+  <div class="cbody">
+  <p><b>GWDG academic services</b> — an EU-hosted assistant available to many German institutions through the existing research computing agreement. Its virtue is the agreement, not the model. Its fault: the model catalogue changes, so a prompt tuned last term may behave differently this term and you will not be told.</p>
+  <p><b>HAWKI</b> — an open-source front end an institution can self-host in front of whichever model it has licensed. Its virtue is that the interface, the logging and the retention rules are yours. Its fault: somebody has to run it, and that person is usually already fully occupied.</p>
+  <p><b>Local models via Ollama</b> — Workshop 3's stack. Its virtue is that nothing leaves the machine. Its faults are real: smaller models are meaningfully weaker at long documents and at languages other than English, and a laptop without a capable GPU will be slow enough to change how you work.</p>
+  <p><b>Commercial general assistants</b> — capable, quick, and outside your institution's control. The best of them are behind a subscription. Note where that leads in the equity panel below.</p>
+  </div></details>
+
+  <details class="c good"><summary><span aria-hidden="true">▸</span><span><span class="t">Preparation</span><span class="s">Where the gain is largest and the risk smallest</span><span class="plus">tools and their faults</span></span></summary>
+  <div class="cbody">
+  <p>Drafting task variants, alternative worked examples, reading-list annotations, question banks, plain-language versions of a dense handout. You are the reviewer before anything reaches a student, which is what makes this family safe.</p>
+  <p><b>Transcription</b> — open-weight speech models run locally handle recorded lectures without sending audio anywhere. They do badly on discipline-specific vocabulary and on strong regional accents, and they will hallucinate through silence rather than leave a gap.</p>
+  <p><b>Translation</b> — an EU-based service such as DeepL is a defensible route for teaching material. It is not a defensible route for a student's submitted work; see the copyright panel.</p>
+  <p><b>The trap in this family</b> is volume. Producing four versions of a task is easy; deciding which one to use is the work, and it did not get easier.</p>
+  </div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">In-class</span><span class="s">Students are present and cannot easily opt out</span><span class="plus">tools and one hard stop</span></span></summary>
+  <div class="cbody">
+  <p>Live captioning and translation are the clearest accessibility gains available in this list, and they degrade in exactly the situation where they matter most: a noisy room, an unfamiliar accent, technical vocabulary. Announce them as an aid, never as a record.</p>
+  <p><b>The hard stop:</b> anything that infers emotion from faces, voices or posture in an educational setting. This is not a matter of taste or local policy — see the legal panel.</p>
+  <p>Attendance, engagement scoring and participation analytics belong to this family too, and they are where an in-class tool quietly becomes an evaluation tool.</p>
+  </div></details>
+
+  <details class="c legal"><summary><span aria-hidden="true">■</span><span><span class="t">Evaluation</span><span class="s">The output lands on somebody's record</span><span class="plus">tools, and what not to do</span></span></summary>
+  <div class="cbody">
+  <p><b>Rubric and criteria drafting</b> is the safe end: you are writing the instrument, not applying it.</p>
+  <p><b>Feedback drafting</b> sits in the middle and depends entirely on the route the student's text takes — see the copyright panel below.</p>
+  <p><b>Marking support</b> is the end where the law arrives. A grade is a decision about a person, and the two questions that follow are whether a human is genuinely in the loop and whether the student can contest it.</p>
+  <p><b>Detection</b> is treated separately below, because the argument against it is not about accuracy.</p>
+  </div></details>
+</div>
+
+<div class="labcall">
+  <div class="hd"><span class="badge">Lab 7</span><span class="ttl">Where the bytes went — and what that does not fix</span><span class="mins">3 min</span></div>
+  <p>The lab reports its own endpoint and lists which obligations that route triggers. The result most people do not expect is how short the list of removed obligations is.</p>
+  <span class="cmd">python -m llmlab lab route</span>
+  <p><b>Ask the room:</b> which of the four obligations did running it locally actually remove?</p>
+</div>
+
+<h3>The legal panel</h3>
+<div class="panel legal">
+<h4>Five provisions, and one date that moved</h4>
+<ul>
+<li><b>Art. 4 — AI literacy.</b> The duty falls on the deploying organisation, which for teaching purposes is your institution. It is discharged by staff who can explain the tools they use, not by a procurement decision. In application since February 2025, and <b>not deferred</b>.</li>
+<li><b>Art. 5(1)(f) — prohibited practice.</b> Inferring emotions from a person in the workplace or in education, outside narrow medical and safety exceptions. A prohibition, in application since February 2025, and not deferred. If a supplier demonstrates engagement detection to your faculty, this is the article to name in the room.</li>
+<li><b>Art. 50 — transparency.</b> People must be told when they are interacting with an AI system or when content is artificially generated. In application since 2 August 2026. If a chatbot answers your students' module questions, this is your duty and not the vendor's alone.</li>
+<li><b>Art. 14 — human oversight.</b> Attaches to high-risk systems: oversight has to be real, informed, and capable of overriding the output. "A human clicked approve" is not the test.</li>
+<li><b>Annex III §3 — education.</b> Admission and assignment to institutions, evaluating learning outcomes, assessing the appropriate level of education, and monitoring prohibited behaviour during tests. These are the four listed situations, and grading is squarely among them.</li>
+</ul>
+<p><b>The date that moved.</b> Regulation (EU) 2026/1744, the Digital Omnibus on AI, was published in the Official Journal on 24 July 2026 and entered into force on 27 July 2026. It defers the obligations attaching to standalone Annex III high-risk systems from 2 August 2026 to <b>2 December 2027</b>, and Annex I embedded systems to 2 August 2028. The stated reason is the late arrival of harmonised standards, not a change of view about the risk. Articles 4, 5 and 50 were not deferred.</p>
+<p>Read the deferral as sixteen extra months to build the process, not as sixteen months in which the question does not apply. The obligations are unchanged; only the date they bite has moved.</p>
+</div>
+
+<div class="panel">
+<h4>GDPR Art. 22, in one sentence for a colleague</h4>
+<p>A person has the right not to be subject to a decision based solely on automated processing which produces legal effects or similarly significantly affects them — and a mark is the standard example anyone will reach for. Meaningful human involvement is the condition, and it has to be involvement by someone with the authority and the information to reach a different conclusion.</p>
+</div>
+
+<div class="panel good">
+<h4>The tool decision record — page 2 of 3</h4>
+<p>Pick one tool you use, or are being asked to use. The page asks for the job family first, because that decides which legal questions appear: evaluation raises Annex III §3, GDPR Art. 22 and Art. 14 as questions that must be answered before the record will export, and emotion inference in class stops the record at <i>decline</i>. Criteria can be marked <i>unclear</i> — that becomes a condition, not a pass.</p>
+<p><a href="pages/p2_tool_triage.html">Open the tool triage page</a> · start it here, finish it this week, and send it to whoever will hold you to the review date.</p>
+</div>
+
+<h3>Detectors</h3>
+<p class="lede">The case against them is not that they are inaccurate. It is that they are <strong>unfalsifiable in use</strong> and that their errors fall unevenly.</p>
+
+<div class="strip">
+  <details class="c legal"><summary><span aria-hidden="true">■</span><span><span class="t">Asymmetric harm</span><span class="s">The two errors are not comparable</span><span class="plus">the argument</span></span></summary>
+  <div class="cbody"><p>A missed case costs a mark that should have been lower. A false accusation costs a student a disciplinary process, a relationship with their department, and in some cases a visa. Any instrument whose two error types carry consequences this unequal has to be justified against that asymmetry, not against an average.</p></div></details>
+
+  <details class="c legal"><summary><span aria-hidden="true">■</span><span><span class="t">Unfalsifiability</span><span class="s">The accused cannot produce disproof</span><span class="plus">the argument</span></span></summary>
+  <div class="cbody"><p>Ask what evidence a student could bring that would settle the matter in their favour. Version history and drafts help and are worth requiring, but they are also producible by anyone who anticipated the accusation. A procedure in which the accused cannot construct a disproof is not an academic-integrity procedure, whatever it is called. See Bassett et al. (2026) in the reading list.</p></div></details>
+
+  <details class="c legal"><summary><span aria-hidden="true">■</span><span><span class="t">Uneven errors</span><span class="s">Distributed by first language</span><span class="plus">the argument</span></span></summary>
+  <div class="cbody"><p>Detector scores respond to features that correlate with writing that is fluent but unadventurous: shorter clauses, conventional collocations, low lexical surprise. Those are also features of competent academic writing by someone working in their second, third or fourth language. The consequence is not that the tool is imprecise. It is that its errors fall on the students least able to contest an accusation. An instrument whose false positives are systematically distributed by first language is not a weak instrument; it is a different instrument from the one it claims to be.</p></div></details>
+</div>
+
+<div class="note"><b>If someone asks for the accuracy figures:</b> decline, and say why. Quoting a percentage concedes that the question is empirical and invites a rebuttal with a better percentage next term. The objection survives any accuracy rate.</div>
+
+<div class="panel warn">
+<h4>Where the payment note becomes an assessment problem</h4>
+<p>The strongest general models are, at present, the paid ones. If a task can be done better with a subscription than without, the assessment is measuring disposable income alongside whatever it was meant to measure — and the effect is invisible in the marks.</p>
+<ul>
+<li>You cannot require a tool your institution does not provide. Not as a matter of policy preference, but as a matter of what you are entitled to make a condition of assessment.</li>
+<li>Where the institution does provide a compliant option, providing it <i>quickly</i> is the equity intervention. Every term without one is a term of quiet stratification.</li>
+<li>If your task design assumes AI use, the fairness of that assumption rests on two conditions: everyone has been taught the use, and everyone has comparable access. Neither is satisfied by announcing that AI is permitted.</li>
+</ul>
+</div>
+
+<div class="panel legal">
+<h4>The direction nobody checks — copyright in students' work</h4>
+<p>Copyright in a student's examination script, term paper or thesis belongs to the student. Pasting it into a general commercial assistant to draft feedback, check similarity or summarise it is a use of someone else's protected work, made by you, usually without their knowledge, and frequently under terms permitting the provider to retain the text. This is separate from the data-protection question and is <b>not</b> resolved by anonymising the file, because the work itself is the protected thing.</p>
+<p><b>Practical position:</b> student work goes to the institutional or local option, or it does not go. If you intend to use any external service on submitted work, say so in the module handbook before submission, not in the feedback afterwards.</p>
+</div>
+
+<div class="panel">
+<h4>Forward pointer</h4>
+<p>This block has treated assessment as one tool family among four, which is the most a session about tools can honestly do with it. Whether the format should change at all, what an AI-integrating task has to satisfy to be fair, and what to write in the module handbook in week one — that is Workshop 5.</p>
+</div>
+
+<h3>Two things to take to a departmental meeting<span class="new">new</span></h3>
+<div class="strip">
+  <details class="c"><summary><span aria-hidden="true">▸</span><span><span class="t">A typology, not a tool list</span><span class="s">Didactic chatbot types (ZML, KIT)</span><span class="plus">why the shape helps</span></span></summary>
+  <div class="cbody"><p>Colleagues arrive at these meetings with product names. A typology moves the conversation to what the thing is <i>for</i> — a tutor, a sparring partner, a simulated interlocutor, a first-line answering service for module questions — and each of those has a different failure mode and a different disclosure obligation under Art. 50.</p>
+  <p>The transferable move: make people name the type before they name the vendor. The vendor changes every eighteen months. The type does not.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">▸</span><span><span class="t">Somebody else’s written policy</span><span class="s">A unit-level example you can read in ten minutes</span><span class="plus">what to copy from it</span></span></summary>
+  <div class="cbody"><p>The UC Berkeley School of Law policy (effective Summer 2026) is worth reading not because it is right for you but because it is the right <i>size</i>: a single faculty, written for its own assessment types, specific enough to be applied by a marker at 11pm.</p>
+  <p>German-language equivalents at the level of legal orientation exist too, and the edu-sharing FAQ answers the questions colleagues actually ask. Neither replaces your examination office. Both stop you drafting from a blank page.</p></div></details>
+
+  <details class="c good"><summary><span aria-hidden="true">▸</span><span><span class="t">Where to send people</span><span class="s">Open offers, so you do not write your own</span><span class="plus">the four to remember</span></span></summary>
+  <div class="cbody"><p><b>Students:</b> DigiStudi (iMooX) for digital competence at entry level; Elements of AI for a colleague with no starting point at all.</p>
+  <p><b>Staff:</b> the twillo OER materials — <i>KI-Literacy: Grundlagen und Orientierung für Lehrende</i> and the <i>Handlungsempfehlungen</i> — are German, openly licensed and short enough to be read.</p>
+  <p><b>Regionally:</b> structures like KI:Expertisezentrum.nrw exist to answer exactly the questions you are about to spend a weekend on. Find out whether your state has one before you build anything.</p></div></details>
+</div>
+
+<div class="panel warn">
+<h4>The resource question this session under-covers<span class="new">new</span></h4>
+<p>This is an EU GREEN workshop, so the omission should be named rather than smoothed over. Every inference has an energy, water and hardware cost, and it is paid whether or not the output was useful. The framework in Appendix A has a competence for this (comparing how AI systems consume energy and natural resources) and this session reaches only its Foundation level.</p>
+<p>What you can do this term, honestly: prefer the smallest model that passes your test cases rather than the largest available; batch rather than re-run; do not put a hosted call inside a teaching artefact that a cohort will trigger a thousand times when a cached answer would do. Lab 7 prints the route, and the route is where the cost lives.</p>
+</div>
+
+<div class="panel">
+<h4>Feedback: the choice between two failures<span class="new">new</span></h4>
+<p>Krommer (2026) frames automated feedback as a passage between two hazards, and the framing survives translation. Feedback general enough to be safely generated is too general to change what a student does. Feedback specific enough to change what a student does is specific enough that you have to be able to defend every sentence of it — which means reading the work, which was the part you were trying to avoid.</p>
+<p>The useful consequence is not that automated feedback is impossible. It is that the gain is in <i>drafting</i> against a standing instruction you wrote and can defend, and never in the last step before it reaches the student.</p>
+</div>
+
+<div class="panel warn">
+<h4>Agents change what an online test measures<span class="new">new</span></h4>
+<p>The 2026 argument, put bluntly: a tool that browses, reads a course page, opens a PDF and submits a form does not just answer a question faster — it dissolves the assumption that an unproctored online test measures the person sitting at the keyboard. Field notes from practitioners describe the same thing arriving in ordinary classrooms rather than in a lab.</p>
+<p>Two responses that do not work: detection (see below) and a longer honour code. The response that does work is a format in which the process is the evidence — which is Workshop 5, and which is why it is a workshop and not a paragraph.</p>
+</div>
+
+<div class="quiz" data-quiz>
+<h4>Quick check — Block 2</h4>
+<div class="q" data-a="2">
+<p>A supplier offers a lecture-hall system that flags students who appear disengaged. What is the correct response?</p>
+<button class="opt">Run a data protection impact assessment and proceed if it passes</button>
+<button class="opt">Use it only with explicit student consent</button>
+<button class="opt">Decline: inferring emotions in education is prohibited under Art. 5(1)(f), and consent does not cure a prohibition</button>
+<button class="opt">Wait until December 2027, when the high-risk obligations apply</button>
+<div class="why">Article 5 sets prohibited practices, which are not conditions to be satisfied. Consent does not make a prohibited practice lawful, and the December 2027 deferral concerns Annex III high-risk obligations, not the Article 5 prohibitions, which have applied since February 2025.</div>
+</div>
+<div class="q" data-a="1">
+<p>You want to draft feedback on submitted essays using a commercial assistant. Anonymising the files handles which problem?</p>
+<button class="opt">Both the data protection question and the copyright question</button>
+<button class="opt">Part of the data protection question, and none of the copyright question</button>
+<button class="opt">The copyright question, since an anonymous work has no author</button>
+<button class="opt">Neither, because feedback is always a high-risk use</button>
+<div class="why">Removing the name addresses identifiability. It does nothing about copyright, because the protected thing is the work, not the name attached to it. Drafting feedback is also not automatically the Annex III situation; applying a mark is.</div>
+</div>
+</div>
+</section>
+<!-- ══════════════════════════ BLOCK 3 ══════════════════════════ -->
+<section class="block" id="b3" data-title="Strategies" data-mins="25" data-lab="10">
+<div class="bhead"><span class="idx">3</span><h2>Strategies — the words are the strategy</h2><span class="time">0:47 – 1:12</span></div>
+
+<div class="cpd"><span class="lvl">Deepen</span><div><b>5.2 AI to enhance organizational learning</b> — autonomous upskilling and peer coaching. This is the block that transfers: what you learn here you can teach a colleague on Thursday.</div></div>
+
+<p class="lede">This is not a glossary. Every term below is here because <strong>not having it produces a specific professional error</strong> — one you can make without ever noticing you made it.</p>
+
+<div class="tw"><table>
+<caption class="cap" style="text-align:left;margin-bottom:6px">Six terms, and the decision each one protects</caption>
+<thead><tr><th style="width:22%">Term</th><th style="width:34%">What it means, briefly</th><th>What goes wrong without it</th></tr></thead>
+<tbody>
+<tr><td><b>Token</b></td><td>The unit the system actually processes. Roughly a word fragment, not a word.</td><td>You budget in pages and are wrong. You do not notice that the same sentence in German or Polish costs more than in English, which is a cost fact and an equity fact.</td></tr>
+<tr><td><b>Context window</b></td><td>The maximum amount of text available to one call. A hard boundary, not a preference.</td><td>You paste a 90-page thesis, receive a confident summary, and believe the whole thing was read. What fell outside was not flagged as missing.</td></tr>
+<tr><td><b>Training vs inference</b></td><td>Weights are fixed when you use the system. Your session does not change them.</td><td>You believe the tool "learns from" your corrections, so you correct it repeatedly instead of writing the instruction down. You also fear the wrong risk: the exposure is logging and retention, not the model absorbing your text.</td></tr>
+<tr><td><b>Grounding</b></td><td>Whether the answer was produced with the source in front of it.</td><td>You treat a fluent answer as a lookup. Nothing in the register distinguishes the two, which is why verification cannot be delegated to the thing being verified.</td></tr>
+<tr><td><b>Temperature and seed</b></td><td>How the next fragment is chosen, and whether that choice is repeatable.</td><td>Two identical scripts receive different comments, and you cannot reproduce either. In an appeal, "I ran it again and got something else" is the end of your position.</td></tr>
+<tr><td><b>Deployment route</b></td><td>Where the text physically goes: your machine, your institution's server, or a third party.</td><td>You answer the data protection question and assume you have answered the others. Local hosting removes a processor relationship. It does not remove Annex III, Art. 50 or Art. 4.</td></tr>
+</tbody></table></div>
+
+<div class="note"><b>Defend this table in review.</b> If a later edit removes the third column, the section becomes a glossary and the session loses its argument for why any of this is strategic rather than trivia.</div>
+
+<div class="labcall">
+  <div class="hd"><span class="badge">Labs 1–3</span><span class="ttl">Check three of those rows in six minutes</span><span class="mins">6 min</span></div>
+  <p>Run these in order. Each one prints the claim it is testing, then the numbers, then the question to put to the room.</p>
+  <span class="cmd"><span class="c"># row 1 — a token is not a word, and the model reports its own count</span>
+python -m llmlab lab tokens --text "Ihre Prüfungsleistung wurde bewertet."
+
+<span class="c"># row 2 — the same question, two window sizes, one code word in line 1</span>
+python -m llmlab lab context --set num_ctx=256
+
+<span class="c"># row 5 — the same prompt four times, at temperature 0 and above it</span>
+python -m llmlab lab vary --set n=4</span>
+  <p><b>The one to watch is the second.</b> The narrow window does not answer "I cannot see it". It answers wrongly, with the same confidence as the correct run — on the models this was tested on, a single wrong word delivered as if it were the right one. If a run does admit that something is missing, the lab says so; it is the rare case. And in the first lab, look at the second number: the tokens the chat template wrapped around your sentence, which you never typed and which still count against the window.</p>
+</div>
+
+<div class="svgwrap">
+<svg viewBox="0 0 720 268" role="img" aria-label="A four-rung ladder: prompt, loop, skill, harness. Each rung is labelled with the artefact it leaves behind, from nothing at rung one to a versioned repository at rung four.">
+ <g font-family="Segoe UI,sans-serif">
+  <text x="8" y="16" font-size="12" fill="#7b8b9c">the rung you work at decides what still exists next term</text>
+
+  <rect x="8" y="208" width="440" height="48" rx="8" fill="#f6f8fb" stroke="#d6dee8"/>
+  <text x="24" y="228" font-size="14" font-weight="700" fill="#45566a">1 · Prompt</text>
+  <text x="24" y="246" font-size="11.5" fill="#7b8b9c">one request, one answer</text>
+  <text x="466" y="238" font-size="12" fill="#8a3324">leaves behind: nothing</text>
+
+  <rect x="8" y="152" width="440" height="48" rx="8" fill="#eef3f9" stroke="#b9d0ec"/>
+  <text x="24" y="172" font-size="14" font-weight="700" fill="#1a4a88">2 · Loop</text>
+  <text x="24" y="190" font-size="11.5" fill="#45566a">correct, narrow, correct again</text>
+  <text x="466" y="182" font-size="12" fill="#8a3324">leaves behind: a chat you cannot repeat</text>
+
+  <rect x="8" y="96" width="440" height="48" rx="8" fill="#e7eefa" stroke="#1a4a88"/>
+  <text x="24" y="116" font-size="14" font-weight="700" fill="#1a4a88">3 · Skill</text>
+  <text x="24" y="134" font-size="11.5" fill="#45566a">the standing instruction, written once and saved</text>
+  <text x="466" y="126" font-size="12" fill="#0f7a5a">leaves behind: something you can hand over</text>
+
+  <rect x="8" y="40" width="440" height="48" rx="8" fill="#f1ebf9" stroke="#6b4a9e" stroke-width="1.6"/>
+  <text x="24" y="60" font-size="14" font-weight="700" fill="#6b4a9e">4 · Harness</text>
+  <text x="24" y="78" font-size="11.5" fill="#45566a">a specification in a file, run over many inputs, versioned</text>
+  <text x="466" y="70" font-size="12" fill="#0f7a5a">leaves behind: a repository with a licence</text>
+
+  <path d="M456 232 L456 64" stroke="#b9d0ec" stroke-width="1.5" stroke-dasharray="4 3"/>
+ </g>
+</svg>
+<div class="cap">The rungs are not mainly a quality ladder: a single rung-one answer can be as good as a rung-three one. They differ in what survives the session, and in whether the output can be checked against anything written down.</div>
+</div>
+
+<div class="strip">
+  <details class="c"><summary><span aria-hidden="true">①</span><span><span class="t">Rung 1 — prompt</span><span class="s">Where nearly everyone stays</span><span class="plus">when it is the right rung</span></span></summary>
+  <div class="cbody"><p>Perfectly appropriate for a one-off: rephrase this paragraph, list six discussion questions, translate this notice. The error is not using rung one. The error is using rung one for something you will do forty more times.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">②</span><span><span class="t">Rung 2 — loop</span><span class="s">Correcting your way to a good answer</span><span class="plus">the hidden cost</span></span></summary>
+  <div class="cbody"><p>Six exchanges produce something usable and nothing reusable. The knowledge of what made it good lives in a conversation you will not open again. This is the rung that feels most productive and transfers least.</p></div></details>
+
+  <details class="c good"><summary><span aria-hidden="true">③</span><span><span class="t">Rung 3 — skill</span><span class="s">Write the instruction down once</span><span class="plus">what to put in it</span></span></summary>
+  <div class="cbody"><p>Name the audience, the scope, the count, and the prohibition. The example used in the lab: <i>address the writing, never the writer; quote the words at issue; two points maximum; end with one answerable question; do not rewrite the passage.</i></p><p>That instruction is a colleague-readable artefact. It can be reviewed by a programme team, disagreed with, corrected, and reused next year by somebody else.</p></div></details>
+
+  <details class="c lab"><summary><span aria-hidden="true">④</span><span><span class="t">Rung 4 — harness</span><span class="s">The specification lives in a file, not a window</span><span class="plus">what it buys</span></span></summary>
+  <div class="cbody"><p>One written specification, a folder of inputs, one output per input, each carrying a header recording the input, the specification, the model, the temperature, the seed and the timestamp. Nothing about this is sophisticated. That is the argument: the difference between rung one and rung four is not cleverness, it is that this leaves a trail somebody else can audit.</p></div></details>
+</div>
+
+<div class="labcall">
+  <div class="hd"><span class="badge">Labs 4 &amp; 6</span><span class="ttl">Climb the ladder, then run rung four</span><span class="mins">4 min</span></div>
+  <span class="cmd"><span class="c"># rungs 1 to 3 on one paragraph, each checked against the written rules</span>
+python -m llmlab lab ladder
+
+<span class="c"># the same rules pasted into a request, or kept as a standing instruction</span>
+python -m llmlab lab steer
+
+<span class="c"># rung 4 — one specification applied to a folder of inputs</span>
+python -m llmlab harness --spec examples/feedback_spec.md --inputs examples/inputs --out out</span>
+  <p>Each run is checked against five of the written rules: quotes the words at issue, two points at most, ends with one question, does not rewrite, addresses the writing. The checks are a line or two each in <code class="inl">llmlab/labs.py</code>, crude on purpose — open the file, read one, and argue with it. That is the difference between rung three, where a person can check the rules, and rung four, where anyone can run the checks.</p>
+  <p>Then open one of the files in <code class="inl">out/</code>. The provenance header at the top is the whole point of the exercise; the text below it is secondary.</p>
+</div>
+
+<h3>3.4 · A worked example from the top rung</h3>
+<p class="lede">Rung four stays abstract until you see something that came off it. Here is one, built at this university, in the open.</p>
+
+<div class="panel">
+<h4>Circular construction safety and material twin</h4>
+<p>A browser-based simulation for vocational construction teaching. Live regional weather, a fault developing across eight sensor channels, three role consultations in sequence, and six material passports the learner routes to reuse, repair, recycle or quarantine — with retained mass, avoided carbon and avoided replacement cost moving against a circularity score. The learner's output is a diagnosis, an action and a <b>written justification</b>. It runs from a static web host with no backend and no key.</p>
+</div>
+
+<details class="more"><summary>What made that possible — and what did not</summary>
+<div class="mbody">
+<p>Not learning to code in the sense of a degree, and not prompting in the sense of clever phrases. Two literacies, doing different jobs.</p>
+<div class="tw"><table>
+<thead><tr><th>Literacy</th><th>What it buys you</th><th>What its absence costs</th></tr></thead>
+<tbody>
+<tr><td><b>Coding — reading level</b></td><td>Open the folder, see that two subfolders are the whole system, serve it locally, look at it, publish it.</td><td>You cannot check the output, so you have to trust it — and Block 1 was about why that is not available to you.</td></tr>
+<tr><td><b>Coding — architecture level</b></td><td>Decide <i>no backend, no key, no database</i> before writing a line, because you know what each would have obliged you to do.</td><td>You accept whatever architecture is generated and discover the data protection consequences after the thing exists.</td></tr>
+<tr><td><b>Prompting — specification</b></td><td>State the constraint set, the data provenance rules and the pedagogical goal, so there is something to satisfy.</td><td>A plausible generic dashboard, and longer spent repairing it than specifying it would have taken.</td></tr>
+<tr><td><b>Prompting — iteration</b></td><td>Version the work in passes small enough to inspect and roll back.</td><td>One enormous request, one enormous artefact, nothing reviewable.</td></tr>
+</tbody></table></div>
+<h4 style="margin:16px 0 6px;font-size:.95rem;color:#2b4a72">Three decisions in it that are pedagogical, not technical</h4>
+<p><b>1 · The architecture is the privacy answer.</b> No login, no accounts, no server-side storage: the learner's decisions never leave the browser. Workshop 2's privacy by design, made structural rather than promised — there is no personal data to protect because the design does not collect any. One caveat stated honestly: it does fetch public regional weather, which is one external call, and no personal data goes out with it.</p>
+<p><b>2 · The data labelling is a teaching artefact.</b> Public weather values are marked as live external data; the concrete, strain, crane-tilt, dust and electrical channels are marked virtual until physical sensors are connected; impact figures are marked educational estimates rather than engineering forecasts. Learners see the provenance of every number they are asked to act on. Most simulations do not tell you which of their numbers are real, and learners generalise from that silence.</p>
+<p><b>3 · The output is a decision record.</b> A diagnosis, an action and a written justification: a process artefact, timestamped and attributable. That is exactly what an assessment redesign needs, and it is the subject of Workshop 5.</p>
+</div></details>
+
+<div class="panel warn">
+<h4>The seduction to resist</h4>
+<p>An artefact like this is enjoyable to build, and that is its principal risk. Before the second one, answer three questions in writing: what teaching problem does this solve that a well-run seminar does not; what does it replace rather than add; and who maintains it when the person who specified it is on sabbatical. A repository nobody has opened since the demo is not an OER. It is a hobby with a licence file.</p>
+</div>
+
+<details class="more"><summary>Provenance, licensing, and where the artefact lives</summary>
+<div class="mbody"><p>Where a substantial part of an artefact was generated, your credibility rests on the audit trail being public: who contributed what, in which commit, on which date. A single file emailed round has none of that; a repository has all of it by default. Which is why <i>where you put the artefact</i> is part of the pedagogical decision and not an afterthought. If the work is a fork, the fork relationship belongs on the repository page rather than in a footnote.</p></div></details>
+
+<div class="panel good">
+<h4>The transferable move</h4>
+<p>Nothing above is specific to construction. The pattern: pick one thing your students cannot currently practise because the real setting is too dangerous, too slow, too expensive or too rare; specify it as a system with an explicit constraint set; build it in small versioned passes you can actually read; label what is real and what is simulated; make the learner's output a justification rather than a score. Welding, clinical triage, laboratory safety, negotiation, network incident response, ward handover — the list in your discipline is longer than you think.</p>
+</div>
+
+<div class="panel legal">
+<h4>Where an artefact like that sits legally</h4>
+<p>No personal data, so the Workshop 2 questions do not arise in the first place. Nothing evaluates a learner for an outcome that affects them, so it is not the Annex III §3 situation — <b>it becomes one the moment you attach the score to a grade</b>. Art. 50 applies to what the learner is told: if a consultation response is generated rather than authored, say so on screen. And Art. 4 is the reason you are the right person to build it, since the literacy duty falls on the deploying organisation and is discharged by staff who can explain their own tools.</p>
+</div>
+
+<h3>3.5 &middot; Three positions worth holding<span class="new">new</span></h3>
+<div class="strip">
+  <details class="c good"><summary><span aria-hidden="true">◆</span><span><span class="t">AI as a reflection instrument</span><span class="s">The rung-three move for student writing</span><span class="plus">the pattern</span></span></summary>
+  <div class="cbody"><p>Rather than asking a system to improve a draft, ask it to interrogate one: name the claim this paragraph makes, list what would have to be true for it to hold, say which of those the text does not establish. The student keeps authorship and gets the questions a supervisor would have asked in week four rather than week eleven.</p>
+  <p>This is a standing instruction, not a prompt — which puts it on rung three and makes it something a programme team can adopt, disagree with and correct.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">◆</span><span><span class="t">The misunderstanding that blocks the work</span><span class="s">On academic writing and generative systems</span><span class="plus">the argument</span></span></summary>
+  <div class="cbody"><p>Wampfler (2026) argues that teaching development is stuck on a false premise: that academic writing is the transcription of finished thought, so that automating the transcription is either harmless or fatal depending on your temperament. If writing is instead the process by which the thought is formed, both positions collapse, and the question becomes which parts of that formation the student must go through personally.</p>
+  <p>That question you can actually answer for your own module, and the answer is the assessment design. Which is Workshop 5, again.</p></div></details>
+
+  <details class="c warn"><summary><span aria-hidden="true">▲</span><span><span class="t">A book that is its own case study</span><span class="s">Read it on the meta level</span><span class="plus">what to notice</span></span></summary>
+  <div class="cbody"><p>There is now a German-language book on higher education in the age of generative AI whose companion material — slides, podcast episodes — is entirely AI-generated. The observation circulating with it in our own Fokusgruppe is that the companion material demonstrates precisely the problems such material has, and that concrete recommendations for action remain scarce.</p>
+  <p>Take that as the honest test for anything produced this term, including this page: does it tell you what to do on Monday, and can you tell which parts were generated? If the answer to the second is no, the first is worth less.</p></div></details>
+</div>
+
+<div class="panel">
+<h4>Verification tooling, and the loop it creates<span class="new">new</span></h4>
+<p>Fabricated references are now common enough to be reported as a measurable trend, and a small industry of checkers has appeared to catch them — reference-verification services, and research tools for detecting citation hallucination at scale.</p>
+<p>Use them. Then notice the shape of what you have just done: you have answered a tool’s failure with another tool, which has its own false-positive rate, its own data route and its own obligation to be explained under Art. 4. That is not an argument against using it. It is the reason the checker belongs in your decision record alongside the thing it checks.</p>
+</div>
+
+<div class="quiz" data-quiz>
+<h4>Quick check — Block 3</h4>
+<div class="q" data-a="2">
+<p>The repository marks its concrete and strain values as virtual until physical sensors are connected. Why is that labelling pedagogical rather than a technical disclaimer?</p>
+<button class="opt">It protects the authors from liability if a learner acts on a wrong value</button>
+<button class="opt">It allows real sensor data to be swapped in later without changing the code</button>
+<button class="opt">Learners are asked to justify decisions, and a justification is only assessable if the provenance of the evidence is known</button>
+<button class="opt">The AI Act requires simulated values in educational software to be labelled</button>
+<div class="why">The assessed output is the justification. A justification built on evidence of unknown provenance cannot be marked, and learners who are never told which numbers are real generalise from that silence to every other simulation they meet.</div>
+</div>
+<div class="q" data-a="1">
+<p>You paste a 90-page thesis into an assistant and receive a fluent three-paragraph summary. What is the safest assumption?</p>
+<button class="opt">The whole document was processed, since the summary covers the whole argument</button>
+<button class="opt">Some of it may not have been available to the answer, and nothing in the answer will tell you which part</button>
+<button class="opt">Only the first page was processed, since systems read from the top</button>
+<button class="opt">It depends on the file format rather than the context window</button>
+<div class="why">The window is a hard boundary and exceeding it is not reported as an error. The output remains fluent and complete-seeming, which is exactly the failure the context lab reproduces in thirty seconds.</div>
+</div>
+</div>
+</section>
+<!-- ══════════════════════════ BLOCK 4 ══════════════════════════ -->
+<section class="block" id="b4" data-title="Reflection" data-mins="13" data-lab="0">
+<div class="bhead"><span class="idx">4</span><h2>Reflection — and the route to Create</h2><span class="time">1:12 – 1:25</span></div>
+
+<div class="cpd"><span class="lvl">Deepen → Create</span><div><b>5.2 → 5.3</b> — human-controlled uses of AI for collaborative professional development, moving toward AI-enhanced design of training programmes. This block is where the session hands the work over rather than finishing it.</div></div>
+
+<p class="lede">What ninety minutes can honestly deliver, and where the line is.</p>
+
+<div class="svgwrap">
+<svg viewBox="0 0 720 224" role="img" aria-label="A progression from Acquire through Deepen to Create. This session reaches Acquire fully, starts Deepen in two places, and stops before Create, which is shown as reachable over about ninety days rather than ninety minutes.">
+ <g font-family="Segoe UI,sans-serif">
+  <rect x="8" y="30" width="222" height="86" rx="9" fill="#f1ebf9" stroke="#6b4a9e" stroke-width="1.6"/>
+  <text x="24" y="54" font-size="15" font-weight="700" fill="#6b4a9e">Acquire</text>
+  <text x="24" y="74" font-size="11.5" fill="#45566a">rights and obligations · readiness</text>
+  <text x="24" y="90" font-size="11.5" fill="#45566a">self-assessment · human-directed use</text>
+  <text x="24" y="108" font-size="11.5" font-weight="700" fill="#0f7a5a">reached today</text>
+
+  <rect x="244" y="30" width="222" height="86" rx="9" fill="#f6f2fb" stroke="#a98cc9" stroke-width="1.4"/>
+  <text x="260" y="54" font-size="15" font-weight="700" fill="#6b4a9e">Deepen</text>
+  <text x="260" y="74" font-size="11.5" fill="#45566a">autonomous upskilling · peer coaching</text>
+  <text x="260" y="90" font-size="11.5" fill="#45566a">collaborative development</text>
+  <text x="260" y="108" font-size="11.5" font-weight="700" fill="#a86a12">started in two places</text>
+
+  <rect x="480" y="30" width="232" height="86" rx="9" fill="#f8f9fb" stroke="#c9d3e0" stroke-dasharray="5 4"/>
+  <text x="496" y="54" font-size="15" font-weight="700" fill="#8f9dad">Create</text>
+  <text x="496" y="74" font-size="11.5" fill="#8f9dad">hybrid coach · programme design</text>
+  <text x="496" y="90" font-size="11.5" fill="#8f9dad">communities of co-creation</text>
+  <text x="496" y="108" font-size="11.5" font-weight="700" fill="#8a3324">not reachable in 90 minutes</text>
+
+  <path d="M232 73 L240 73" stroke="#6b4a9e" stroke-width="2"/>
+  <path d="M468 73 L476 73" stroke="#a98cc9" stroke-width="2" stroke-dasharray="3 3"/>
+
+  <rect x="8" y="140" width="704" height="70" rx="9" fill="#e7eefa"/>
+  <text x="24" y="162" font-size="12.5" font-weight="700" fill="#1a4a88">Why the third box has a dashed border</text>
+  <text x="24" y="182" font-size="12" fill="#1d3557">Create is not a harder version of Deepen. It requires other people, a review cycle and something published.</text>
+  <text x="24" y="200" font-size="12" fill="#1d3557">Ninety days is the honest unit for it. That is what the plan in Block 5 is sized for.</text>
+ </g>
+</svg>
+</div>
+
+<div class="strip">
+  <details class="c"><summary><span aria-hidden="true">?</span><span><span class="t">Question one</span><span class="s">What will you keep doing by hand?</span><span class="plus">why this one first</span></span></summary>
+  <div class="cbody"><p>Name one task you will continue to do unassisted <i>because</i> you need to stay able to do it. Not because assistance is forbidden, and not because you are attached to it. Because the judgement it exercises is the judgement you will use to evaluate everything else.</p><p>Write the task and the reason. If you cannot write the reason, the task is not the right one.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">?</span><span><span class="t">Question two</span><span class="s">Which decision would you now make differently?</span><span class="plus">how to answer it usefully</span></span></summary>
+  <div class="cbody"><p>One decision, already taken, in the last twelve months. A tool adopted, a task set, a sentence written into a module handbook, a piece of feedback drafted somewhere it should not have been drafted. Name the article or the principle that changes your view, so the answer is transferable to your colleagues rather than a private correction.</p></div></details>
+
+  <details class="c"><summary><span aria-hidden="true">?</span><span><span class="t">Question three</span><span class="s">Who else needs to know this?</span><span class="plus">the Deepen move</span></span></summary>
+  <div class="cbody"><p>Name one person and one thing to tell them. Peer coaching is not a metaphor in the Aspect 5 framing; it is the named contextual activity for the Deepen level, and it is the cheapest step available to you this month.</p></div></details>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th style="width:26%">Aspect 5 level</th><th style="width:37%">What this session did</th><th>What it did not do</th></tr></thead>
+<tbody>
+<tr><td><b>Acquire</b><br><span style="font-size:.8rem">5.1 lifelong professional learning</span></td><td>Rights and obligations named with articles; a readiness self-assessment completed by you; human-directed use checked on your own machine — some of it in the room, all seven claims with <code class="inl">python -m llmlab all</code>.</td><td class="yes">Nothing outstanding. This level is complete if you did the <a href="pages/p1_self_check.html">self-check</a>.</td></tr>
+<tr><td><b>Deepen</b><br><span style="font-size:.8rem">5.2 organizational learning</span></td><td>Started in two places: the tool decision record, which is a peer-reviewable artefact, and the standing instruction from rung three, which is transferable.</td><td class="no">No peer coaching yet, and no use of data about your own practice to direct your development.</td></tr>
+<tr><td><b>Create</b><br><span style="font-size:.8rem">5.3 professional transformation</span></td><td>Described, with one worked example, and sized honestly at ninety days.</td><td class="no">Not attempted. It needs a community, a review cycle and a published artefact, none of which fit in an afternoon.</td></tr>
+</tbody></table></div>
+
+<div class="note"><b>Do not soften this table.</b> A session that claims Create teaches participants that the level means less than it does, which makes the framework useless to them the next time they meet it.</div>
+
+<div class="panel">
+<h4>The name for what question one is asking<span class="new">new</span></h4>
+<p>The Wissenschaftsrat calls it <i>intellectual sovereignty</i>: the capacity to judge independently, critically and with reasons in a world shaped by these systems. It is a better phrase than the ones usually reached for, because it locates the goal in the person rather than in a policy, and because it makes the target of teaching the judgement rather than the output.</p>
+<p>Read against Ferdman’s capacity-hostile environments from Block 1, the two give you the whole of question one: sovereignty is what you are protecting, and the environment — not your resolve — is what protects it. So the answer to “what will you keep doing by hand” has to be written into a module, a deadline or a review step, where somebody else can see it.</p>
+</div>
+
+<div class="panel good">
+<h4>Turning the reflection into two competence identifiers<span class="new">new</span></h4>
+<p>If you would rather leave with something more specific than two areas, use <a href="#bA">Appendix A</a>. Run the router for the practice you actually do most, read the amber column, and take the first two items from it. That is your ninety-day plan, and it is expressed in a vocabulary a colleague at another institution can read.</p>
+</div>
+
+<div class="quiz" data-quiz>
+<h4>Quick check — Block 4</h4>
+<div class="q" data-a="3">
+<p>Why is Create not reachable in a 90-minute session?</p>
+<button class="opt">It requires programming skills that take longer than 90 minutes to acquire</button>
+<button class="opt">It is reserved for staff with formal educational development roles</button>
+<button class="opt">It only applies to institutions with an approved AI strategy</button>
+<button class="opt">Its contextual activities require other people, a review cycle and a published artefact</button>
+<div class="why">Hybrid coaching, designing training for others and co-creating with a community are all activities involving people beyond the room. The constraint is social and temporal, not technical — which is also why ninety days is a realistic unit for it.</div>
+</div>
+</div>
+</section>
+
+<!-- ══════════════════════════ BLOCK 5 ══════════════════════════ -->
+<section class="block" id="b5" data-title="Commitment" data-mins="5" data-lab="0">
+<div class="bhead"><span class="idx">5</span><h2>Commitment and close</h2><span class="time">1:25 – 1:30</span></div>
+
+<div class="cpd"><span class="lvl">Create — the route to it</span><div><b>5.3 AI-enhanced design of training programmes</b> — the task list you leave with, dated.</div></div>
+
+<p class="lede">Two areas. Not five. A plan with five areas on it is a plan that will be abandoned in week three, and the abandonment will feel like a personal failure rather than an arithmetic one.</p>
+
+<div class="strip">
+  <details class="c good"><summary><span aria-hidden="true">→</span><span><span class="t">Run this session</span><span class="s">For your own department, in your own discipline</span><span class="plus">what it takes</span></span></summary>
+  <div class="cbody"><p>Everything here is CC BY. Replace the tool examples with the ones your faculty actually uses and the legal panel stays correct. Budget one afternoon to adapt, ninety minutes to deliver.</p></div></details>
+
+  <details class="c good"><summary><span aria-hidden="true">→</span><span><span class="t">Mentor one colleague</span><span class="s">The named Deepen activity</span><span class="plus">what it takes</span></span></summary>
+  <div class="cbody"><p>One person, four conversations across a term. Bring them to the point where they can complete the tool triage themselves. This is the cheapest item on the list and the one most often skipped.</p></div></details>
+
+  <details class="c good"><summary><span aria-hidden="true">→</span><span><span class="t">Publish one artefact</span><span class="s">Openly licensed, versioned, attributed</span><span class="plus">what it takes</span></span></summary>
+  <div class="cbody"><p>A task specification, a rubric, a decision record, a small simulation. It has to be somewhere with a commit history and a licence file. The audit trail is the part that makes it credible; the artefact is the part that makes it useful.</p></div></details>
+
+  <details class="c good"><summary><span aria-hidden="true">→</span><span><span class="t">Join or start a practice group</span><span class="s">Co-creation of tools, pedagogies or rules</span><span class="plus">what it takes</span></span></summary>
+  <div class="cbody"><p>Three people and a recurring hour. The output that matters is not a policy document; it is a shared set of decisions with dates and reasons attached, which is what a policy document is eventually written from.</p></div></details>
+</div>
+
+<div class="panel good">
+<h4>The 90-day plan — page 3 of 3</h4>
+<p>Paste the last line of your self-check from Block 0; your two largest gaps become the two areas, and the page will not let you add a third. Each area gets two dated tasks at the level you are aiming for, drawn from the four options above and the rest of the session. Edit them, add your own, and download the calendar file so the dates arrive without you having to remember them.</p>
+<p><a href="pages/p4_cpd_plan.html">Open the plan page</a></p>
+</div>
+
+<div class="panel">
+<h4>Write it down before you leave the room</h4>
+<p>One sentence, in this shape: <i>By [date], I will [specific action] so that [named colleague or group] can [outcome].</i> A commitment without a date is a preference. A commitment without another person in it is a private intention, and Aspect 5 is not about private intentions.</p>
+</div>
+
+<div class="quiz" data-quiz>
+<h4>Closing check — six items</h4>
+<div class="q" data-a="2">
+<p>Which statement about the December 2027 date is correct?</p>
+<button class="opt">All EU AI Act obligations in education were deferred to December 2027</button>
+<button class="opt">The Article 5 prohibitions and the Article 4 literacy duty were deferred with it</button>
+<button class="opt">Annex III high-risk obligations were deferred; Articles 4, 5 and 50 were not</button>
+<button class="opt">The deferral removed education from Annex III entirely</button>
+<div class="why">Regulation (EU) 2026/1744 moved the Annex III standalone high-risk date from 2 August 2026 to 2 December 2027 because harmonised standards were late. The prohibitions, the literacy duty and the transparency regime were untouched, and education remains in Annex III §3.</div>
+</div>
+<div class="q" data-a="0">
+<p>What does running a model locally remove?</p>
+<button class="opt">The processor relationship and the transfer of text to a third party</button>
+<button class="opt">The Annex III classification when the output contributes to a grade</button>
+<button class="opt">The Article 50 duty to tell people they are interacting with an AI system</button>
+<button class="opt">The Article 4 literacy duty, since no external provider is involved</button>
+<div class="why">Hosting answers the transfer question and nothing else. If the output feeds a grade it is the same Annex III situation wherever it runs, the transparency duty attaches to what the learner is told, and the literacy duty falls on the deploying organisation regardless of route.</div>
+</div>
+<div class="q" data-a="3">
+<p>A colleague says detectors are now accurate enough to use. What is the strongest reply?</p>
+<button class="opt">Cite the current false-positive rate from the most recent evaluation</button>
+<button class="opt">Point out that students can defeat them with paraphrasing tools</button>
+<button class="opt">Agree, provided a second marker confirms every flagged case</button>
+<button class="opt">Ask what evidence an innocent student could produce that would settle the matter, and note that the errors fall by first language</button>
+<div class="why">Citing a rate concedes that the question is empirical, and invites a better rate next term. The unfalsifiability objection and the uneven distribution of false positives survive any accuracy figure.</div>
+</div>
+<div class="q" data-a="1">
+<p>Which of these is a rung-three artefact?</p>
+<button class="opt">A well-phrased request that produced an unusually good answer</button>
+<button class="opt">A saved instruction naming the audience, scope, count and prohibition</button>
+<button class="opt">A six-turn conversation that arrived at the right output</button>
+<button class="opt">A folder of outputs generated from one specification</button>
+<div class="why">Rung three is the standing instruction: written once, readable by a colleague, reusable next year. The last option is rung four, which adds the folder, the provenance headers and the version history.</div>
+</div>
+<div class="q" data-a="2">
+<p>Which failure mode is not caught by checking the output?</p>
+<button class="opt">A fabricated citation</button>
+<button class="opt">A factual error in a date</button>
+<button class="opt">Deskilling, since it erodes the judgement you would check with</button>
+<button class="opt">A mistranslated technical term</button>
+<div class="why">The first, second and fourth are all detectable by someone competent in the domain. Deskilling removes that competence gradually, and nothing signals when it has gone — which is why the response has to be written down in advance rather than noticed in time.</div>
+</div>
+<div class="q" data-a="0">
+<p>Why are only two areas allowed on the 90-day plan?</p>
+<button class="opt">Because a plan that fails through overload teaches the wrong lesson about the framework</button>
+<button class="opt">Because UNESCO's framework specifies a maximum of two competencies per cycle</button>
+<button class="opt">Because the two areas correspond to the Acquire and Deepen levels</button>
+<button class="opt">Because institutional development budgets typically cover two activities</button>
+<div class="why">The limit is practical rather than prescribed. A five-area plan is abandoned in week three, and participants read the abandonment as a personal failure rather than as a scoping error — which makes them less likely to use the framework again.</div>
+</div>
+</div>
+
+<h3>Six lines to take away</h3>
+<div class="panel good">
+<ul>
+<li>A token is not a word, and the context window is a boundary rather than a setting.</li>
+<li>Fluency is not evidence of grounding, and no amount of rereading the output will settle it.</li>
+<li>Hosting answers the transfer question and none of the others.</li>
+<li>Prohibitions are not conditions: Art. 5(1)(f) is a stop, not a risk assessment.</li>
+<li>The rung you work at decides what still exists next term.</li>
+<li>Tools, strategies, reflection — in that order, or the first two do not hold.</li>
+</ul>
+</div>
+
+<h3>Further reading</h3>
+<div class="panel">
+<p>The full bibliography has moved to <a href="#bB">Appendix B</a>, where it is grouped by what you would need it for: frameworks, policy, law, the evidence on how these systems fail, teaching practice, and the open offers you can send people to instead of writing your own. Everything cited anywhere on this page is in it, with a link.</p>
+<p>If you want three things and nothing else: Ferdman on deskilling as a structural problem, the Wissenschaftsrat recommendations for the German frame, and Chandra and colleagues on why warning somebody about sycophancy does not protect them from it.</p>
+</div>
+</section>
+
+
+<!-- ══════════════════════════ APPENDIX A ══════════════════════════ -->
+<section class="block" id="bA" data-title="Placement map" data-mins="7" data-lab="0" data-appendix="1">
+<div class="bhead"><span class="idx">A</span><h2>Appendix A &mdash; Where does this put you?</h2><span class="time">reference &middot; not timed</span></div>
+
+<div class="panel warn">
+<h4>Read this before you use the map</h4>
+<p>The grid below is the structure of <b>HETAICF v0.11</b>, an unpublished draft under review at this university. Its numbering will change and its identifiers carry no authority. Do not cite them, and do not put them in a module handbook.</p>
+<p>What the draft is good for, and the only thing it is used for here, is a <b>vocabulary</b>: a way of saying which specific thing you are already doing and which specific thing you needed first. If your institution adopts a different framework next year, the exercise transfers and the numbers do not.</p>
+</div>
+
+<p class="lede">Four domains, three obligations that sit outside them, three levels, and five objects the competences apply to. The <strong>router</strong> below is the part to use in the room.</p>
+
+<div class="doms">
+<div class="dom"><div class="dn">Engage with AI</div><div class="dde">Bewusst mit KI umgehen</div><p>Every member of teaching staff has to reach Foundation here, because Art. 4 makes AI literacy an institutional legal duty rather than a development option.</p><div class="ids">HET-E1 &middot; HET-E2 &middot; HET-E3 &middot; HET-E4 &middot; HET-E5 &middot; HET-E6 &middot; HET-E7</div></div>
+<div class="dom"><div class="dn">Create with AI</div><div class="dde">KI kreativ anwenden</div><p>In higher education this is where the integrity question lives. Prompting is given an explicit home here, which most published frameworks do not do.</p><div class="ids">HET-C1 &middot; HET-C2 &middot; HET-C3 &middot; HET-C4</div></div>
+<div class="dom"><div class="dn">Manage AI</div><div class="dde">KI gezielt einsetzen</div><p>Dividing academic work deliberately between people and systems. Reasoned non-use is a competence in this domain, not the absence of one.</p><div class="ids">HET-M1 &middot; HET-M2 &middot; HET-M3 &middot; HET-M4</div></div>
+<div class="dom"><div class="dn">Shape AI</div><div class="dde">KI aktiv mitgestalten</div><p>Investigating, testing and designing use rather than accepting what arrives. The lab lives here.</p><div class="ids">HET-S1 &middot; HET-S2 &middot; HET-S3 &middot; HET-S4</div></div>
+<div class="dom x"><div class="dn">Stratum X — professional obligations</div><div class="dde">Professionspflichten</div><p>The three obligations that fall outside the learner-facing frameworks entirely: the law, scholarly practice, and your own continuing development.</p><div class="ids">HET-X1 &middot; HET-X2 &middot; HET-X3</div></div>
+</div>
+
+<div class="svgwrap">
+<svg viewBox="0 0 720 250" role="img" aria-label="The framework structure: four domains — engage, create, manage, shape — read against three levels, Foundation, Applied and Advanced; plus a stratum of three professional obligations sitting outside them; and a legal floor underneath everything.">
+ <g font-family="Segoe UI,sans-serif">
+  <rect x="8" y="8" width="704" height="30" rx="7" fill="#fbe9e6" stroke="#8a3324" stroke-width="1.2"/>
+  <text x="20" y="28" font-size="12.5" font-weight="700" fill="#8a3324">Stratum X &mdash; the law (X1) &middot; scholarly practice (X2) &middot; your own development (X3)</text>
+
+  <rect x="8" y="52" width="168" height="112" rx="8" fill="#e7eefa" stroke="#1a4a88"/>
+  <text x="24" y="74" font-size="13" font-weight="700" fill="#1a4a88">Engage</text>
+  <text x="24" y="92" font-size="11" fill="#45566a">recognise, describe,</text>
+  <text x="24" y="108" font-size="11" fill="#45566a">evaluate, question</text>
+  <text x="24" y="132" font-size="10.5" fill="#7b8b9c">E1 &ndash; E7</text>
+  <text x="24" y="152" font-size="10.5" font-weight="700" fill="#0f7a5a">everyone, at least F</text>
+
+  <rect x="186" y="52" width="168" height="112" rx="8" fill="#f1ebf9" stroke="#6b4a9e"/>
+  <text x="202" y="74" font-size="13" font-weight="700" fill="#6b4a9e">Create</text>
+  <text x="202" y="92" font-size="11" fill="#45566a">ideas, prototypes,</text>
+  <text x="202" y="108" font-size="11" fill="#45566a">prompting, authorship</text>
+  <text x="202" y="132" font-size="10.5" fill="#7b8b9c">C1 &ndash; C4</text>
+  <text x="202" y="152" font-size="10.5" font-weight="700" fill="#6b4a9e">Block 3 lives here</text>
+
+  <rect x="364" y="52" width="168" height="112" rx="8" fill="#e3f3ee" stroke="#0f7a5a"/>
+  <text x="380" y="74" font-size="13" font-weight="700" fill="#0f7a5a">Manage</text>
+  <text x="380" y="92" font-size="11" fill="#45566a">use or not use, choose,</text>
+  <text x="380" y="108" font-size="11" fill="#45566a">decompose, monitor</text>
+  <text x="380" y="132" font-size="10.5" fill="#7b8b9c">M1 &ndash; M4</text>
+  <text x="380" y="152" font-size="10.5" font-weight="700" fill="#0f7a5a">Block 2 lives here</text>
+
+  <rect x="542" y="52" width="170" height="112" rx="8" fill="#fdf3e2" stroke="#a86a12"/>
+  <text x="558" y="74" font-size="13" font-weight="700" fill="#a86a12">Shape</text>
+  <text x="558" y="92" font-size="11" fill="#45566a">investigate, test,</text>
+  <text x="558" y="108" font-size="11" fill="#45566a">design data flow, improve</text>
+  <text x="558" y="132" font-size="10.5" fill="#7b8b9c">S1 &ndash; S4</text>
+  <text x="558" y="152" font-size="10.5" font-weight="700" fill="#a86a12">the lab lives here</text>
+
+  <rect x="8" y="178" width="704" height="26" rx="6" fill="#f2f5f9"/>
+  <text x="20" y="196" font-size="11.5" fill="#45566a">Levels read across every domain: <tspan font-weight="700">Foundation</tspan> → <tspan font-weight="700">Applied</tspan> → <tspan font-weight="700">Advanced</tspan> &nbsp;(UNESCO Acquire / Deepen / Create &middot; DigCompEdu A / B / C)</text>
+
+  <rect x="8" y="212" width="704" height="30" rx="6" fill="#e7eefa"/>
+  <text x="20" y="232" font-size="11.5" fill="#1d3557">Every competence has two readings: what <tspan font-weight="700">you</tspan> must be able to do, and what you must <tspan font-weight="700">enable students</tspan> to do. Most people are a level lower on the second.</text>
+ </g>
+</svg>
+<div class="cap">The legal floor is not a competence. It is a constraint the framework has to satisfy &mdash; which is why it appears as a stratum rather than as a domain, and is operationalised only in X1.</div>
+</div>
+
+<div class="router" id="router">
+<h4>The router &mdash; pick what you actually do</h4>
+<p class="hint">Twelve practices from this session. Choosing one shows the competences you are already exercising, the ones you needed first, which law is engaged, and where in the session it is treated. Nothing is stored and nothing is scored.</p>
+<div class="rchoices" id="rchoices"></div>
+<div class="rout" id="rout" hidden></div>
+</div>
+
+<div class="note"><b>How to run this live:</b> ask for a show of hands on the first three options before you open any of them. The distribution in the room is the argument for the block you are about to teach, and it is more persuasive than any slide.</div>
+
+<h3>What this course actually covers, competence by competence</h3>
+<p class="lede">Including the ones it does not reach. A coverage map that claims everything is a coverage map nobody can use.</p>
+
+<div class="tw"><table>
+<caption class="cap" style="text-align:left;margin-bottom:6px">Level reached is the level this session and its lab can honestly evidence &mdash; not the level a participant might already hold.</caption>
+<thead><tr><th style="width:23%">Competence</th><th style="width:11%">Level reached</th><th style="width:33%">Where</th><th>What is still missing</th></tr></thead>
+<tbody>
+<tr><td><span class="cid">HET-E1</span><br><b>Recognise AI's role and influence in academic contexts</b></td><td class="yes">Foundation</td><td>Block 0 diagram; Block 2 four-family map; ASSET module 01</td><td>Institution-wide mapping (Advanced) is not attempted.</td></tr>
+<tr><td><span class="cid">HET-E2</span><br><b>Describe how AI systems perform tasks in accurate, non-anthropomorphic language</b></td><td class="yes">Applied</td><td>Block 3 terminology table (six terms); Labs 1&ndash;3; ASSET module 02</td><td>This is the strongest coverage in the course. The table is the whole argument.</td></tr>
+<tr><td><span class="cid">HET-E3</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected</b></td><td class="yes">Applied</td><td>Block 1 failure modes; Lab 5 <code class="inl">ground</code>; Block 3 grounding row</td><td>Covered as a judgement, not yet as a written verification procedure.</td></tr>
+<tr><td><span class="cid">HET-E4</span><br><b>Examine how predictive AI recommendations can inform or limit perspectives</b></td><td class="yes">Foundation</td><td>Block 1 — confirmation and anchoring; Block 3 — context window</td><td>Recommender pre-selection is named rather than examined.</td></tr>
+<tr><td><span class="cid">HET-E5</span><br><b>Compare how AI systems consume energy and natural resources</b></td><td class="yes">Foundation</td><td>Block 2 — the resource panel; Lab 7 route report</td><td>Weakest area in the course relative to its EU GREEN framing. Named honestly rather than padded.</td></tr>
+<tr><td><span class="cid">HET-E6</span><br><b>Explain how AI can amplify societal biases and concentrate epistemic authority</b></td><td class="yes">Applied</td><td>Block 1 homogenisation and illusion of consensus; Block 2 detectors, uneven errors</td><td>Bias is treated through one worked case (detectors) rather than systematically.</td></tr>
+<tr><td><span class="cid">HET-E7</span><br><b>Analyse how well AI use aligns with ethical principles and human values</b></td><td class="yes">Applied</td><td>Block 2 equity and copyright panels; Block 4 reflection questions</td><td>Ethics is carried by cases, not by a principles list. Deliberate.</td></tr>
+<tr><td><span class="cid">HET-C1</span><br><b>Use AI to explore perspectives that build upon original academic ideas</b></td><td class="yes">Foundation</td><td>Block 2 preparation family; Block 3 rungs one and two</td><td>&mdash;</td></tr>
+<tr><td><span class="cid">HET-C2</span><br><b>Visualise, prototype and combine ideas using different types of AI systems</b></td><td class="yes">Foundation</td><td>Block 2 preparation family; Block 3.4 worked example (Advanced, demonstrated not practised)</td><td>Participants watch rather than build. Ninety minutes does not buy the build.</td></tr>
+<tr><td><span class="cid">HET-C3</span><br><b>Direct and iterate with generative AI systems (prompting as a documented practice)</b></td><td class="yes">Applied</td><td>Block 3 — the four-rung ladder; Labs 4 and 6; the harness command</td><td>This is the spine of Block 3 and the clearest route to Applied.</td></tr>
+<tr><td><span class="cid">HET-C4</span><br><b>Analyse how AI can safeguard or violate authenticity, authorship and intellectual property</b></td><td class="yes">Foundation</td><td>Block 2 copyright panel; Block 3 provenance disclosure</td><td>Institutional disclosure rules vary; the session gives the question, not your answer.</td></tr>
+<tr><td><span class="cid">HET-M1</span><br><b>Decide whether to use AI based on the nature of the academic task, including reasoned non-use</b></td><td class="yes">Applied</td><td>Block 2 four families ordered by consequence; Block 4 question one</td><td>Reasoned non-use is explicitly a competence here, which is unusual and load-bearing.</td></tr>
+<tr><td><span class="cid">HET-M2</span><br><b>Choose an appropriate AI approach by comparing how different systems operate</b></td><td class="yes">Foundation</td><td>Block 2 tool cards; Lab 7 <code class="inl">route</code></td><td>&mdash;</td></tr>
+<tr><td><span class="cid">HET-M3</span><br><b>Decompose a task to determine where AI should automate and where it should only augment</b></td><td class="yes">Applied</td><td>Block 3 rung three; Block 4 &mdash; what will you keep doing by hand</td><td>Directly reinforced by Ferdman's capacity-hostile environments.</td></tr>
+<tr><td><span class="cid">HET-M4</span><br><b>Monitor and evaluate AI use throughout an academic process</b></td><td class="yes">Foundation</td><td>Block 1 automation complacency; Block 3 provenance headers</td><td>Checkpoints across a term are described, not practised.</td></tr>
+<tr><td><span class="cid">HET-S1</span><br><b>Investigate how an AI system is intended to work, whom it is designed for, and what its limits are</b></td><td class="yes">Foundation</td><td>Block 2 tool cards, each with its stated fault</td><td>&mdash;</td></tr>
+<tr><td><span class="cid">HET-S2</span><br><b>Evaluate AI systems using defined outcomes, test cases and user feedback</b></td><td class="yes">Applied</td><td>The whole lab: seven claims put to a system on your own machine</td><td>The lab <i>is</i> this competence. It is why the session has a terminal in it.</td></tr>
+<tr><td><span class="cid">HET-S3</span><br><b>Design AI use attentive to data sources, data selection and information flow</b></td><td class="yes">Applied</td><td>Block 2 deployment routes; Block 3 route row; Workshop 2 in full</td><td>&mdash;</td></tr>
+<tr><td><span class="cid">HET-S4</span><br><b>Improve AI use and AI systems to promote well-being and societal benefit</b></td><td class="no">&mdash;</td><td>Named in Block 5 (publish one artefact) and not reached</td><td>Requires other people and a review cycle. Ninety days, not ninety minutes.</td></tr>
+<tr><td><span class="cid">HET-X1</span><br><b>Apply the legal framework for AI in higher education</b></td><td class="yes">Applied</td><td>Block 2 legal panel; GDPR Art. 22 panel; copyright panel; closing quiz</td><td>The most heavily covered Stratum X competence, because it is the one with a deadline.</td></tr>
+<tr><td><span class="cid">HET-X2</span><br><b>Practise scholarly work with AI</b></td><td class="yes">Foundation</td><td>Block 3.4 provenance and licensing; Block 1 fabrication</td><td>Scholarly writing with AI is a Workshop 5 and doctoral-supervision topic.</td></tr>
+<tr><td><span class="cid">HET-X3</span><br><b>Develop professionally and collaboratively with AI</b></td><td class="yes">Applied</td><td>Block 4 question three; Block 5 mentor one colleague; the 90-day plan</td><td>Started, not completed &mdash; which is exactly the Deepen claim the session makes.</td></tr>
+</tbody></table></div>
+
+<div class="panel legal">
+<h4>The four the session does not reach, said plainly</h4>
+<ul>
+<li><b>S4 &mdash; improving systems and use for well-being and societal benefit.</b> Needs a channel, a community and a review cycle. Ninety days, not ninety minutes. It is the second item on the Block 5 list.</li>
+<li><b>E5 &mdash; energy and resource comparison.</b> Foundation only, which is thin for a session funded under a green alliance. Named in Block 2 rather than solved.</li>
+<li><b>C2 at Advanced &mdash; prototyping.</b> Demonstrated in Block 3.4 and not practised. You watch someone else’s artefact.</li>
+<li><b>X2 &mdash; scholarly work with AI</b> beyond provenance and licensing. Doctoral supervision and publication ethics are a different session with a different audience.</li>
+</ul>
+</div>
+
+<h3>The self-study route, for the people who could not come</h3>
+<div class="panel good">
+<p>Five open LiaScript modules written for teachers in vocational education cover the Foundation level of most of the Engage domain and part of Create, in about four hours of self-study: <b>AI Orientation</b> (lifelong professional learning, E1, X3), <b>AI Basics</b> (non-anthropomorphic description and human agency, E2, E3, M4), <b>AI Tools</b> (system types, data origin, OER, M2, S1, S3), <b>Prompting</b> (C3 at Foundation, and the structure a standing instruction needs), <b>Quality and Ethics</b> (E6, E7, and the human-rights framing).</p>
+<p>They were written for a TVET audience under the UNESCO-UNEVOC ASSET co-initiative, and the examples are electronics rather than seminar rooms. That is a feature when you send them to a colleague who teaches a workshop-based subject, and a limitation when you send them to a lawyer. Point people at the module, then run this session’s Block 2 and Block 3 with them, because those are the two the modules do not reach.</p>
+</div>
+
+<div class="quiz" data-quiz>
+<h4>Quick check &mdash; the placement map</h4>
+<div class="q" data-a="1">
+<p>You run every model locally. Which claim does the framework support?</p>
+<button class="opt">You have satisfied the legal floor, since no data leaves the institution</button>
+<button class="opt">You are Applied on the data-flow competence and unchanged on the legal one</button>
+<button class="opt">You have reached Advanced on all four Shape competences</button>
+<button class="opt">Local hosting is outside the framework, since it is an infrastructure choice</button>
+<div class="why">Route answers the transfer question and nothing else. Annex III &sect;3, Art. 50 and Art. 4 are indifferent to where the bytes went, which is why the router puts the legal competence in the amber column for that practice rather than the green one.</div>
+</div>
+<div class="q" data-a="2">
+<p>A colleague uses no AI at all and says the framework does not apply to them. What does the map say?</p>
+<button class="opt">Correct: the competences describe use, so non-use places you outside them</button>
+<button class="opt">Correct for the four domains, but Stratum X still applies</button>
+<button class="opt">Reasoned non-use is itself a competence, and three obligations apply regardless</button>
+<button class="opt">They should be assessed at Foundation on every competence by default</button>
+<div class="why">Deciding not to use AI for a task, for a stated reason, is the Manage-domain competence in its own right. Deciding by default is not. Meanwhile their students are using it, their reference manager contains it, and the Art. 4 literacy duty falls on the institution and is discharged by staff who can explain the tools in use.</div>
+</div>
+</div>
+</section>
+
+<!-- ══════════════════════════ APPENDIX B ══════════════════════════ -->
+<section class="block" id="bB" data-title="References" data-mins="5" data-lab="0" data-appendix="1">
+<div class="bhead"><span class="idx">B</span><h2>Appendix B &mdash; References</h2><span class="time">reference &middot; not timed</span></div>
+
+<p class="lede">Everything cited on this page, grouped by what you would need it for. Sources marked <b>new in v4</b> in the blocks above come largely from the reading list circulated in the OvGU working group on AI and digitality in study and teaching, which is the best-curated German-language source on this topic that we know of.</p>
+
+<div class="panel">
+<h4>A note on how to use a list like this</h4>
+<p>Nobody reads forty items. The list is here so that a claim in the session can be traced, and so that when a colleague disputes something you can hand them the source rather than your recollection of it. If you are choosing where to start, the three named at the end of Block 5 are the three.</p>
+<p>Links were checked at the time of writing. Where an item is unpublished or has no stable link, that is stated rather than papered over.</p>
+</div>
+
+<div class="bib">
+<h4>Competence frameworks</h4>
+<ol>
+<li>Miao, F. &amp; Cukurova, M. (2024). <i>AI competency framework for teachers.</i> UNESCO, Paris. CC BY-SA 3.0 IGO. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000391104">unesdoc.unesco.org/ark:/48223/pf0000391104</a></li>
+<li>UNESCO (2024). <i>AI competency framework for students.</i> UNESCO, Paris. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000391105">unesdoc.unesco.org/ark:/48223/pf0000391105</a></li>
+<li>OECD &amp; European Commission (2026). <i>Empowering Learners for the Age of AI: an AI literacy framework (AILit).</i> Addressee: primary and secondary learners. <a href="https://ailiteracyframework.org">ailiteracyframework.org</a></li>
+<li>Redecker, C. (2017). <i>European Framework for the Digital Competence of Educators: DigCompEdu.</i> JRC Science for Policy Report, Publications Office of the EU. <a href="https://joint-research-centre.ec.europa.eu/digcompedu_en">joint-research-centre.ec.europa.eu/digcompedu_en</a></li>
+<li>Vuorikari, R., Kluzer, S. &amp; Punie, Y. (2022). <i>DigComp 2.2: The Digital Competence Framework for Citizens.</i> JRC128415. Adds examples concerning AI systems. <a href="https://publications.jrc.ec.europa.eu/repository/handle/JRC128415">publications.jrc.ec.europa.eu/repository/handle/JRC128415</a></li>
+<li>UNESCO (2018). <i>UNESCO ICT Competency Framework for Teachers, version 3.</i> Origin of the three-level acquisition / deepening / creation grammar. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000265721">unesdoc.unesco.org/ark:/48223/pf0000265721</a></li>
+<li>Npuls (2025). <i>AI GO! AI Literacy in Education — a practical framework.</i> Addressed to education professionals in mbo, hbo and wo; the closest published comparator to a higher-education-facing framework. <a href="https://npuls.nl/en/knowledge-base/ai-go-ai-literacy-in-education-a-practical-framework">npuls.nl/en/knowledge-base/ai-go-ai-literacy-in-education-a-prac</a></li>
+<li>Npuls (2025). <i>Reference Framework 2.0 — Responsible use of education data and AI.</i> Governance-facing companion to AI GO!; written for institutions rather than individuals. <a href="https://npuls.nl/en/knowledge-base/reference-framework-2-0-responsible-use-of-education-data-and-ai">npuls.nl/en/knowledge-base/reference-framework-2-0-responsible-u</a></li>
+<li>Long, D. &amp; Magerko, B. (2020). <i>What is AI literacy? Competencies and design considerations.</i> CHI '20. The source of the competence list most later frameworks reuse. <a href="https://doi.org/10.1145/3313831.3376727">doi.org/10.1145/3313831.3376727</a></li>
+<li>OvGU Zentrum f&uuml;r Lehrer*innenbildung, working group (2026). <i>HETAICF v0.11 — Higher Education Teaching AI Competence Framework.</i> <b>Unpublished draft, in review. Numbering will change. Do not cite competence identifiers as authority.</b> Used in this session as a mechanism for local adaptation, not as a source.</li>
+<li>AK Digitalisierung im Lehramt, OvGU (2026). <i>DACT v1.0 — Digital and AI Competency Framework for University Teacher Trainers.</i> Local framework for the teacher-trainer role; one of the source frameworks crosswalked in HETAICF.</li>
+</ol>
+<h4>Policy, recommendations and institutional practice</h4>
+<ol>
+<li>Wissenschaftsrat (2026). <i>Intellektuelle Souver&auml;nit&auml;t: Empfehlungen f&uuml;r die Hochschulbildung in Zeiten von generativer KI.</i> Drs. 3319-26, K&ouml;ln, July 2026. doi:10.57674/1evx-t906. Argues that the question is not how higher education is designed <i>with</i> generative AI, but how good higher education is designed in a world shaped by it. <a href="https://www.wissenschaftsrat.de/download/2026/3319-26">www.wissenschaftsrat.de/download/2026/3319-26</a></li>
+<li>OECD (2026). <i>Policies supporting responsible and systematic GenAI adoption in higher education.</i> OECD Education Policy Perspectives. <a href="https://www.oecd.org/en/publications/policies-supporting-responsible-and-systematic-genai-adoption-in-higher-education_c4e5621f-en.html">www.oecd.org/en/publications/policies-supporting-responsible-and</a></li>
+<li>Hochschulforum Digitalisierung (2026). <i>Generative KI in der Hochschullehre — wie wir Innovation verantwortungsvoll gestalten.</i>  <a href="https://hochschulforumdigitalisierung.de/genki-in-der-hochschullehre/">hochschulforumdigitalisierung.de/genki-in-der-hochschullehre/</a></li>
+<li>UC Berkeley School of Law (2026). <i>Artificial Intelligence Policy, effective Summer 2026.</i> A readable example of a unit-level policy, at the granularity a department can actually write. <a href="https://www.law.berkeley.edu/wp-content/uploads/2026/05/AI-Final-Policy-26.pdf">www.law.berkeley.edu/wp-content/uploads/2026/05/AI-Final-Policy-</a></li>
+<li>heise online (2026). <i>Leiden Declaration: Mathematiker fordern bewussten Umgang mit KI — &bdquo;Don't believe the hype&ldquo;.</i> A discipline writing its own rules rather than waiting for an institutional one. <a href="https://www.heise.de/news/Mathematiker-fordern-bewussten-Umgang-mit-KI-Don-t-believe-the-hype-11378210.html">www.heise.de/news/Mathematiker-fordern-bewussten-Umgang-mit-KI-D</a></li>
+<li>KI:Expertisezentrum.nrw (2026). <i>Regional AI competence centre for higher education in North Rhine-Westphalia.</i> An example of the regional support structure the Wissenschaftsrat recommendations call for. <a href="https://ki-expertisezentrum.nrw/">ki-expertisezentrum.nrw/</a></li>
+<li>Universit&auml;t zu K&ouml;ln (2026). <i>Universit&auml;t zu K&ouml;ln ist Teil des neuen KI:Expertisezentrum.nrw.</i>  <a href="https://uni-koeln.de/universitaet/aktuell/meldungen/meldungen-detail/universitaet-zu-koeln-ist-teil-des-neuen-kiexpertisezentrumnrw">uni-koeln.de/universitaet/aktuell/meldungen/meldungen-detail/uni</a></li>
+<li>HIS-HE (2026). <i>Perspektiven einer KI-unterst&uuml;tzten offenen Bildungspraxis.</i>  <a href="https://his-he.de/publikation/perspektiven-einer-ki-unterstuetzten-offenen-bildungspraxis/">his-he.de/publikation/perspektiven-einer-ki-unterstuetzten-offen</a></li>
+</ol>
+<h4>Law</h4>
+<ol>
+<li>European Union (2024). <i>Regulation (EU) 2024/1689 (Artificial Intelligence Act).</i> Arts. 4, 5(1)(f), 14, 50; Annex III &sect;3. <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">eur-lex.europa.eu/eli/reg/2024/1689/oj</a></li>
+<li>European Union (2026). <i>Regulation (EU) 2026/1744 (Digital Omnibus on AI).</i> OJ 24 July 2026, in force 27 July 2026. Defers standalone Annex III high-risk obligations to 2 December 2027. Arts. 4, 5 and 50 not deferred. <a href="https://eur-lex.europa.eu">eur-lex.europa.eu</a></li>
+<li>European Union (2016). <i>Regulation (EU) 2016/679 (GDPR).</i> Arts. 5 and 22. <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">eur-lex.europa.eu/eli/reg/2016/679/oj</a></li>
+<li>edu-sharing / Open Innovation Community (2026). <i>KI in der Bildung — Rechtliche Orientierung f&uuml;r Bildungseinrichtungen und Lehrkr&auml;fte (FAQ).</i> German-language legal FAQ; useful for the questions a colleague asks in the corridor. <a href="https://edu-sharing.atlassian.net/wiki/spaces/OIC/pages/1891565573/">edu-sharing.atlassian.net/wiki/spaces/OIC/pages/1891565573/</a></li>
+</ol>
+<h4>How the systems fail — the evidence base</h4>
+<ol>
+<li>Ferdman, A. (2026). <i>AI deskilling is a structural problem.</i> <i>AI &amp; Society</i> 41, 3001&ndash;3013. doi:10.1007/s00146-025-02686-z. Introduces <i>capacity-hostile environments</i>: settings in which AI mediation blocks the cultivation of a capacity, so that deskilling is a property of the environment rather than a failure of individual willpower. <a href="https://doi.org/10.1007/s00146-025-02686-z">doi.org/10.1007/s00146-025-02686-z</a></li>
+<li>Chandra, K., Kleiman-Weiner, M., Ragan-Kelley, J. &amp; Tenenbaum, J. B. (2026). <i>Sycophantic chatbots cause delusional spiraling, even in ideal Bayesians.</i> arXiv:2602.19141. A Bayesian model in which even a perfectly rational user spirals; the effect survives both removing hallucination and warning the user that the system is sycophantic. <a href="https://arxiv.org/abs/2602.19141">arxiv.org/abs/2602.19141</a></li>
+<li>Bassett et al. (2026). <i>Heads we win, tails you lose: AI detectors in education.</i> The unfalsifiability and asymmetric-harm argument used in Block 2.</li>
+<li>Forschung &amp; Lehre (2026). <i>Zahl falscher KI-Referenzen in Forschungsarbeiten nimmt zu.</i>  <a href="https://www.forschung-und-lehre.de/forschung/zahl-falscher-ki-referenzen-in-forschungsarbeiten-nimmt-zu-7760">www.forschung-und-lehre.de/forschung/zahl-falscher-ki-referenzen</a></li>
+<li>CheckIfExist (2026). <i>Detecting citation hallucinations in the era of AI-generated content.</i> arXiv:2602.15871. <a href="https://arxiv.org/abs/2602.15871">arxiv.org/abs/2602.15871</a></li>
+<li>BibFox (2026). <i>Reference verification service.</i> A verification tool, and therefore itself a tool with a false-positive rate you are responsible for knowing. <a href="https://bibfox.com/en/solutions/reference-verification">bibfox.com/en/solutions/reference-verification</a></li>
+<li>Tagide (2026). <i>The anatomy of a learning stall.</i> On what happens to a learner who never reaches the point of productive difficulty. <a href="https://tagide.com/blog/llm/the-anatomy-of-a-learning-stall/">tagide.com/blog/llm/the-anatomy-of-a-learning-stall/</a></li>
+<li>Golem.de (2026). <i>KI-Agenten &uuml;bernehmen marxistische Ansichten.</i> Reported value drift in agent populations. Read as: the outputs carry a politics you did not choose and did not audit. <a href="https://www.golem.de/news/kuenstliche-intelligenz-ki-agenten-uebernehmen-marxistische-ansichten-2605-208696.html">www.golem.de/news/kuenstliche-intelligenz-ki-agenten-uebernehmen</a></li>
+<li>Springer / IJETHE (2026). <i>Generative AI literacy across education and business: competencies, obstacles, and benefits — a systematic literature review.</i>  <a href="https://link.springer.com/article/10.1186/s41239-026-00596-8">link.springer.com/article/10.1186/s41239-026-00596-8</a></li>
+</ol>
+<h4>Teaching practice, didactics and commentary</h4>
+<ol>
+<li>Krommer, A. (2026). <i>KI-Feedback. Oder: die Entscheidung zwischen Skylla und Charybdis.</i> The feedback dilemma: automated feedback that is either too generic to help or too specific to be defensible. <a href="https://axelkrommer.com/2026/07/25/ki-feedback-oder-die-entscheidung-zwischen-skylla-und-charybdis/">axelkrommer.com/2026/07/25/ki-feedback-oder-die-entscheidung-zwi</a></li>
+<li>ZML, Karlsruher Institut f&uuml;r Technologie (2026). <i>Didaktische Chatbot-Typen — Beispiele f&uuml;r Ihren Einsatz.</i> A typology rather than a tool list; the useful shape for a departmental conversation. <a href="https://www.zml.kit.edu/didaktische-chatbots.php">www.zml.kit.edu/didaktische-chatbots.php</a></li>
+<li>ZHQ, FH Aachen (2026). <i>KI als Reflexionsinstrument im wissenschaftlichen Arbeiten.</i>  <a href="https://zhq-blog.fh-aachen.de/kompetenzen-studierende/ki-als-reflexionsinstrument-im-wissenschaftlichen-arbeiten/">zhq-blog.fh-aachen.de/kompetenzen-studierende/ki-als-reflexionsi</a></li>
+<li>Hochschulforum Digitalisierung (2026). <i>Warum KI-Agenten das Ende klassischer Onlinetests einleiten.</i>  <a href="https://hochschulforumdigitalisierung.de/ki-agenten-in-onlinetests/">hochschulforumdigitalisierung.de/ki-agenten-in-onlinetests/</a></li>
+<li>Moodle (2026). <i>Feldnotizen: Wenn KI-Agenten in der Klasse auftauchen.</i> Practitioner field notes rather than a position paper. <a href="https://moodle.com/de/nachrichten/feldnotizen-wenn-ki-agenten-in-der-klasse-auftauchen/">moodle.com/de/nachrichten/feldnotizen-wenn-ki-agenten-in-der-kla</a></li>
+<li>Wampfler, P. (2026). <i>Wissenschaftliches Schreiben und KI — wie ein fundamentales Missverst&auml;ndnis die Lehrentwicklung blockiert.</i>  <a href="https://schulesocialmedia.com/2026/06/16/wissenschaftliches-schreiben-und-ki-wie-ein-fundamentales-missverstandnis-die-lehrentwicklung-blockiert/">schulesocialmedia.com/2026/06/16/wissenschaftliches-schreiben-un</a></li>
+<li>Lehrwende (2026). <i>Lehrwende — Hochschulbildung im Zeitalter generativer KI.</i> Worth reading on the meta level: its companion material (slides, podcasts) is itself AI-generated, and the Fokusgruppe note that circulated it observes that this displays exactly the problems such material has, and that concrete recommendations for action are scarce. <a href="https://lehrwende.de/">lehrwende.de/</a></li>
+<li>twillo (2026). <i>Handlungsempfehlungen f&uuml;r Hochschullehrende zum Einsatz von K&uuml;nstlicher Intelligenz.</i> OER, German. <a href="https://www.twillo.de/edu-sharing/components/render/27d39f95-eada-4cec-939f-95eada0cec80">www.twillo.de/edu-sharing/components/render/27d39f95-eada-4cec-9</a></li>
+<li>twillo (2026). <i>KI-Literacy — Grundlagen und Orientierung f&uuml;r Lehrende.</i> OER, German. <a href="https://www.twillo.de/edu-sharing/components/render/2e1ef4ad-15e0-4d17-af45-4c7223041966">www.twillo.de/edu-sharing/components/render/2e1ef4ad-15e0-4d17-a</a></li>
+<li>Springer (2026). <i>GenAI in novel educational applications: practices of integrating GenAI in the K-12 classroom.</i>  <a href="https://link.springer.com/book/10.1007/978-3-032-16153-6">link.springer.com/book/10.1007/978-3-032-16153-6</a></li>
+<li>In Preparation (Substack) (2026). <i>Opinion: I was not allowed to type prompts into ChatGPT during my chalk talk.</i> An opinion piece; included because the argument it makes about tool access in assessment is one you will meet. <a href="https://inpreparation.substack.com/p/opinion-i-was-not-allowed-to-type">inpreparation.substack.com/p/opinion-i-was-not-allowed-to-type</a></li>
+</ol>
+<h4>Open offers you can point students and colleagues at</h4>
+<ol>
+<li>iMooX (2026). <i>DigiStudi — Digitale Kompetenzen f&uuml;r Studienanf&auml;nger*innen.</i> Open course; useful as the thing you point first-year students at instead of writing your own. <a href="https://imoox.at/course/DigiStudi">imoox.at/course/DigiStudi</a></li>
+<li>Deutscher Bildungsserver (2026). <i>complett — Portal f&uuml;r Bildungsressourcen.</i>  <a href="https://complett.bildungsserver.de/">complett.bildungsserver.de/</a></li>
+<li>University of Helsinki &amp; MinnaLearn (2018&ndash;). <i>Elements of AI.</i> Free introductory course, many languages; the standard first recommendation for a colleague with no starting point. <a href="https://www.elementsofai.com">www.elementsofai.com</a></li>
+<li>KI-Campus (2026). <i>KI-Campus — die Lernplattform f&uuml;r K&uuml;nstliche Intelligenz.</i> German-language course platform, including modules for educators. <a href="https://ki-campus.org/">ki-campus.org/</a></li>
+</ol>
+<h4>This workshop series</h4>
+<ol>
+<li>EduGreenLabs / OvGU Magdeburg (2026). <i>Workshop 2 — Privacy by Design.</i> WP2 Training Lab, EU GREEN Alliance. CC BY 4.0.</li>
+<li>EduGreenLabs / OvGU Magdeburg (2026). <i>Workshop 3 — AI Implementation Sprint.</i> Installs the local stack (Ollama, Gemma) this session's lab uses. CC BY 4.0.</li>
+<li>EduGreenLabs / OvGU Magdeburg (2026). <i>Workshop 4 — AI in Teaching: Tools, Strategies and Reflection.</i> This session. Page, LiaScript course and <code class="inl">llmlab</code>. CC BY 4.0.</li>
+<li>EduGreenLabs / OvGU Magdeburg (in preparation). <i>Workshop 5 — Assessment in the age of generative AI.</i> </li>
+<li>EduGreenLabs / OvGU Magdeburg (2026). <i>llmlab — seven exercises that check this session's claims on your own machine.</i> Python 3.9+, standard library only, loopback enforced in code. CC BY 4.0.</li>
+<li>UNESCO-UNEVOC / ASSET Co-initiative, OvGU (2026). <i>Self-learning nuggets: AI Orientation, AI Basics, AI Tools, Prompting, Quality and Ethics.</i> Five LiaScript modules written for TVET teachers, mapped in Appendix A as the self-study route into the Foundation level.</li>
+</ol>
+</div>
+</section>
+
+<footer>
+<p><b>AI in Teaching: Tools, Strategies and Reflection.</b> EduGreenLabs / OvGU Magdeburg — WP2 Training Lab, EU GREEN Alliance. Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Funded by the European Union. Views expressed are those of the authors alone.</p>
+<p>This page contains no scripts, styles, fonts or images from outside the file itself. It stores nothing, sends nothing and works offline. The framework marked as an unpublished draft in Block 1 and used for the structure of Appendix A should not be cited.</p>
+<p><b>Version 4</b>, September 2026. Adds three framework cards, three failure modes, the resource and agent panels, Appendix A (the HETAICF placement map and router) and Appendix B (the full bibliography). New material carries a small violet marker in the block headings.</p>
+</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- time rail, drawn to scale from the block metadata ---- */
+  var blocks = Array.prototype.slice.call(document.querySelectorAll("section.block"));
+  var rail = document.getElementById("rail");
+  blocks.forEach(function(b){
+    var a = document.createElement("a");
+    a.href = "#" + b.id;
+    a.style.flexGrow = b.dataset.mins;
+    var isApp = b.dataset.appendix === "1";
+    a.innerHTML = '<span><span class="n">' + b.querySelector(".idx").textContent +
+                  '</span><span class="m">' + (isApp ? "ref" : b.dataset.mins + " min") +
+                  "</span></span>";
+    if (isApp) a.style.opacity = ".72";
+    a.setAttribute("aria-label", "Block " + b.querySelector(".idx").textContent +
+                   ": " + b.dataset.title + ", " + b.dataset.mins + " minutes");
+    if (Number(b.dataset.lab) > 0){
+      var d = document.createElement("span");
+      d.className = "dot";
+      d.title = b.dataset.lab + " minutes in the lab";
+      a.appendChild(d);
+    }
+    rail.appendChild(a);
+  });
+
+  /* ---- which block am I in ---- */
+  var links = Array.prototype.slice.call(rail.querySelectorAll("a"));
+  function mark(id){
+    links.forEach(function(l){
+      l.setAttribute("aria-current", l.getAttribute("href") === "#" + id ? "true" : "false");
+    });
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) mark(e.target.id); });
+    }, {rootMargin: "-15% 0px -70% 0px"});
+    blocks.forEach(function(b){ io.observe(b); });
+  }
+  mark("b0");
+
+  /* ---- facilitator notes ---- */
+  var tn = document.getElementById("tNotes");
+  tn.addEventListener("click", function(){
+    var on = document.body.classList.toggle("notes");
+    tn.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+
+  /* ---- open or close every disclosure, for printing and for review ---- */
+  var to = document.getElementById("tOpen");
+  to.addEventListener("click", function(){
+    var open = to.getAttribute("aria-pressed") !== "true";
+    document.querySelectorAll("details").forEach(function(d){ d.open = open; });
+    to.setAttribute("aria-pressed", open ? "true" : "false");
+    to.textContent = open ? "Close everything" : "Open everything";
+  });
+
+  /* ---- quizzes: answer once, see why ---- */
+  document.querySelectorAll("[data-quiz] .q").forEach(function(q){
+    var answer = Number(q.dataset.a);
+    var opts = Array.prototype.slice.call(q.querySelectorAll(".opt"));
+    var why = q.querySelector(".why");
+    opts.forEach(function(opt, i){
+      opt.addEventListener("click", function(){
+        if (q.dataset.done) return;
+        q.dataset.done = "1";
+        opts[answer].classList.add("right");
+        if (i !== answer) opt.classList.add("wrong");
+        opts.forEach(function(o){ o.setAttribute("aria-disabled", "true"); });
+        why.classList.add("on");
+      });
+    });
+  });
+
+  /* ---- v4: the placement router ---- */
+  var RDATA = [{"id": "r1", "label": "I paste student work into a commercial assistant to draft feedback", "verdict": "warn", "sum": "You are working at Foundation on one competence and below Foundation on three others, two of which are legal.", "has": ["<li><span class=\"cid\">HET-C3</span><span class=\"lvpill\">Foundation</span><br><b>Direct and iterate with generative AI systems (prompting as a documented practice).</b> You are directing a generative system and judging whether the output matches your intent.</li>", "<li><span class=\"cid\">HET-M1</span><span class=\"lvpill\">Foundation</span><br><b>Decide whether to use AI based on the nature of the academic task, including reasoned non-use.</b> You have made a decision about which tasks AI supports — even if you have not written it down.</li>"], "needs": ["<li><span class=\"cid\">HET-X1</span><span class=\"lvpill\">Foundation</span><br><b>Apply the legal framework for AI in higher education.</b> Copyright in the script belongs to the student, and anonymising the file does not touch that. If the output feeds a mark, Annex III &sect;3 and GDPR Art. 22 are in play.</li>", "<li><span class=\"cid\">HET-S3</span><span class=\"lvpill\">Foundation</span><br><b>Design AI use attentive to data sources, data selection and information flow.</b> Know which data leaves the institution during use, and under which retention terms.</li>", "<li><span class=\"cid\">HET-C4</span><span class=\"lvpill\">Foundation</span><br><b>Analyse how AI can safeguard or violate authenticity, authorship and intellectual property.</b> Disclosure: what you say in the module handbook, before submission rather than after.</li>", "<li><span class=\"cid\">HET-E3</span><span class=\"lvpill\">Foundation</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected.</b> A procedure for accepting, revising or rejecting the draft, rather than editing whatever arrives.</li>"], "legal": "AI Act Art. 50; Annex III &sect;3 (if it reaches a mark); GDPR Arts. 5, 22; copyright in the student's work.", "session": "Block 2 — evaluation family, the copyright panel and the legal panel.", "read": "<a href=\"https://edu-sharing.atlassian.net/wiki/spaces/OIC/pages/1891565573/\">KI in der Bildung — Rechtliche Orientierung f&uuml;r Bildungseinrichtungen und Lehrkr&auml;fte (FAQ)</a> &middot; <a href=\"https://axelkrommer.com/2026/07/25/ki-feedback-oder-die-entscheidung-zwischen-skylla-und-charybdis/\">KI-Feedback. Oder: die Entscheidung zwischen Skylla und Charybdis</a> &middot; <a href=\"https://eur-lex.europa.eu/eli/reg/2024/1689/oj\">Regulation (EU) 2024/1689 (Artificial Intelligence Act)</a>"}, {"id": "r2", "label": "I use the institutional assistant (GWDG, HAWKI) for administrative text", "verdict": "good", "sum": "The safest starting point in the catalogue, and it already covers three competences at Foundation.", "has": ["<li><span class=\"cid\">HET-C3</span><span class=\"lvpill\">Foundation</span><br><b>Direct and iterate with generative AI systems (prompting as a documented practice).</b> Clear prompts, and recognising when an output misses the intent.</li>", "<li><span class=\"cid\">HET-M1</span><span class=\"lvpill\">Foundation</span><br><b>Decide whether to use AI based on the nature of the academic task, including reasoned non-use.</b> Administration is the family where a mistake costs the student least.</li>", "<li><span class=\"cid\">HET-S3</span><span class=\"lvpill\">Foundation</span><br><b>Design AI use attentive to data sources, data selection and information flow.</b> The institutional route answers the question of where the text goes.</li>"], "needs": ["<li><span class=\"cid\">HET-M4</span><span class=\"lvpill\">Foundation</span><br><b>Monitor and evaluate AI use throughout an academic process.</b> Checkpoints. The tenth minute-summary gets checked less than the first, and nothing warns you.</li>", "<li><span class=\"cid\">HET-S1</span><span class=\"lvpill\">Foundation</span><br><b>Investigate how an AI system is intended to work, whom it is designed for, and what its limits are.</b> The model catalogue behind an institutional front end changes without telling you.</li>"], "legal": "Art. 4 literacy duty applies to your institution as deployer, whichever route you take.", "session": "Block 2 — administration family.", "read": "<a href=\"https://www.twillo.de/edu-sharing/components/render/27d39f95-eada-4cec-939f-95eada0cec80\">Handlungsempfehlungen f&uuml;r Hochschullehrende zum Einsatz von K&uuml;nstlicher Intelligenz</a> &middot; <a href=\"https://eur-lex.europa.eu/eli/reg/2024/1689/oj\">Regulation (EU) 2024/1689 (Artificial Intelligence Act)</a>"}, {"id": "r3", "label": "I run a model locally with Ollama, so I assume I am compliant", "verdict": "warn", "sum": "Local hosting moves you up on two competences and answers exactly one obligation.", "has": ["<li><span class=\"cid\">HET-S3</span><span class=\"lvpill\">Applied</span><br><b>Design AI use attentive to data sources, data selection and information flow.</b> You can say precisely where the text goes, which most colleagues cannot.</li>", "<li><span class=\"cid\">HET-M2</span><span class=\"lvpill\">Applied</span><br><b>Choose an appropriate AI approach by comparing how different systems operate.</b> You have compared how different systems operate rather than accepting a default.</li>", "<li><span class=\"cid\">HET-E5</span><span class=\"lvpill\">Foundation</span><br><b>Compare how AI systems consume energy and natural resources.</b> Running it yourself is the first time most people see the energy cost as a cost.</li>"], "needs": ["<li><span class=\"cid\">HET-X1</span><span class=\"lvpill\">Applied</span><br><b>Apply the legal framework for AI in higher education.</b> Route is not compliance. Annex III &sect;3, Art. 50 and Art. 4 are unchanged by where the bytes went.</li>", "<li><span class=\"cid\">HET-E3</span><span class=\"lvpill\">Applied</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected.</b> Smaller models are measurably weaker on long documents and on languages other than English, so verification effort goes up, not down.</li>"], "legal": "Removes the processor relationship and the transfer. Removes nothing else.", "session": "Block 2 &middot; Lab 7 (<code class=\"inl\">route</code>) &middot; Block 3 terminology table, deployment route.", "read": "Workshop 3 — AI Implementation Sprint &middot; llmlab — seven exercises that check this session's claims on your own machine &middot; <a href=\"https://eur-lex.europa.eu/eli/reg/2024/1689/oj\">Regulation (EU) 2024/1689 (Artificial Intelligence Act)</a>"}, {"id": "r4", "label": "I run submissions through an AI detector", "verdict": "stop", "sum": "The framework does not put you at a level here. It puts a decision in front of you.", "has": ["<li><span class=\"cid\">HET-S2</span><span class=\"lvpill\">Foundation</span><br><b>Evaluate AI systems using defined outcomes, test cases and user feedback.</b> You are evaluating a system — but against no defined outcome, no test cases and no measure of the harm of a false positive.</li>"], "needs": ["<li><span class=\"cid\">HET-E6</span><span class=\"lvpill\">Applied</span><br><b>Explain how AI can amplify societal biases and concentrate epistemic authority.</b> Detector errors are distributed by first language, which means the instrument is not the one it claims to be.</li>", "<li><span class=\"cid\">HET-E3</span><span class=\"lvpill\">Applied</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected.</b> There is no evidence an accused student can produce that settles the matter in their favour.</li>", "<li><span class=\"cid\">HET-E7</span><span class=\"lvpill\">Applied</span><br><b>Analyse how well AI use aligns with ethical principles and human values.</b> An instrument whose two error types carry consequences this unequal has to be justified against that asymmetry, not against an average.</li>", "<li><span class=\"cid\">HET-X1</span><span class=\"lvpill\">Applied</span><br><b>Apply the legal framework for AI in higher education.</b> A disciplinary process resting on an unfalsifiable output is a procedure question before it is a technical one.</li>"], "legal": "Annex III &sect;3 covers monitoring prohibited behaviour during tests. GDPR Art. 22 covers the decision that follows.", "session": "Block 2 — detectors, all three cards.", "read": "Heads we win, tails you lose: AI detectors in education &middot; <a href=\"https://eur-lex.europa.eu/eli/reg/2024/1689/oj\">Regulation (EU) 2024/1689 (Artificial Intelligence Act)</a>"}, {"id": "r5", "label": "I use live captioning or translation in the lecture theatre", "verdict": "warn", "sum": "The clearest accessibility gain in the catalogue, in the family where students cannot easily opt out.", "has": ["<li><span class=\"cid\">HET-C2</span><span class=\"lvpill\">Foundation</span><br><b>Visualise, prototype and combine ideas using different types of AI systems.</b> You are producing material with AI support in a live setting.</li>", "<li><span class=\"cid\">HET-E1</span><span class=\"lvpill\">Foundation</span><br><b>Recognise AI's role and influence in academic contexts.</b> You can name where an AI system is operating in your teaching.</li>"], "needs": ["<li><span class=\"cid\">HET-S1</span><span class=\"lvpill\">Foundation</span><br><b>Investigate how an AI system is intended to work, whom it is designed for, and what its limits are.</b> Its stated limits: it degrades on noise, accent and technical vocabulary — exactly where you need it.</li>", "<li><span class=\"cid\">HET-X1</span><span class=\"lvpill\">Foundation</span><br><b>Apply the legal framework for AI in higher education.</b> Art. 50: announce it. And the hard stop next door — anything inferring emotion from faces, voices or posture is prohibited under Art. 5(1)(f).</li>", "<li><span class=\"cid\">HET-E3</span><span class=\"lvpill\">Foundation</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected.</b> Announce it as an aid, never as a record.</li>"], "legal": "Art. 50 transparency. Art. 5(1)(f) prohibition sits immediately adjacent.", "session": "Block 2 — in-class family and the legal panel.", "read": "<a href=\"https://eur-lex.europa.eu/eli/reg/2024/1689/oj\">Regulation (EU) 2024/1689 (Artificial Intelligence Act)</a> &middot; <a href=\"https://www.zml.kit.edu/didaktische-chatbots.php\">Didaktische Chatbot-Typen — Beispiele f&uuml;r Ihren Einsatz</a>"}, {"id": "r6", "label": "I generate slides, quizzes or task variants", "verdict": "good", "sum": "The family with the largest gain and the smallest risk, because you review before anything ships.", "has": ["<li><span class=\"cid\">HET-C2</span><span class=\"lvpill\">Foundation</span><br><b>Visualise, prototype and combine ideas using different types of AI systems.</b> Examples, quizzes, graphics with AI support.</li>", "<li><span class=\"cid\">HET-C1</span><span class=\"lvpill\">Foundation</span><br><b>Use AI to explore perspectives that build upon original academic ideas.</b> Using AI to open perspectives on material you already own.</li>"], "needs": ["<li><span class=\"cid\">HET-E3</span><span class=\"lvpill\">Applied</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected.</b> The volume trap: producing four versions is easy, deciding which to use is the work and it did not get easier.</li>", "<li><span class=\"cid\">HET-E6</span><span class=\"lvpill\">Foundation</span><br><b>Explain how AI can amplify societal biases and concentrate epistemic authority.</b> Ask what a generated example set represents, and who is missing from it.</li>", "<li><span class=\"cid\">HET-C4</span><span class=\"lvpill\">Foundation</span><br><b>Analyse how AI can safeguard or violate authenticity, authorship and intellectual property.</b> If it goes to students as OER, say what was AI-assisted.</li>"], "legal": "None directly, until the material is used to evaluate someone.", "session": "Block 2 — preparation family &middot; Block 3 — rung one and rung two.", "read": "<a href=\"https://www.twillo.de/edu-sharing/components/render/2e1ef4ad-15e0-4d17-af45-4c7223041966\">KI-Literacy — Grundlagen und Orientierung f&uuml;r Lehrende</a> &middot; Self-learning nuggets: AI Orientation, AI Basics, AI Tools, Prompting, Quality and Ethics"}, {"id": "r7", "label": "I have written a standing instruction and I reuse it (rung three)", "verdict": "good", "sum": "This is the move from Foundation to Applied, and it is the one that transfers to a colleague.", "has": ["<li><span class=\"cid\">HET-C3</span><span class=\"lvpill\">Applied</span><br><b>Direct and iterate with generative AI systems (prompting as a documented practice).</b> Prompting as a documented practice rather than a private knack.</li>", "<li><span class=\"cid\">HET-M3</span><span class=\"lvpill\">Applied</span><br><b>Decompose a task to determine where AI should automate and where it should only augment.</b> You have decided which part is automated and which is only augmented.</li>", "<li><span class=\"cid\">HET-X3</span><span class=\"lvpill\">Applied</span><br><b>Develop professionally and collaboratively with AI.</b> The instruction is reviewable, so it can be taught.</li>"], "needs": ["<li><span class=\"cid\">HET-S2</span><span class=\"lvpill\">Applied</span><br><b>Evaluate AI systems using defined outcomes, test cases and user feedback.</b> Test cases: try it on the three inputs where you expect it to fail.</li>", "<li><span class=\"cid\">HET-M4</span><span class=\"lvpill\">Applied</span><br><b>Monitor and evaluate AI use throughout an academic process.</b> Checkpoints across a term, not a single approval at the start.</li>"], "legal": "None new. The instruction is what makes your human oversight demonstrable under Art. 14 if it ever matters.", "session": "Block 3 — rung three &middot; Lab 4 (<code class=\"inl\">steer</code>).", "read": "llmlab — seven exercises that check this session's claims on your own machine &middot; <a href=\"https://zhq-blog.fh-aachen.de/kompetenzen-studierende/ki-als-reflexionsinstrument-im-wissenschaftlichen-arbeiten/\">KI als Reflexionsinstrument im wissenschaftlichen Arbeiten</a>"}, {"id": "r8", "label": "I run a specification over a folder of inputs with provenance headers (rung four)", "verdict": "good", "sum": "Advanced on the prompting competence, and the only rung that leaves an auditable trail.", "has": ["<li><span class=\"cid\">HET-C3</span><span class=\"lvpill\">Advanced</span><br><b>Direct and iterate with generative AI systems (prompting as a documented practice).</b> A versioned specification, a recorded model, temperature and seed.</li>", "<li><span class=\"cid\">HET-S2</span><span class=\"lvpill\">Applied</span><br><b>Evaluate AI systems using defined outcomes, test cases and user feedback.</b> Defined outcomes and repeatable test cases.</li>", "<li><span class=\"cid\">HET-M4</span><span class=\"lvpill\">Applied</span><br><b>Monitor and evaluate AI use throughout an academic process.</b> Monitoring across the whole process rather than at the end.</li>", "<li><span class=\"cid\">HET-X2</span><span class=\"lvpill\">Applied</span><br><b>Practise scholarly work with AI.</b> Scholarly practice: the trail is what makes the claim checkable by someone else.</li>"], "needs": ["<li><span class=\"cid\">HET-S4</span><span class=\"lvpill\">Applied</span><br><b>Improve AI use and AI systems to promote well-being and societal benefit.</b> Publishing it so somebody other than you can use and correct it.</li>", "<li><span class=\"cid\">HET-E5</span><span class=\"lvpill\">Foundation</span><br><b>Compare how AI systems consume energy and natural resources.</b> Batch runs are where the energy question stops being abstract.</li>"], "legal": "The provenance header is the practical form of Art. 14 oversight and of an appeal-proof position.", "session": "Block 3 — rung four &middot; Lab 6 (<code class=\"inl\">ladder</code>) and the <code class=\"inl\">harness</code> command.", "read": "llmlab — seven exercises that check this session's claims on your own machine &middot; Workshop 4 — AI in Teaching: Tools, Strategies and Reflection"}, {"id": "r9", "label": "I have set a task that assumes students will use AI", "verdict": "warn", "sum": "You have crossed into the second reading of every competence: not what you can do, but what you enable students to do.", "has": ["<li><span class=\"cid\">HET-M1</span><span class=\"lvpill\">Applied</span><br><b>Decide whether to use AI based on the nature of the academic task, including reasoned non-use.</b> You decided the task is one where AI use is legitimate.</li>", "<li><span class=\"cid\">HET-C4</span><span class=\"lvpill\">Applied</span><br><b>Analyse how AI can safeguard or violate authenticity, authorship and intellectual property.</b> Authorship and disclosure rules are now part of the task, not an afterthought.</li>"], "needs": ["<li><span class=\"cid\">HET-X1</span><span class=\"lvpill\">Applied</span><br><b>Apply the legal framework for AI in higher education.</b> You cannot require a tool your institution does not provide. Equity of access is a condition of fairness, not a nice-to-have.</li>", "<li><span class=\"cid\">HET-E1</span><span class=\"lvpill\">Foundation</span><br><b>Recognise AI's role and influence in academic contexts.</b> at the student reading — they have to be able to identify the AI in the tools they already use.</li>", "<li><span class=\"cid\">HET-E3</span><span class=\"lvpill\">Foundation</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected.</b> at the student reading — they need a verification procedure, and they will not invent one.</li>", "<li><span class=\"cid\">HET-S2</span><span class=\"lvpill\">Applied</span><br><b>Evaluate AI systems using defined outcomes, test cases and user feedback.</b> Agentic tools change what an online test measures. Assume the format is under revision.</li>"], "legal": "Equity of access; Art. 50 if a system speaks to students on your behalf; Annex III &sect;3 when the output reaches a mark.", "session": "Block 2 — the equity panel &middot; Block 3.4 &middot; forward to Workshop 5.", "read": "<a href=\"https://hochschulforumdigitalisierung.de/ki-agenten-in-onlinetests/\">Warum KI-Agenten das Ende klassischer Onlinetests einleiten</a> &middot; <a href=\"https://moodle.com/de/nachrichten/feldnotizen-wenn-ki-agenten-in-der-klasse-auftauchen/\">Feldnotizen: Wenn KI-Agenten in der Klasse auftauchen</a> &middot; <a href=\"https://imoox.at/course/DigiStudi\">DigiStudi — Digitale Kompetenzen f&uuml;r Studienanf&auml;nger*innen</a>"}, {"id": "r10", "label": "I do not use AI in my teaching at all", "verdict": "neutral", "sum": "Reasoned non-use is a named competence, not an absence of one — but three obligations still apply to you.", "has": ["<li><span class=\"cid\">HET-M1</span><span class=\"lvpill\">Foundation</span><br><b>Decide whether to use AI based on the nature of the academic task, including reasoned non-use.</b> Deciding <i>not</i> to use AI for a task, for a stated reason, is the competence. Deciding by default is not.</li>"], "needs": ["<li><span class=\"cid\">HET-E1</span><span class=\"lvpill\">Foundation</span><br><b>Recognise AI's role and influence in academic contexts.</b> Your students are using it, and there is AI in your reference manager, your VLE and your literature search whether you chose it or not.</li>", "<li><span class=\"cid\">HET-E2</span><span class=\"lvpill\">Foundation</span><br><b>Describe how AI systems perform tasks in accurate, non-anthropomorphic language.</b> You will be asked to sit on a committee that procures one of these, and non-anthropomorphic description is what makes that meeting useful.</li>", "<li><span class=\"cid\">HET-X1</span><span class=\"lvpill\">Foundation</span><br><b>Apply the legal framework for AI in higher education.</b> Art. 4 falls on the institution and is discharged by staff who can explain the tools in use. Abstention does not discharge it.</li>"], "legal": "Art. 4 applies to you as a member of the deploying organisation.", "session": "Block 0 &middot; Block 1 &middot; Block 4, question one — which is the reflective version of this position.", "read": "<a href=\"https://www.wissenschaftsrat.de/download/2026/3319-26\">Intellektuelle Souver&auml;nit&auml;t: Empfehlungen f&uuml;r die Hochschulbildung in Zeiten von generativer KI</a> &middot; <a href=\"https://doi.org/10.1007/s00146-025-02686-z\">AI deskilling is a structural problem</a>"}, {"id": "r11", "label": "I use AI to search literature and summarise papers", "verdict": "warn", "sum": "The most common academic use, and the one where the failure is hardest to see in the output.", "has": ["<li><span class=\"cid\">HET-X2</span><span class=\"lvpill\">Foundation</span><br><b>Practise scholarly work with AI.</b> Literature search and text revision, with references checked against the source.</li>", "<li><span class=\"cid\">HET-C1</span><span class=\"lvpill\">Foundation</span><br><b>Use AI to explore perspectives that build upon original academic ideas.</b> Exploring perspectives on ideas that are already yours.</li>"], "needs": ["<li><span class=\"cid\">HET-E3</span><span class=\"lvpill\">Applied</span><br><b>Evaluate whether AI outputs should be accepted, revised, or rejected.</b> A grounded answer and an ungrounded answer are written in the same register. Nothing in the text distinguishes them.</li>", "<li><span class=\"cid\">HET-E4</span><span class=\"lvpill\">Foundation</span><br><b>Examine how predictive AI recommendations can inform or limit perspectives.</b> Ranking is pre-selection, and pre-selection is not neutral. What you did not see is not reported as missing.</li>", "<li><span class=\"cid\">HET-E6</span><span class=\"lvpill\">Foundation</span><br><b>Explain how AI can amplify societal biases and concentrate epistemic authority.</b> A fluent synthesis of a live disagreement does not report the disagreement as absent. It simply does not report it.</li>"], "legal": "None directly. The exposure is scholarly rather than legal, which does not make it smaller.", "session": "Block 1 — fabrication and illusion of consensus &middot; Lab 5 (<code class=\"inl\">ground</code>) &middot; Block 3 — context window.", "read": "<a href=\"https://www.forschung-und-lehre.de/forschung/zahl-falscher-ki-referenzen-in-forschungsarbeiten-nimmt-zu-7760\">Zahl falscher KI-Referenzen in Forschungsarbeiten nimmt zu</a> &middot; <a href=\"https://arxiv.org/abs/2602.15871\">Detecting citation hallucinations in the era of AI-generated content</a> &middot; <a href=\"https://bibfox.com/en/solutions/reference-verification\">Reference verification service</a> &middot; <a href=\"https://schulesocialmedia.com/2026/06/16/wissenschaftliches-schreiben-und-ki-wie-ein-fundamentales-missverstandnis-die-lehrentwicklung-blockiert/\">Wissenschaftliches Schreiben und KI — wie ein fundamentales Missverst&auml;ndnis die Lehrentwicklung blockiert</a>"}, {"id": "r12", "label": "I built a teaching artefact with substantial AI assistance and published it", "verdict": "good", "sum": "Advanced across several competences, and the point at which Stratum X stops being theoretical.", "has": ["<li><span class=\"cid\">HET-C2</span><span class=\"lvpill\">Advanced</span><br><b>Visualise, prototype and combine ideas using different types of AI systems.</b> Prototyping and combining system types into something that did not exist.</li>", "<li><span class=\"cid\">HET-S3</span><span class=\"lvpill\">Advanced</span><br><b>Design AI use attentive to data sources, data selection and information flow.</b> Architecture as the privacy answer: no accounts, no server-side storage, nothing to protect because nothing is collected.</li>", "<li><span class=\"cid\">HET-S1</span><span class=\"lvpill\">Applied</span><br><b>Investigate how an AI system is intended to work, whom it is designed for, and what its limits are.</b> You can state the artefact's limits because you specified them.</li>", "<li><span class=\"cid\">HET-X2</span><span class=\"lvpill\">Applied</span><br><b>Practise scholarly work with AI.</b> The commit history is the audit trail, and the audit trail is the credibility.</li>"], "needs": ["<li><span class=\"cid\">HET-S4</span><span class=\"lvpill\">Applied</span><br><b>Improve AI use and AI systems to promote well-being and societal benefit.</b> Maintenance. A repository nobody has opened since the demo is not an OER.</li>", "<li><span class=\"cid\">HET-X1</span><span class=\"lvpill\">Applied</span><br><b>Apply the legal framework for AI in higher education.</b> It becomes the Annex III situation the moment the score attaches to a grade.</li>", "<li><span class=\"cid\">HET-E5</span><span class=\"lvpill\">Foundation</span><br><b>Compare how AI systems consume energy and natural resources.</b> If it calls a hosted model at runtime, that cost is now in your teaching, every cohort, every year.</li>"], "legal": "Art. 50 for what the learner is told. Annex III &sect;3 as soon as it is graded.", "session": "Block 3.4 — the worked example and the three pedagogical decisions.", "read": "Workshop 4 — AI in Teaching: Tools, Strategies and Reflection &middot; <a href=\"https://his-he.de/publikation/perspektiven-einer-ki-unterstuetzten-offenen-bildungspraxis/\">Perspektiven einer KI-unterst&uuml;tzten offenen Bildungspraxis</a>"}];
+  var rc = document.getElementById("rchoices");
+  var ro = document.getElementById("rout");
+  if (rc && ro){
+    RDATA.forEach(function(r){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "rbtn";
+      b.setAttribute("aria-pressed", "false");
+      b.setAttribute("aria-controls", "rout");
+      b.textContent = r.label;
+      b.addEventListener("click", function(){
+        var open = b.getAttribute("aria-pressed") === "true";
+        Array.prototype.forEach.call(rc.children, function(o){
+          o.setAttribute("aria-pressed", "false");
+        });
+        if (open){ ro.hidden = true; return; }
+        b.setAttribute("aria-pressed", "true");
+        ro.innerHTML =
+          '<span class="rverdict ' + r.verdict + '">' +
+          ({good:"a reasonable place to be", warn:"proceed, with these first",
+            stop:"a decision, not a level", neutral:"still inside the framework"}[r.verdict]) +
+          '</span>' +
+          '<p class="rsum">' + r.sum + '</p>' +
+          '<div class="rgrid">' +
+            '<div class="rcol has"><h5>You are exercising</h5><ul>' + r.has.join("") + '</ul></div>' +
+            '<div class="rcol needs"><h5>You needed these first</h5><ul>' + r.needs.join("") + '</ul></div>' +
+          '</div>' +
+          '<div class="rmeta">' +
+            '<div><b>Legal floor:</b> ' + r.legal + '</div>' +
+            '<div><b>In this session:</b> ' + r.session + '</div>' +
+            '<div><b>Read:</b> ' + r.read + '</div>' +
+          '</div>';
+        ro.hidden = false;
+      });
+      rc.appendChild(b);
+    });
+  }
+})();
+</script>
+</body>
+</html>
