@@ -1,0 +1,42 @@
+{
+  "title": "Replies to student emails, module EDU-204",
+  "signature": "EDU-204 module team",
+  "signature_pattern": "EDU-204 (module team|Modulteam)",
+  "max_words": 150,
+  "open_question_phrases": [
+    "The module team will confirm this separately.",
+    "Das Modulteam bestätigt dies gesondert."
+  ],
+  "categories": {
+    "information": {
+      "description": "asks for a date, a room, a procedure or course material",
+      "handling": "Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.",
+      "route": "auto",
+      "refer": false
+    },
+    "extension": {
+      "description": "asks for a deadline extension or reports an illness that affects a deadline or an examination",
+      "handling": "State that the examination office decides on extensions and illness, give its address and say what the application must contain. Do not decide, promise or suggest an outcome.",
+      "route": "auto",
+      "refer": true
+    },
+    "grade": {
+      "description": "questions or contests a mark or a grade",
+      "handling": "Do not discuss the grade. Name the review session and the written procedure with the examination office.",
+      "route": "auto",
+      "refer": true
+    },
+    "third_party": {
+      "description": "asks about another student or asks to act on behalf of another student",
+      "handling": "Give no information about the other student. State that each student must contact the module team personally.",
+      "route": "human",
+      "refer": false
+    },
+    "other": {
+      "description": "anything else, including questions about the content of the student's own work",
+      "handling": "Confirm receipt and state that a member of the module team will reply personally. Do not answer the question itself.",
+      "route": "human",
+      "refer": false
+    }
+  }
+}
