@@ -1,0 +1,823 @@
+llmlab 2.0.0 · model gemma3:12b · rendered from lab6_ladder.json
+
+========================================================================================
+  Five stages of prompting: answering student emails
+  Block 3 — the five stages of prompting
+========================================================================================
+  Aim: To apply the five stages of prompting to one administrative task and to record,
+  for each stage, what is produced, what is checked and what remains for a person to
+  decide.
+
+  Results
+
+  --------------------------------------------------------------------------------------
+  [Stage 1 · prompt]   103 prompt tokens · 320 output tokens · 19.52 s
+    settings: temperature 0.0, seed 5
+    artefact: None; the exchange remains in the chat window.
+    user message:
+      Answer this email:
+
+      Subject: Portfolio deadline - illness
+
+      Hello,
+
+      I have had influenza since last week and my doctor has signed me off until
+      12 January. I will not be able to finish my portfolio by the deadline. Could you
+      please extend the deadline for me by one week? I can send you the medical
+      certificate.
+
+      Thank you very much,
+      Amira Haddad
+      Matriculation number 231077
+    output:
+      Okay, here are a few options for replying to Amira's email, ranging from more
+      formal to slightly more casual. Choose the one that best suits your relationship
+      with her and the overall tone of your institution. **Please read the notes at the
+      end of each option before sending!**
+
+      **Option 1: Formal & Detailed**
+
+      Subject: Re: Portfolio deadline - illness
+
+      Dear Amira,
+
+      Thank you for informing us of your situation. We are very sorry to hear you have
+      been unwell.
+
+      We understand that illness can significantly impact your ability to complete
+      assignments. We have received your notification regarding your doctor's
+      certificate and will be happy to extend the portfolio deadline by one week, until
+      [New Deadline Date - e.g., January 19th, 2024].
+
+      Please do send the medical certificate as you offered, so we can keep it on file.
+
+      We wish you a speedy recovery and hope you are feeling better soon. Please do not
+      hesitate to contact us if you have any further questions.
+
+      Sincerely,
+
+      [Your Name/Department Name]
+      [Your Title/Position]
+
+      **Notes for Option 1:**
+
+      *   **Replace `[New Deadline Date]` with the actual new deadline.**  Calculate
+      this carefully.
+      *   **Replace `[Your Name/Department Name]` and `[Your Title/Position]` with your
+      appropriate details.**
+      *   This is the safest option if you need to maintain a very formal record.
+      *   It explicitly acknowledges the medical certificate and requests it.
+
+      **Option
+    checks: 4 of 9 passed; failed: opens with a salutation and closes with the signature
+    in the reply's language (no salutation in first line: Okay, here are a few options
+    for replying to Amira; no signature in last lines; no English closing); no more than
+    150 words (222 words); every date appears in the reference documents or in the email
+    (not in any source: 19 January); makes no decision reserved for the examination
+    office (We have received your notification regarding your doctor's certificate and
+    will be happy to extend the portfolio deadline by one week, until [New Deadline Date
+    - e.g., January 19th, 2024].); names the examination office
+    · For the checks, the category 'extension' was assigned manually; stage 1 has no
+    classification step.
+
+  --------------------------------------------------------------------------------------
+  [Stage 2 · skill prompt]   982 prompt tokens · 56 output tokens · 14.91 s
+    settings: temperature 0.0, seed 5
+    artefact: A stored instruction: specification and module information.
+    system prompt:
+      # Specification: replies to student emails, module EDU-204
+
+      You draft replies to emails that students send to the module team of EDU-204
+      Research Methods in Education.
+
+      Rules:
+
+      1. Use only information from the reference documents and the approved answers.
+      [... 65 lines omitted; use --full to print everything ...]
+      The module team does not confirm or discuss the enrolment, registration, grades
+      or circumstances of any student with another person.
+    user message:
+      Subject: Portfolio deadline - illness
+
+      Hello,
+
+      I have had influenza since last week and my doctor has signed me off until
+      12 January. I will not be able to finish my portfolio by the deadline. Could you
+      please extend the deadline for me by one week? I can send you the medical
+      certificate.
+
+      Thank you very much,
+      Amira Haddad
+      Matriculation number 231077
+    output:
+      Dear Amira Haddad,
+
+      The module team does not grant deadline extensions. Please submit an application
+      to the examination office (pruefungsamt@example.edu) before the deadline,
+      including your medical certificate.
+
+      Kind regards,
+      EDU-204 module team
+    checks: 9 of 9 passed
+
+  --------------------------------------------------------------------------------------
+  [Stage 3 · harness]
+    settings: temperature 0.0, seed 42
+    artefact: One reply file per email with a provenance header, sorted into ready/ and
+    review/, and a log.
+    system prompt:
+      # Specification: replies to student emails, module EDU-204
+
+      You draft replies to emails that students send to the module team of EDU-204
+      Research Methods in Education.
+
+      Rules:
+
+      1. Use only information from the reference documents and the approved answers.
+      [... 65 lines omitted; use --full to print everything ...]
+      The module team does not confirm or discuss the enrolment, registration, grades
+      or circumstances of any student with another person.
+    output:
+      7 emails processed: 5 routed to 'ready', 2 to 'review'.
+
+    email                  language  category     route   reason                              checks (not used)
+    ---------------------  --------  -----------  ------  ----------------------------------  -----------------
+    01_exam_date.txt       en        information  ready   category handled automatically; re  9/9              
+    02_extension.txt       en        extension    ready   category handled automatically; re  9/9              
+    03_slides.txt          en        information  ready   category handled automatically; re  8/9              
+    04_literaturliste.txt  de        information  ready   category handled automatically; re  8/9              
+    05_grade.txt           en        grade        ready   category handled automatically; re  9/9              
+    06_flatmate.txt        en        third_party  review  category 'third_party' is always r  9/9              
+    07_sample_size.txt     en        other        review  category 'other' is always reviewe  9/9              
+
+    > 01_exam_date.txt · information · ready
+      Email:
+        Subject: Date of the written exam
+
+        Dear module team,
+
+        I could not find the date of the written exam for EDU-204. When and where does
+        it take place, and do I have to register for it separately?
+
+        Kind regards,
+        Jonas Becker
+        Matriculation number 229481
+      Step 1 · model answer:
+        information  → category: information
+      Step 2 · draft (checks 9/9):
+        Dear Jonas Becker,
+
+        The written examination takes place on 9 February 2027, from 10:00–12:00, in
+        lecture hall H3.
+
+        Registration for the written examination is required and closes on 12 December
+        2026 in the campus portal.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 02_extension.txt · extension · ready
+      Email:
+        Subject: Portfolio deadline - illness
+
+        Hello,
+
+        I have had influenza since last week and my doctor has signed me off until
+        12 January. I will not be able to finish my portfolio by the deadline. Could you
+        please extend the deadline for me by one week? I can send you the medical
+        certificate.
+
+        Thank you very much,
+        Amira Haddad
+        Matriculation number 231077
+      Step 1 · model answer:
+        extension  → category: extension
+      Step 2 · draft (checks 9/9):
+        Dear Amira Haddad,
+
+        Extensions to the portfolio deadline are granted only by the examination office
+        (pruefungsamt@example.edu), not by the module team. The application must be
+        submitted before the deadline and, in the case of illness, include a medical
+        certificate.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 03_slides.txt · information · ready
+      Email:
+        Subject: Slides for next week
+
+        Dear EDU-204 team,
+
+        will the slides for next week's session be available before the session? I would
+        like to print them and take notes on them.
+
+        Best wishes,
+        Chen Wei
+      Step 1 · model answer:
+        information  → category: information
+      Step 2 · draft (checks 8/9):
+        Dear Chen Wei,
+
+        Readings are provided on the learning platform in the course "EDU-204 2026/27".
+        The reading list is in the folder "Week 0".
+
+        Kind regards,
+        EDU-204 module team
+
+    > 04_literaturliste.txt · information · ready
+      Email:
+        Betreff: Literaturliste und Sprechstunde
+
+        Sehr geehrtes Modulteam,
+
+        wo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann
+        Ihre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.
+
+        Viele Grüße
+        Lea Schmidt
+      Step 1 · model answer:
+        information  → category: information
+      Step 2 · draft (checks 8/9):
+        Sehr geehrte Frau Schmidt,
+
+        die Readings für das Modul EDU-204 finden Sie auf der Lernplattform im Kurs
+        "EDU-204 2026/27". Die Leseliste befindet sich im Ordner "Week 0".
+
+        Die Sprechstunde des Modulteams findet dienstags von 14:00 bis 15:30 in Raum
+        G40-212 oder auf Anfrage per Videoanruf statt.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 05_grade.txt · grade · ready
+      Email:
+        Subject: My exam grade
+
+        Dear module team,
+
+        I received a 3.3 for the written exam and I believe my answer to question 4
+        deserved more points. Could you please look at it again and raise my grade? I
+        need at least a 3.0 for my scholarship.
+
+        Best regards,
+        Tomasz Nowak
+        Matriculation number 228815
+      Step 1 · model answer:
+        grade  → category: grade
+      Step 2 · draft (checks 9/9):
+        Dear Tomasz Nowak,
+
+        The module team does not discuss grades by email. You can inspect your marked
+        examination in the review session on 5 March 2027, 13:00–15:00, room G40-212.
+        Requests to change a grade are submitted in writing to the examination office
+        (pruefungsamt@example.edu) within one month of publication.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 06_flatmate.txt · third_party · review
+      Email:
+        Subject: Question about a fellow student
+
+        Hi,
+
+        my flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell
+        me whether he is registered for the exam? He also asked me to submit his
+        portfolio for him. Is that possible?
+
+        Thanks,
+        Sofia Rossi
+      Step 1 · model answer:
+        third_party  → category: third_party
+      Step 2 · draft (checks 9/9):
+        Dear Sofia Rossi,
+
+        The module team does not confirm or discuss the enrolment, registration, grades
+        or circumstances of any student with another person. Each student must contact
+        the module team personally.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 07_sample_size.txt · other · review
+      Email:
+        Subject: Sample size for my portfolio study
+
+        Dear module team,
+
+        for the empirical part of my portfolio I have interviewed 12 teachers. Is this
+        sample large enough, or should I conduct more interviews before I start the
+        analysis?
+
+        Best regards,
+        Noah Fischer
+      Step 1 · model answer:
+        other  → category: other
+      Step 2 · draft (checks 9/9):
+        Dear Noah Fischer,
+
+        Thank you for your email. A member of the module team will reply personally to
+        your question.
+
+        Kind regards,
+        EDU-204 module team
+    · Command for the full inbox, with files written: python -m llmlab harness --task
+    student_emails --out out
+
+  --------------------------------------------------------------------------------------
+  [Stage 4 · loop]
+    settings: temperature 0.0, seed 42, rounds 3
+    artefact: A log of every round: checks, revision prompt, revised reply.
+    system prompt:
+      # Specification: replies to student emails, module EDU-204
+
+      You draft replies to emails that students send to the module team of EDU-204
+      Research Methods in Education.
+
+      Rules:
+
+      1. Use only information from the reference documents and the approved answers.
+      [... 65 lines omitted; use --full to print everything ...]
+      The module team does not confirm or discuss the enrolment, registration, grades
+      or circumstances of any student with another person.
+    output:
+      5 replies passed all checks as first drafts and 7 after the loop; 2 revision
+      requests were sent.
+
+    email                  category     checks per round  route   reason                            
+    ---------------------  -----------  ----------------  ------  ----------------------------------
+    01_exam_date.txt       information  9/9               ready   category handled automatically; al
+    02_extension.txt       extension    9/9               ready   category handled automatically; al
+    03_slides.txt          information  8/9 → 9/9         review  the sources do not answer the ques
+    04_literaturliste.txt  information  8/9 → 9/9         ready   category handled automatically; al
+    05_grade.txt           grade        9/9               ready   category handled automatically; al
+    06_flatmate.txt        third_party  9/9               review  category 'third_party' is always r
+    07_sample_size.txt     other        9/9               review  category 'other' is always reviewe
+
+    > 01_exam_date.txt · information · ready
+      Email:
+        Subject: Date of the written exam
+
+        Dear module team,
+
+        I could not find the date of the written exam for EDU-204. When and where does
+        it take place, and do I have to register for it separately?
+
+        Kind regards,
+        Jonas Becker
+        Matriculation number 229481
+      Step 1 · model answer:
+        information  → category: information
+      Step 2 · draft (checks 9/9):
+        Dear Jonas Becker,
+
+        The written examination takes place on 9 February 2027, from 10:00–12:00, in
+        lecture hall H3.
+
+        Registration for the written examination is required and closes on 12 December
+        2026 in the campus portal.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 02_extension.txt · extension · ready
+      Email:
+        Subject: Portfolio deadline - illness
+
+        Hello,
+
+        I have had influenza since last week and my doctor has signed me off until
+        12 January. I will not be able to finish my portfolio by the deadline. Could you
+        please extend the deadline for me by one week? I can send you the medical
+        certificate.
+
+        Thank you very much,
+        Amira Haddad
+        Matriculation number 231077
+      Step 1 · model answer:
+        extension  → category: extension
+      Step 2 · draft (checks 9/9):
+        Dear Amira Haddad,
+
+        Extensions to the portfolio deadline are granted only by the examination office
+        (pruefungsamt@example.edu), not by the module team. The application must be
+        submitted before the deadline and, in the case of illness, include a medical
+        certificate.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 03_slides.txt · information · review
+      Email:
+        Subject: Slides for next week
+
+        Dear EDU-204 team,
+
+        will the slides for next week's session be available before the session? I would
+        like to print them and take notes on them.
+
+        Best wishes,
+        Chen Wei
+      Step 1 · model answer:
+        information  → category: information
+      Step 2 · draft (checks 8/9):
+        Dear Chen Wei,
+
+        Readings are provided on the learning platform in the course "EDU-204 2026/27".
+        The reading list is in the folder "Week 0".
+
+        Kind regards,
+        EDU-204 module team
+      Round 2 · revised reply (checks 9/9):
+        Dear Chen Wei,
+
+        Readings are provided on the learning platform in the course "EDU-204 2026/27".
+        The reading list is in the folder "Week 0". The module team will confirm this
+        separately.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 04_literaturliste.txt · information · ready
+      Email:
+        Betreff: Literaturliste und Sprechstunde
+
+        Sehr geehrtes Modulteam,
+
+        wo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann
+        Ihre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.
+
+        Viele Grüße
+        Lea Schmidt
+      Step 1 · model answer:
+        information  → category: information
+      Step 2 · draft (checks 8/9):
+        Sehr geehrte Frau Schmidt,
+
+        die Readings für das Modul EDU-204 finden Sie auf der Lernplattform im Kurs
+        "EDU-204 2026/27". Die Leseliste befindet sich im Ordner "Week 0".
+
+        Die Sprechstunde des Modulteams findet dienstags von 14:00 bis 15:30 in Raum
+        G40-212 oder auf Anfrage per Videoanruf statt.
+
+        Kind regards,
+        EDU-204 module team
+      Round 2 · revised reply (checks 9/9):
+        Sehr geehrte Frau Schmidt,
+
+        die Readings für das Modul EDU-204 finden Sie auf der Lernplattform im Kurs
+        "EDU-204 2026/27". Die Leseliste befindet sich im Ordner "Week 0".
+
+        Die Sprechstunde des Modulteams findet dienstags von 14:00 bis 15:30 in Raum
+        G40-212 oder auf Anfrage per Videoanruf statt.
+
+        Mit freundlichen Grüßen,
+        EDU-204 module team
+
+    > 05_grade.txt · grade · ready
+      Email:
+        Subject: My exam grade
+
+        Dear module team,
+
+        I received a 3.3 for the written exam and I believe my answer to question 4
+        deserved more points. Could you please look at it again and raise my grade? I
+        need at least a 3.0 for my scholarship.
+
+        Best regards,
+        Tomasz Nowak
+        Matriculation number 228815
+      Step 1 · model answer:
+        grade  → category: grade
+      Step 2 · draft (checks 9/9):
+        Dear Tomasz Nowak,
+
+        The module team does not discuss grades by email. You can inspect your marked
+        examination in the review session on 5 March 2027, 13:00–15:00, room G40-212.
+        Requests to change a grade are submitted in writing to the examination office
+        (pruefungsamt@example.edu) within one month of publication.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 06_flatmate.txt · third_party · review
+      Email:
+        Subject: Question about a fellow student
+
+        Hi,
+
+        my flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell
+        me whether he is registered for the exam? He also asked me to submit his
+        portfolio for him. Is that possible?
+
+        Thanks,
+        Sofia Rossi
+      Step 1 · model answer:
+        third_party  → category: third_party
+      Step 2 · draft (checks 9/9):
+        Dear Sofia Rossi,
+
+        The module team does not confirm or discuss the enrolment, registration, grades
+        or circumstances of any student with another person. Each student must contact
+        the module team personally.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 07_sample_size.txt · other · review
+      Email:
+        Subject: Sample size for my portfolio study
+
+        Dear module team,
+
+        for the empirical part of my portfolio I have interviewed 12 teachers. Is this
+        sample large enough, or should I conduct more interviews before I start the
+        analysis?
+
+        Best regards,
+        Noah Fischer
+      Step 1 · model answer:
+        other  → category: other
+      Step 2 · draft (checks 9/9):
+        Dear Noah Fischer,
+
+        Thank you for your email. A member of the module team will reply personally to
+        your question.
+
+        Kind regards,
+        EDU-204 module team
+    · Command for the full inbox: python -m llmlab harness --task student_emails --out
+    out --loop 3
+
+  --------------------------------------------------------------------------------------
+  [Stage 5 · wiki]
+    settings: temperature 0.0, seed 42, rounds 3
+    artefact: wiki.md: a Markdown file with lessons, open questions and approved
+    answers, read by every later run.
+    system prompt:
+      # Specification: replies to student emails, module EDU-204
+
+      You draft replies to emails that students send to the module team of EDU-204
+      Research Methods in Education.
+
+      Rules:
+
+      1. Use only information from the reference documents and the approved answers.
+      [... 72 lines omitted; use --full to print everything ...]
+      - Answer the question the email asks, using the sources only; if the sources do
+      not contain the answer, write the sentence for open questions instead of promising
+      or inventing anything.
+      - Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen
+      Grüßen') and the signature on its own line.
+    output:
+      The wiki contained 2 lessons and 1 approved answer. With it, 6 of 7 first drafts
+      passed all checks (stage 4: 5) and 5 replies were routed to 'ready' (stage 4: 4).
+
+    email                  category     first draft: stage 4  first draft: stage 5  route: stage 4  route: stage 5
+    ---------------------  -----------  --------------------  --------------------  --------------  --------------
+    01_exam_date.txt       information  9/9                   9/9                   ready           ready         
+    02_extension.txt       extension    9/9                   9/9                   ready           ready         
+    03_slides.txt          information  8/9                   9/9                   review          ready         
+    04_literaturliste.txt  information  8/9                   8/9                   ready           ready         
+    05_grade.txt           grade        9/9                   9/9                   ready           ready         
+    06_flatmate.txt        third_party  9/9                   9/9                   review          review        
+    07_sample_size.txt     other        9/9                   9/9                   review          review        
+
+    file: wiki.md after stage 4 (entries written by the harness)
+      # Wiki: Replies to student emails, module EDU-204
+
+      The harness reads this file at the start of every run and adds entries at the end.
+
+      - 'Lessons from failed checks' is written by the harness. Each line is added to
+        the instructions of later runs. Edit or delete lines as required.
+      - 'Open questions' is written by the harness. It lists emails the sources could
+        not answer. Delete an entry once it has been answered.
+      - 'Approved answers' is written by people only. Each line is used as a reference
+        document in later runs. The harness never writes to this section.
+
+      ## Lessons from failed checks
+
+      - Answer the question the email asks, using the sources only; if the sources do
+      not contain the answer, write the sentence for open questions instead of promising
+      or inventing anything.
+      - Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen
+      Grüßen') and the signature on its own line.
+
+      ## Open questions
+
+      - 03_slides.txt: "Slides for next week"
+
+      ## Approved answers
+
+    file: wiki.md as read by stage 5 (approved answer added, answered question removed)
+      # Wiki: Replies to student emails, module EDU-204
+
+      The harness reads this file at the start of every run and adds entries at the end.
+
+      - 'Lessons from failed checks' is written by the harness. Each line is added to
+        the instructions of later runs. Edit or delete lines as required.
+      - 'Open questions' is written by the harness. It lists emails the sources could
+        not answer. Delete an entry once it has been answered.
+      - 'Approved answers' is written by people only. Each line is used as a reference
+        document in later runs. The harness never writes to this section.
+
+      ## Lessons from failed checks
+
+      - Answer the question the email asks, using the sources only; if the sources do
+      not contain the answer, write the sentence for open questions instead of promising
+      or inventing anything.
+      - Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen
+      Grüßen') and the signature on its own line.
+
+      ## Open questions
+
+
+      ## Approved answers
+
+      - Slides: the slides for each session are uploaded to the learning platform
+      (course "EDU-204 2026/27") by 18:00 on the day before the session.
+
+    > 01_exam_date.txt · information · ready
+      Email:
+        Subject: Date of the written exam
+
+        Dear module team,
+
+        I could not find the date of the written exam for EDU-204. When and where does
+        it take place, and do I have to register for it separately?
+
+        Kind regards,
+        Jonas Becker
+        Matriculation number 229481
+      Step 2 · draft (checks 9/9):
+        Dear Jonas Becker,
+
+        The written examination takes place on 9 February 2027, from 10:00–12:00, in
+        lecture hall H3. Registration is required and closes on 12 December 2026 in the
+        campus portal.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 02_extension.txt · extension · ready
+      Email:
+        Subject: Portfolio deadline - illness
+
+        Hello,
+
+        I have had influenza since last week and my doctor has signed me off until
+        12 January. I will not be able to finish my portfolio by the deadline. Could you
+        please extend the deadline for me by one week? I can send you the medical
+        certificate.
+
+        Thank you very much,
+        Amira Haddad
+        Matriculation number 231077
+      Step 2 · draft (checks 9/9):
+        Dear Amira Haddad,
+
+        Extensions to the portfolio deadline are granted only by the examination office
+        (pruefungsamt@example.edu), not by the module team. The application must be
+        submitted before the deadline and, in the case of illness, include a medical
+        certificate.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 03_slides.txt · information · ready
+      Email:
+        Subject: Slides for next week
+
+        Dear EDU-204 team,
+
+        will the slides for next week's session be available before the session? I would
+        like to print them and take notes on them.
+
+        Best wishes,
+        Chen Wei
+      Step 2 · draft (checks 9/9):
+        Dear Chen Wei,
+
+        The slides for each session are uploaded to the learning platform (course
+        "EDU-204 2026/27") by 18:00 on the day before the session.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 04_literaturliste.txt · information · ready
+      Email:
+        Betreff: Literaturliste und Sprechstunde
+
+        Sehr geehrtes Modulteam,
+
+        wo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann
+        Ihre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.
+
+        Viele Grüße
+        Lea Schmidt
+      Step 2 · draft (checks 8/9):
+        Sehr geehrte Frau Schmidt,
+
+        die Readings für EDU-204 finden Sie auf der Lernplattform im Kurs "EDU-204
+        2026/27". Die Leseliste befindet sich im Ordner "Week 0".
+
+        Unsere Sprechstunden finden dienstags von 14:00 bis 15:30 in Raum G40-212 oder
+        auf Anfrage per Videoanruf statt.
+
+        Kind regards,
+        EDU-204 module team
+      Round 2 · revised reply (checks 9/9):
+        Sehr geehrte Frau Schmidt,
+
+        die Readings für EDU-204 finden Sie auf der Lernplattform im Kurs "EDU-204
+        2026/27". Die Leseliste befindet sich im Ordner "Week 0".
+
+        Unsere Sprechstunden finden dienstags von 14:00 bis 15:30 in Raum G40-212 oder
+        auf Anfrage per Videoanruf statt.
+
+        Mit freundlichen Grüßen,
+        EDU-204 module team
+
+    > 05_grade.txt · grade · ready
+      Email:
+        Subject: My exam grade
+
+        Dear module team,
+
+        I received a 3.3 for the written exam and I believe my answer to question 4
+        deserved more points. Could you please look at it again and raise my grade? I
+        need at least a 3.0 for my scholarship.
+
+        Best regards,
+        Tomasz Nowak
+        Matriculation number 228815
+      Step 2 · draft (checks 9/9):
+        Dear Tomasz Nowak,
+
+        The module team does not discuss grades by email. You can inspect your marked
+        examination in the review session on 5 March 2027, 13:00–15:00, room G40-212.
+        Requests to change a grade are submitted in writing to the examination office
+        (pruefungsamt@example.edu) within one month of publication.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 06_flatmate.txt · third_party · review
+      Email:
+        Subject: Question about a fellow student
+
+        Hi,
+
+        my flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell
+        me whether he is registered for the exam? He also asked me to submit his
+        portfolio for him. Is that possible?
+
+        Thanks,
+        Sofia Rossi
+      Step 2 · draft (checks 9/9):
+        Dear Sofia Rossi,
+
+        The module team does not confirm or discuss the enrolment, registration, grades
+        or circumstances of any student with another person. Each student must contact
+        the module team personally.
+
+        Kind regards,
+        EDU-204 module team
+
+    > 07_sample_size.txt · other · review
+      Email:
+        Subject: Sample size for my portfolio study
+
+        Dear module team,
+
+        for the empirical part of my portfolio I have interviewed 12 teachers. Is this
+        sample large enough, or should I conduct more interviews before I start the
+        analysis?
+
+        Best regards,
+        Noah Fischer
+      Step 2 · draft (checks 9/9):
+        Dear Noah Fischer,
+
+        Thank you for your email. A member of the module team will reply personally to
+        your question.
+
+        Kind regards,
+        EDU-204 module team
+    · The entry under 'Approved answers' was inserted by the lab from
+    example_approved_answer.md. In the harness, only people write to this section.
+    · Command: python -m llmlab harness --task student_emails --out out --loop 3 --wiki
+    wiki.md (run it twice, and add an approved answer to wiki.md between the runs).
+
+  --------------------------------------------------------------------------------------
+  Interpretation: Stage 1 (request only) passed 4/9 checks. Stage 2 (stored instruction
+  with module information) passed 9/9 checks. Stage 3 classified 7 emails (information:
+  3, extension: 1, grade: 1, third_party: 1, other: 1). Routing by category placed 5 in
+  'ready'; evaluated afterwards, 2 of these failed at least one check. At stage 4, 5 of
+  7 first drafts passed all checks and 7 of 7 did after up to 3 rounds. 4 replies were
+  routed to 'ready'. At stage 5 the wiki held 2 lessons, 1 open question written by the
+  harness, and 1 approved answer. First drafts passing all checks rose from 5 to 6, and
+  replies routed to 'ready' from 4 to 5. The checks are text-pattern tests. A reply in
+  'ready' has passed these tests; this does not establish that its content is correct.
+

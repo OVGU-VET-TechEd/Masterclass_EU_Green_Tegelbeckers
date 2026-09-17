@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>llmlab — seven exercises on language models</title>
+<style>
+:root{
+  --paper:#fbfcfd; --card:#ffffff; --ink:#16202b; --dim:#48586a; --mute:#6f7f90;
+  --line:#d4dde8; --blue:#1a4a88; --blue-s:#e6eef9; --violet:#5b3f8c; --violet-s:#f0eaf8;
+  --green:#0f7a5a; --green-s:#e4f3ee; --amber:#a86a12; --amber-s:#fdf3e3;
+  --red:#8a3324; --red-s:#fbe9e7; --code:#f4f6f9;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);line-height:1.55;
+     font-family:"Segoe UI",Calibri,system-ui,Helvetica,Arial,sans-serif;font-size:16px}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:16px 20px 12px}
+.hwrap{max-width:1180px;margin:0 auto}
+h1{margin:0;font-size:1.2rem;color:var(--ink)}
+.sub{color:var(--dim);font-size:.88rem;margin-top:2px}
+.status{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:.78rem}
+.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 11px;color:var(--dim)}
+.pill b{color:var(--ink);font-weight:650}
+.pill.live{border-color:var(--green);background:var(--green-s);color:#14513e}
+.pill.sim{border-color:var(--amber);background:var(--amber-s);color:#6b4712}
+main{max-width:1180px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:250px minmax(0,1fr);gap:20px}
+@media(max-width:840px){.grid{grid-template-columns:minmax(0,1fr)}}
+nav ol{list-style:none;margin:0;padding:0}
+nav li{margin-bottom:6px}
+nav button{width:100%;text-align:left;background:#fff;border:1px solid var(--line);
+  border-left:4px solid var(--line);border-radius:0 8px 8px 0;padding:8px 11px;cursor:pointer;
+  font:inherit;font-size:.86rem;color:var(--dim)}
+nav button:hover{border-left-color:var(--violet);color:var(--ink)}
+nav button[aria-current="true"]{border-left-color:var(--violet);background:var(--violet-s);color:var(--violet);font-weight:650}
+nav .blk{display:block;font-size:.7rem;color:var(--mute);font-weight:400;margin-top:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;min-width:0}
+.panel h2{margin:0 0 2px;font-size:1.15rem;color:var(--ink)}
+.panel h3{margin:20px 0 6px;font-size:.95rem;color:var(--violet)}
+.blockname{font-size:.78rem;color:var(--mute)}
+.aim{border-left:4px solid var(--blue);background:var(--blue-s);border-radius:0 6px 6px 0;
+     padding:9px 13px;margin:12px 0;font-size:.92rem;color:#1d3557}
+.panel p{margin:0 0 9px;font-size:.92rem}
+.panel ol.proc{margin:0;padding-left:22px;font-size:.92rem}
+.panel ol.proc li{margin-bottom:4px}
+details{border:1px solid var(--line);border-radius:6px;margin:6px 0;background:#fff}
+details>summary{cursor:pointer;padding:6px 10px;font-size:.84rem;color:var(--dim);font-weight:600}
+details[open]>summary{border-bottom:1px solid var(--line)}
+pre{margin:0;padding:9px 11px;background:var(--code);white-space:pre-wrap;word-break:break-word;
+    font-family:ui-monospace,Consolas,Menlo,monospace;font-size:.78rem;line-height:1.45;overflow-x:auto}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:10px 0}
+label{display:block;font-size:.76rem;color:var(--mute);font-weight:650;margin-bottom:3px}
+input,select,textarea{font:inherit;font-size:.86rem;border:1px solid var(--line);border-radius:6px;
+  padding:7px 9px;background:#fff;color:var(--ink);max-width:100%}
+textarea{width:100%;min-height:76px;resize:vertical}
+.go{background:var(--violet);border:1px solid var(--violet);color:#fff;border-radius:6px;
+    padding:9px 18px;font:inherit;font-weight:650;cursor:pointer;min-height:42px}
+.go:hover{background:#4a3374}
+.go[disabled]{opacity:.55;cursor:progress}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+.run{border:1px solid var(--line);border-radius:8px;padding:11px 14px;margin:12px 0;background:#fdfefe;min-width:0}
+.run h4{margin:0 0 4px;font-size:.9rem;color:var(--blue)}
+.meta{font-size:.74rem;color:var(--mute);margin-bottom:6px}
+.artefact{font-size:.8rem;color:var(--dim);margin:4px 0 6px}
+.outlabel{font-size:.74rem;color:var(--mute);font-weight:650;margin-top:8px}
+.out{white-space:pre-wrap;font-size:.88rem;color:var(--ink);border-left:3px solid var(--line);padding:4px 0 4px 10px;margin-top:3px}
+.note{font-size:.78rem;color:var(--dim);border-top:1px dashed var(--line);margin-top:8px;padding-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:3px;margin:8px 0}
+.chip{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;padding:2px 5px;border-radius:4px;
+      background:var(--blue-s);color:#1d3557;border:1px solid #c8dcf5}
+.chip:nth-child(even){background:var(--violet-s);border-color:#dccdf0;color:#4c356f}
+.reading{border-left:4px solid var(--green);background:var(--green-s);border-radius:0 6px 6px 0;
+         padding:10px 14px;margin-top:14px;font-size:.9rem;color:#14513e}
+.simbar{border-left:4px solid var(--amber);background:var(--amber-s);border-radius:0 6px 6px 0;
+        padding:9px 13px;margin:12px 0;font-size:.84rem;color:#6b4712}
+.err{border-left:4px solid var(--red);background:var(--red-s);border-radius:0 6px 6px 0;
+     padding:10px 14px;font-size:.88rem;color:#6d2a1e}
+.bar{height:10px;background:#eef2f7;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:6px 0}
+.bar span{display:block;height:100%;background:var(--blue)}
+.checks{list-style:none;margin:8px 0 0;padding:0;font-size:.8rem}
+.ok{color:var(--green)}.no{color:var(--red)}.na{color:var(--mute)}
+.tablewrap{overflow-x:auto;margin:8px 0}
+table{border-collapse:collapse;font-size:.8rem;min-width:100%}
+th,td{border:1px solid var(--line);padding:4px 7px;text-align:left;vertical-align:top}
+th{background:var(--code);font-weight:650}
+td.ready{color:var(--green);font-weight:650} td.review{color:var(--amber);font-weight:650}
+footer{max-width:1180px;margin:0 auto;padding:8px 20px 36px;color:var(--mute);font-size:.75rem}
+</style>
+</head>
+<body>
+<header><div class="hwrap">
+  <h1>llmlab</h1>
+  <div class="sub">Seven exercises on the behaviour of language models, run against a model on this computer. Workshop 4 — AI in Teaching.</div>
+  <div class="status" id="status"><span class="pill">reading the configuration…</span></div>
+</div></header>
+
+<main>
+<div class="grid">
+  <nav aria-label="Exercises"><ol id="nav"></ol></nav>
+  <section class="panel" id="panel" aria-live="polite">
+    <h2>Select an exercise</h2>
+    <p>Each exercise states its aim, the background, the procedure and the texts sent to
+    the model. The results show every prompt as sent, the settings and the output.</p>
+  </section>
+</div>
+</main>
+<footer>This page communicates only with the llmlab process on this computer. It uses no
+browser storage, no analytics and no external files. CC BY 4.0 · EU GREEN.</footer>
+
+<script>
+const CONTROLS = {
+  tokens:[{k:"text",type:"textarea",label:"Text (empty: the English and German default sentences)",v:""}],
+  context:[{k:"num_ctx",type:"number",label:"Narrow window (tokens)",v:1024},
+           {k:"sections",type:"number",label:"Regulation sections after § 1",v:120}],
+  vary:[{k:"n",type:"number",label:"Requests per setting",v:3},
+        {k:"temperature",type:"number",label:"Higher temperature",v:0.8,step:"0.1"}],
+  steer:[{k:"task",type:"textarea",label:"Task",v:""}],
+  ground:[{k:"question",type:"textarea",label:"Question",v:""},
+          {k:"source",type:"textarea",label:"Source (run B)",v:""}],
+  ladder:[{k:"stage",type:"select",label:"Stage",v:"all",options:["all","prompt","skill","harness","loop","wiki"]},
+          {k:"emails",type:"number",label:"Emails (stages 3–5)",v:4},
+          {k:"rounds",type:"number",label:"Rounds (stages 4–5)",v:3}],
+  route:[]
+};
+let SURVEY = null;
+
+function el(tag, attrs, ...kids){
+  const n = document.createElement(tag);
+  for (const k in (attrs||{})) {
+    if (k === "class") n.className = attrs[k];
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), attrs[k]);
+    else n.setAttribute(k, attrs[k]);
+  }
+  for (const c of kids) if (c != null) n.append(c.nodeType ? c : String(c));
+  return n;
+}
+function pre(label, text, open){
+  const d = el("details",{}, el("summary",{}, label), el("pre",{}, text || ""));
+  if (open) d.open = true;
+  return d;
+}
+
+async function boot(){
+  try{ SURVEY = await (await fetch("/api/survey")).json(); }
+  catch(e){
+    document.getElementById("status").replaceChildren(
+      el("span",{class:"pill sim"},"llmlab is not reachable; check that the terminal process is still running"));
+    return;
+  }
+  const a = SURVEY.active;
+  document.getElementById("status").replaceChildren(
+    el("span",{class:"pill " + (a.simulated ? "sim":"live")}, a.simulated ? "simulated mode: no model is running" : "model service reachable"),
+    el("span",{class:"pill"}, el("b",{}, a.model)),
+    el("span",{class:"pill"}, a.endpoint),
+    el("span",{class:"pill"}, "llmlab " + SURVEY.version));
+  const nav = document.getElementById("nav");
+  SURVEY.labs.forEach(function(L, i){
+    const b = el("button",{onclick:function(){open(L.name)}},
+      el("span",{}, (i+1) + " · " + L.title), el("span",{class:"blk"}, L.block));
+    b.dataset.lab = L.name;
+    nav.append(el("li",{}, b));
+  });
+}
+
+async function open(name){
+  document.querySelectorAll("#nav button").forEach(function(b){
+    b.setAttribute("aria-current", b.dataset.lab === name ? "true":"false");
+  });
+  const panel = document.getElementById("panel");
+  let d;
+  try{ d = await (await fetch("/api/describe?lab=" + encodeURIComponent(name))).json(); }
+  catch(e){ panel.replaceChildren(el("div",{class:"err"}, String(e))); return; }
+  const parts = [el("h2",{}, d.title), el("div",{class:"blockname"}, d.block),
+                 el("div",{class:"aim"}, el("b",{},"Aim. "), d.aim),
+                 el("h3",{},"Background")];
+  d.background.forEach(function(p){ parts.push(el("p",{}, p)); });
+  parts.push(el("h3",{},"Procedure"));
+  const ol = el("ol",{class:"proc"});
+  d.procedure.forEach(function(s){ ol.append(el("li",{}, s)); });
+  parts.push(ol);
+  if (d.materials && d.materials.length){
+    parts.push(el("h3",{},"Materials"));
+    d.materials.forEach(function(m){ parts.push(pre(m.label, m.text, false)); });
+  }
+  parts.push(el("h3",{},"Parameters"));
+  const box = el("div",{class:"controls"});
+  (CONTROLS[name]||[]).forEach(function(c){
+    const wrap = el("div",{style: c.type==="textarea" ? "flex:1 1 100%" : ""});
+    const id = "f_" + c.k;
+    wrap.append(el("label",{for:id}, c.label));
+    let f;
+    const dv = (d.params && d.params[c.k] !== undefined && c.k !== "text") ? d.params[c.k] : c.v;
+    if (c.type === "textarea"){ f = el("textarea",{id:id}); f.value = dv; }
+    else if (c.type === "select"){
+      f = el("select",{id:id});
+      c.options.forEach(function(o){ const op = el("option",{value:o}, o); if (o===dv) op.selected = true; f.append(op); });
+    }
+    else { f = el("input",{id:id,type:c.type,value:dv}); if (c.step) f.step = c.step; }
+    f.dataset.key = c.k; f.dataset.type = c.type;
+    wrap.append(f); box.append(wrap);
+  });
+  const btn = el("button",{class:"go",onclick:function(){ run(name, btn); }},"Run");
+  box.append(el("div",{}, btn));
+  parts.push(box, el("div",{id:"result"}));
+  panel.replaceChildren.apply(panel, parts);
+}
+
+async function run(name, btn){
+  const res = document.getElementById("result");
+  btn.disabled = true; btn.textContent = "running…";
+  res.replaceChildren(el("p",{style:"color:var(--mute)"},
+    "Waiting for the model. The first request after loading a model takes longer; the five-stage exercise sends several dozen requests."));
+  const params = {};
+  document.querySelectorAll("#panel [data-key]").forEach(function(f){
+    params[f.dataset.key] = f.dataset.type === "number" ? Number(f.value) : f.value;
+  });
+  try{
+    const r = await fetch("/api/lab",{method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({lab:name, params:params})});
+    const data = await r.json();
+    if (!r.ok) throw new Error((data.error||"failed") + " — " + (data.hint||""));
+    render(data, res);
+  }catch(e){
+    res.replaceChildren(el("div",{class:"err"}, String(e.message||e)));
+  }finally{
+    btn.disabled = false; btn.textContent = "Run";
+  }
+}
+
+function checksList(checks){
+  const ul = el("ul",{class:"checks"});
+  checks.forEach(function(c){
+    const cls = c.applies === false ? "na" : (c.ok ? "ok" : "no");
+    const mark = c.applies === false ? "not required — " : (c.ok ? "passed — " : "failed — ");
+    ul.append(el("li",{class:cls}, mark + c.rule + (c.detail && !c.ok ? " (" + c.detail + ")" : "")));
+  });
+  return ul;
+}
+
+function tableEl(t){
+  const tb = el("table",{});
+  tb.append(el("thead",{}, el("tr",{}, ...t.columns.map(function(c){ return el("th",{}, c); }))));
+  const body = el("tbody",{});
+  t.rows.forEach(function(r){
+    body.append(el("tr",{}, ...r.map(function(c){
+      const s = String(c); return el("td",{class: (s==="ready"||s==="review") ? s : ""}, s);
+    })));
+  });
+  tb.append(body);
+  return el("div",{class:"tablewrap"}, tb);
+}
+
+function render(d, res){
+  const parts = [el("h3",{},"Results")];
+  if (d.simulated) parts.push(el("div",{class:"simbar"},
+    "Simulated mode: no model was called. The texts were produced by llmlab. The procedure and the figures derived from it are real; the wording is not model output."));
+  d.runs.forEach(function(run){
+    const card = el("div",{class:"run"}, el("h4",{}, run.label));
+    const bits = [];
+    if (run.prompt_tokens && run.wrapper_tokens) bits.push(run.prompt_tokens + " text tokens + " + run.wrapper_tokens + " template tokens");
+    else if (run.prompt_tokens) bits.push(run.prompt_tokens + " prompt tokens");
+    if (run.output_tokens) bits.push(run.output_tokens + " output tokens");
+    if (run.seconds) bits.push(run.seconds + " s");
+    if (run.settings) Object.keys(run.settings).forEach(function(k){ bits.push(k + " " + run.settings[k]); });
+    if (bits.length) card.append(el("div",{class:"meta"}, bits.join("  ·  ")));
+    if (run.artefact) card.append(el("div",{class:"artefact"}, el("b",{},"Artefact: "), run.artefact));
+    if (run.system) card.append(pre("System prompt as sent", run.system, false));
+    if (run.prompt) card.append(pre("User message as sent", run.prompt, false));
+    if (run.window && run.prompt_tokens){
+      const pct = Math.min(100, 100 * run.window / Math.max(run.prompt_tokens, run.window));
+      card.append(el("div",{class:"meta"}, "share of the prompt that fits in the window (by the server's count)"),
+                  el("div",{class:"bar"}, el("span",{style:"width:" + pct + "%"})));
+    }
+    if (run.correct !== undefined && run.correct !== null)
+      card.append(el("div",{class: run.correct ? "ok":"no"}, run.correct ? "date found in the answer" : "date not found in the answer"));
+    if (run.chips){
+      const c = el("div",{class:"chips"});
+      run.chips.slice(0,120).forEach(function(t){ c.append(el("span",{class:"chip"}, t)); });
+      card.append(el("div",{class:"meta"},"approximate segmentation (not the model's tokenizer)"), c);
+    }
+    if (run.text){ card.append(el("div",{class:"outlabel"},"Output"), el("div",{class:"out"}, run.text)); }
+    if (run.checks) card.append(checksList(run.checks));
+    if (run.table) card.append(tableEl(run.table));
+    (run.files||[]).forEach(function(f){ card.append(pre(f.name, f.text, true)); });
+    (run.items||[]).forEach(function(it){
+      const det = el("details",{}, el("summary",{}, it.label));
+      const inner = el("div",{style:"padding:6px 10px"});
+      it.blocks.forEach(function(b){ inner.append(pre(b.label, b.text, /reply|draft/i.test(b.label) && !/prompt/i.test(b.label))); });
+      if (it.checks) inner.append(checksList(it.checks));
+      det.append(inner);
+      card.append(det);
+    });
+    (run.notes||[]).forEach(function(n){ card.append(el("div",{class:"note"}, n)); });
+    parts.push(card);
+  });
+  parts.push(el("div",{class:"reading"}, el("b",{},"Interpretation. "), d.reading));
+  res.replaceChildren.apply(res, parts);
+}
+
+boot();
+</script>
+</body>
+</html>

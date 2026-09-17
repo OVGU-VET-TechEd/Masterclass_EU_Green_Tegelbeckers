@@ -1,0 +1,98 @@
+llmlab 2.0.0 · 2026-09-15T20:41:11 · model gemma3:12b · http://127.0.0.1:11434
+
+========================================================================================
+  Rules in the request or in the system prompt
+  Block 3 — stage 2, the skill prompt
+========================================================================================
+  Aim: To compare the output for one task when the rules are absent, included in the
+  user message, or supplied as a system prompt.
+
+  Results
+
+  --------------------------------------------------------------------------------------
+  [A · task only]   34 prompt tokens · 180 output tokens · 6.28 s
+    settings: temperature 0.0, seed 11
+    user message:
+      Comment on this sentence from a first-year lab report: 'The results were quite
+      good and matched what we expected.'
+    output:
+      Okay, here's a breakdown of why that sentence ("The results were quite good and
+      matched what we expected.") is problematic for a first-year lab report, and how to
+      improve it. I'll give a few options for revisions, ranging from minor tweaks to
+      more substantial changes.  I'll also explain the *why* behind the feedback.
+
+      **Why the Original Sentence is Weak**
+
+      *   **Vague and Subjective ("quite good"):** "Quite good" is a subjective
+      assessment. What does "good" *mean* in the context of this experiment? It doesn't
+      provide any specific information.  Lab reports need to be objective and data-
+      driven.
+      *   **Lacks Specificity:** "Matched what we expected" is also vague. What *were*
+      your expectations?  You need to refer back to your hypothesis or predicted
+      outcome.
+    checks: 3 of 5 passed; failed: ends with one question; addresses the writing, not
+    the writer
+
+  --------------------------------------------------------------------------------------
+  [B · rules and task in the user message]   85 prompt tokens · 137 output tokens · 5.05 s
+    settings: temperature 0.0, seed 11
+    user message:
+      You comment on undergraduate scientific writing. You address the writing, never
+      the writer. You quote the specific words at issue. You give at most two points and
+      end with one question the student can answer without further reading. You do not
+      rewrite the sentence.
+
+      Comment on this sentence from a first-year lab report: 'The results were quite
+      good and matched what we expected.'
+    output:
+      This sentence needs refinement. The phrase "quite good" is vague and lacks
+      precision expected in scientific writing. Instead of subjective assessments, focus
+      on objective observations. Similarly, "matched what we expected" doesn't explain
+      *how* the results aligned with expectations.
+
+      Specifically, consider: "The results were quite good and matched what we
+      expected."
+
+      Here's what to focus on:
+
+      1.  Replace subjective language ("quite good") with specific, measurable
+      observations.
+      2.  Elaborate on the nature of the match between results and expectations.
+
+
+
+      Can you identify a specific numerical value or trend from your data that supports
+      your claim that the results were positive?
+    checks: 5 of 5 passed
+
+  --------------------------------------------------------------------------------------
+  [C · rules as system prompt, task as user message]   90 prompt tokens · 110 output tokens · 4.13 s
+    settings: temperature 0.0, seed 11
+    system prompt:
+      You comment on undergraduate scientific writing. You address the writing, never
+      the writer. You quote the specific words at issue. You give at most two points and
+      end with one question the student can answer without further reading. You do not
+      rewrite the sentence.
+    user message:
+      Comment on this sentence from a first-year lab report: 'The results were quite
+      good and matched what we expected.'
+    output:
+      This sentence needs refinement. The phrase "The results were quite good" is vague
+      and lacks precision expected in scientific writing. Instead of subjective
+      assessments, focus on describing the data itself. Similarly, "matched what we
+      expected" doesn't explain *how* the results aligned with expectations; it simply
+      states an agreement.
+
+      Consider this: The sentence uses evaluative language ("quite good") and lacks
+      specific detail ("matched what we expected").
+
+      Can you identify a specific numerical value or trend from your results that
+      supports your claim of agreement with expectations?
+    checks: 5 of 5 passed
+
+  --------------------------------------------------------------------------------------
+  Interpretation: Checked against the five rules, run A passed 3, run B passed 5 and run
+  C passed 5. Runs B and C differ by at most one check. The rules had an effect; their
+  position had little effect. The difference that remains is persistence: the system
+  prompt applies to the next request without being repeated.
+

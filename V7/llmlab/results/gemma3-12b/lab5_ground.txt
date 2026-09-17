@@ -1,0 +1,61 @@
+llmlab 2.0.0 · 2026-09-15T20:41:11 · model gemma3:12b · http://127.0.0.1:11434
+
+========================================================================================
+  Grounding: answers with and without a source
+  Block 1 — reliability of outputs
+========================================================================================
+  Aim: To compare an answer generated from the model's training data with an answer
+  generated from a supplied source text, and to examine whether the two can be
+  distinguished by reading them.
+
+  Results
+
+  --------------------------------------------------------------------------------------
+  [A · no source]   37 prompt tokens · 160 output tokens · 5.74 s
+    settings: temperature 0.0, seed 3
+    user message:
+      Under the EU AI Act, when do the obligations for Annex III high-risk systems begin
+      to apply, and what is not deferred?
+    output:
+      Okay, let's break down the timeline for Annex III (high-risk AI systems)
+      obligations under the EU AI Act and what's *not* being deferred. This is a complex
+      area, so I'll aim for clarity and detail.
+
+      **1. General Timeline & Key Dates**
+
+      The EU AI Act has a phased implementation schedule. Here's the core timeline
+      relevant to Annex III systems:
+
+      *   **2024 (Now - December 31, 2024):**
+          *   **Transparency Obligations:**  Certain transparency obligations for
+      general-purpose AI models (GPFMs) are already in effect. This includes obligations
+      related to disclosing model capabilities, limitations, and intended purpose.  This
+      is relevant even for Annex III systems if
+
+  --------------------------------------------------------------------------------------
+  [B · source supplied]   136 prompt tokens · 69 output tokens · 3.12 s
+    settings: temperature 0.0, seed 3
+    user message:
+      Source:
+      Regulation (EU) 2026/1744 defers the obligations attaching to standalone Annex III
+      high-risk systems from 2 August 2026 to 2 December 2027. The AI literacy duty in
+      Article 4, the prohibitions in Article 5 and the transparency duties in Article 50
+      are not deferred.
+
+      Question: Under the EU AI Act, when do the obligations for Annex III high-risk
+      systems begin to apply, and what is not deferred?
+
+      Answer using the source only. If the source does not settle the question, say so.
+    output:
+      According to the source, the obligations attaching to standalone Annex III high-
+      risk systems are deferred from 2 August 2026 to 2 December 2027. However, the AI
+      literacy duty in Article 4, the prohibitions in Article 5, and the transparency
+      duties in Article 50 are not deferred.
+
+  --------------------------------------------------------------------------------------
+  Interpretation: Run A (no source) gave an answer without 2027. Run B (with source)
+  gave an answer containing 2027. Only the grounded answer contains the date from the
+  source. Both answers are phrased with comparable certainty, and neither states where
+  its information comes from. Whether an answer is supported by a source can only be
+  established by comparing it with the source.
+

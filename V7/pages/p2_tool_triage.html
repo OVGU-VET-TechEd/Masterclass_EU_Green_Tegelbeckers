@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool triage and decision record — Workshop 4</title>
+<style>
+:root{
+  --paper:#fbfcfd; --card:#fff; --sunk:#f2f5f9;
+  --ink:#16202b; --dim:#45566a; --mute:#5b6b7c; --line:#d6dee8;
+  --blue:#1a4a88; --blue-s:#e7eefa; --violet:#6b4a9e; --violet-s:#f1ebf9;
+  --green:#0f7a5a; --green-s:#e3f3ee; --amber:#7a4f0a; --amber-s:#fdf3e2;
+  --red:#8a3324; --red-s:#fbe9e6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.55 "Segoe UI",Calibri,system-ui,Helvetica,Arial,sans-serif}
+main{max-width:880px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:1.35rem;color:var(--blue);margin:0 0 2px}
+h2{font-size:1.05rem;color:var(--violet);margin:0 0 8px}
+.kicker{font-size:.82rem;color:var(--mute)}
+.priv{font-size:.88rem;color:var(--dim);background:var(--sunk);border-radius:8px;padding:8px 12px;margin:10px 0 16px}
+.step{border:1px solid var(--line);border-radius:12px;background:var(--card);margin:0 0 14px;padding:14px 16px}
+fieldset{border:0;margin:0;padding:0}
+legend{font-weight:650;margin-bottom:6px;padding:0}
+.fam{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+label.card{display:flex;gap:10px;align-items:flex-start;min-height:44px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:10px;cursor:pointer;background:#fff}
+label.card:hover{background:var(--sunk)}
+label.card.on{border-color:var(--blue);background:var(--blue-s)}
+label.card input{margin-top:4px;width:18px;height:18px;flex:none}
+.small{font-size:.84rem;color:var(--dim)}
+.field{margin:8px 0}
+.field > label{display:block;font-size:.85rem;font-weight:650;color:var(--dim);margin-bottom:3px}
+input[type=text],input[type=date],textarea{font:inherit;font-size:.95rem;width:100%;border:1px solid var(--line);
+  border-radius:8px;padding:9px 10px;background:#fff;color:var(--ink);min-height:44px}
+textarea{min-height:70px;resize:vertical}
+.crit{border-top:1px solid var(--line);padding:10px 0}
+.crit:first-of-type{border-top:0}
+.crit .name{font-weight:650}
+.tri{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tri label{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border:1px solid var(--line);
+  border-radius:999px;cursor:pointer;font-size:.9rem;background:#fff}
+.tri label.on{border-color:var(--blue);background:var(--blue-s);font-weight:650}
+.legal{border-left:4px solid var(--red);background:var(--red-s);border-radius:0 8px 8px 0;padding:10px 13px;margin:10px 0;color:#5f2217}
+.legal .q{font-weight:650}
+.info{font-size:.86rem;color:var(--dim);margin-top:4px}
+.stop{border:2px solid var(--red);background:#fff;border-radius:10px;padding:10px 13px;margin:10px 0;color:var(--red);font-weight:650}
+.need{border-left:4px solid var(--amber);background:var(--amber-s);border-radius:0 8px 8px 0;padding:9px 13px;color:var(--amber);font-size:.9rem}
+.need ul{margin:4px 0 0 18px;padding:0}
+.ready{border-left:4px solid var(--green);background:var(--green-s);border-radius:0 8px 8px 0;padding:9px 13px;color:#14513e;font-size:.9rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 6px}
+button{font:inherit;font-weight:650;min-height:44px;padding:9px 16px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--blue);background:var(--blue);color:#fff}
+button.sec{background:#fff;color:var(--blue)}
+button[disabled]{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+#rec{border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px 16px;margin-top:14px}
+#rec h3{margin:0 0 4px;color:var(--blue)} #rec h4{margin:14px 0 4px;color:var(--violet)}
+#rec table{border-collapse:collapse;width:100%;font-size:.9rem}
+#rec th,#rec td{border-bottom:1px solid var(--line);text-align:left;padding:5px 7px;vertical-align:top}
+.tw{overflow-x:auto}
+textarea.md{font:13px/1.45 ui-monospace,Consolas,monospace;min-height:150px}
+.status{font-size:.85rem;color:var(--green);min-height:1.3em}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{background:#fff} .noprint{display:none!important}
+  #rec{border:0;padding:0;margin:0}
+}
+</style>
+</head>
+<body>
+<main>
+<div class="noprint">
+<div class="kicker">EU GREEN · Workshop 4 · AI in Teaching · page 2 of 3</div>
+<h1>Tool triage and decision record</h1>
+<div class="priv">Nothing you type here is sent anywhere or saved. Close the page and it is gone — export first if you want to keep it.</div>
+<p>One tool, one task. Four steps, and a record at the end that your head of programme can read. The legal questions depend on the job family, so start there.</p>
+
+<section class="step">
+  <h2>1 · Which job does it do?</h2>
+  <fieldset><legend class="small">Sorted by what a mistake costs the student, not by vendor.</legend>
+  <div class="fam" id="families"></div></fieldset>
+</section>
+
+<section class="step">
+  <h2>2 · Which tool, for which task?</h2>
+  <div class="field"><label for="tool">Tool</label><input type="text" id="tool" placeholder="e.g. the institutional chat assistant"></div>
+  <div class="field"><label for="task">Task</label><textarea id="task" placeholder="e.g. drafting formative comments on first-year lab reports, which I then edit"></textarea></div>
+</section>
+
+<section class="step">
+  <h2>3 · Criteria</h2>
+  <p class="small">Unclear is an honest answer. It becomes a condition in the record, not a pass.</p>
+  <div id="criteria"></div>
+</section>
+
+<section class="step">
+  <h2>4 · Legal questions</h2>
+  <div id="legal"><p class="small">Pick a job family in step 1 and the questions it triggers appear here.</p></div>
+</section>
+
+<section class="step">
+  <h2>5 · Decision</h2>
+  <fieldset><legend class="small">What you decided, and when you will look at it again.</legend>
+  <div class="tri" id="decisions"></div></fieldset>
+  <div class="field"><label for="conditions">Conditions, or the reason for declining</label><textarea id="conditions"></textarea></div>
+  <div class="field"><label for="review">Review by</label><input type="date" id="review"></div>
+  <div class="field"><label for="who">Recorded by (optional)</label><input type="text" id="who"></div>
+</section>
+
+<div id="gate" aria-live="polite"></div>
+<div class="actions">
+  <button type="button" id="dl">Download as Markdown</button>
+  <button type="button" class="sec" id="copy">Copy</button>
+  <button type="button" class="sec" id="print">Print the record</button>
+</div>
+<div class="status" id="status"></div>
+</div>
+
+<section id="rec" aria-label="The decision record"></section>
+
+<div class="noprint">
+<label class="kicker" for="md" style="display:block;margin-top:12px">The same record as text</label>
+<textarea id="md" class="md" readonly></textarea>
+</div>
+</main>
+
+<script>
+/* All wording lives here, so it can be corrected without touching the logic. */
+const DATA = {
+  families: [
+    {id: "admin", name: "Administration", hint: "Minutes, agendas, translations, forms. Nobody is graded by it.", stakes: "low stakes"},
+    {id: "prep", name: "Preparation", hint: "Slides, reading lists, task variants. You check before it ships.", stakes: "low stakes"},
+    {id: "class", name: "In-class", hint: "Captioning, translation, polling. Students are present and cannot opt out.", stakes: "Art. 5(1)(f) nearby"},
+    {id: "eval", name: "Evaluation", hint: "Feedback, marking support, detection. The output lands on a record.", stakes: "Annex III §3 · GDPR Art. 22"}
+  ],
+  criteria: [
+    {id: "host", name: "Hosting and data handling", q: "Where does the text go — your machine, your institution, a third party — and what is kept, for how long?"},
+    {id: "docs", name: "Transparency and documentation", q: "Is it documented what the model is, what it is for and what it is known to get wrong?"},
+    {id: "a11y", name: "Accessibility", q: "Can every student use it: screen reader, keyboard only, captions, low bandwidth?"},
+    {id: "fit", name: "Pedagogical fit", q: "Does it serve what the task is for, or only make the task faster?"},
+    {id: "inst", name: "Institutional compliance", q: "Is it provided or approved by your institution, with an agreement in place?"},
+    {id: "energy", name: "Energy and resource cost", q: "Is it the smallest thing that passes your test cases? Will a cohort trigger it a thousand times?"},
+    {id: "exit", name: "Exit cost", q: "If it disappears or changes next term, what do you lose, and how long does switching take?"}
+  ],
+  verdicts: ["met", "unclear", "not met"],
+  questions: {
+    art4: {kind: "choice", options: ["Yes", "Partly", "No"],
+      text: "Art. 4 AI Act — could you explain to a student how this tool produces its output and what it gets wrong?",
+      info: "The literacy duty falls on your institution and is discharged by staff who can explain the tools they use. It applies on every route and was not deferred.",
+      followIf: ["Partly", "No"], follow: "What will you do to be able to? (This becomes a condition.)", blocking: true},
+    pd: {kind: "choice", options: ["Yes", "No", "Not sure"],
+      text: "Will personal data — names, student numbers, e-mail addresses, marks — go into it?",
+      followIf: ["Yes", "Not sure"], follow: "Name the lawful basis, and the processor agreement if the text leaves the institution (GDPR Arts. 5 and 28).", blocking: true},
+    cr: {kind: "choice", options: ["Yes", "No"],
+      text: "Will students' work, or anyone else's protected material, go into it?",
+      followIf: ["Yes"], follow: "How is that handled? Copyright in a script belongs to the student, and anonymising the file does not change that, because the work is the protected thing.", blocking: true},
+    emo: {kind: "choice", options: ["Yes", "No", "Not sure"],
+      text: "Does it infer emotions, attention or engagement from faces, voices or posture?",
+      stopIf: ["Yes"], stop: "Hard stop. Inferring emotions in education is prohibited by Art. 5(1)(f) AI Act, in application since February 2025 and not deferred. Consent does not cure a prohibition. The decision is decline.",
+      followIf: ["Not sure"], follow: "Ask the supplier in writing, and record who you asked and when. Do not proceed until you have the answer.", blocking: true},
+    a50: {kind: "choice", options: ["Yes", "No"],
+      text: "Art. 50 AI Act — will students be told when they are interacting with an AI system or seeing generated content?",
+      followIf: ["No"], follow: "Art. 50 has applied since 2 August 2026. How will you tell them?", blocking: true},
+    a3: {kind: "multi", none: "None of these — drafting only, and I write every word the student receives",
+      options: ["(a) admission to, or assignment within, a programme or institution",
+                "(b) evaluating learning outcomes, including steering the learning process",
+                "(c) assessing the level of education someone will receive or can access",
+                "(d) monitoring prohibited behaviour during tests"],
+      text: "Annex III §3 AI Act — does the output contribute to any of these?",
+      info: "Any of (a)–(d) makes this a high-risk use. Regulation (EU) 2026/1744 moved those obligations to 2 December 2027: sixteen months to build the process, not sixteen months in which the question does not apply.",
+      blocking: true},
+    a22: {kind: "text", onlyIfHighRisk: true,
+      text: "GDPR Art. 22 — who makes the final decision, and do they have the authority and the information to reach a different conclusion?"},
+    a14: {kind: "text", onlyIfHighRisk: true,
+      text: "Art. 14 AI Act — how does that person override the output, and how are they told what it gets wrong? \"A human clicked approve\" is not the answer."},
+    contest: {kind: "text", onlyIfHighRisk: true,
+      text: "How can a student contest the outcome, and what would they be shown?"}
+  },
+  byFamily: {
+    admin: ["pd", "art4"],
+    prep: ["cr", "art4"],
+    class: ["emo", "a50", "pd", "art4"],
+    eval: ["a3", "a22", "a14", "contest", "cr", "pd", "art4"]
+  },
+  decisions: ["Adopt", "Adopt with conditions", "Pilot, then review", "Decline"]
+};
+
+const S = {family: null, verdict: {}, note: {}, ans: {}, follow: {}, multi: {}, decision: null};
+
+function h(tag, attrs) {
+  const n = document.createElement(tag);
+  for (const k in (attrs || {})) n.setAttribute(k, attrs[k]);
+  for (let i = 2; i < arguments.length; i++) {
+    const c = arguments[i];
+    if (c != null) n.append(c.nodeType ? c : String(c));
+  }
+  return n;
+}
+const $ = function (id) { return document.getElementById(id); };
+const val = function (id) { return $(id).value.trim(); };
+
+function radioGroup(container, name, options, current, onPick, cls) {
+  options.forEach(function (o, i) {
+    const id = name + "_" + i;
+    const inp = h("input", {type: "radio", name: name, id: id, value: o});
+    if (current === o) inp.checked = true;
+    const lab = h("label", {for: id, class: (cls || "") + (current === o ? " on" : "")}, inp, o);
+    inp.addEventListener("change", function () {
+      container.querySelectorAll("label").forEach(function (l) { l.classList.remove("on"); });
+      lab.classList.add("on");
+      onPick(o);
+    });
+    container.append(lab);
+  });
+}
+
+function buildFamilies() {
+  const box = $("families");
+  DATA.families.forEach(function (f) {
+    const id = "fam_" + f.id;
+    const inp = h("input", {type: "radio", name: "family", id: id, value: f.id});
+    const lab = h("label", {for: id, class: "card"}, inp,
+      h("span", {}, h("b", {}, f.name), " · ", h("span", {class: "small"}, f.stakes), h("br"), h("span", {class: "small"}, f.hint)));
+    inp.addEventListener("change", function () {
+      box.querySelectorAll("label").forEach(function (l) { l.classList.remove("on"); });
+      lab.classList.add("on");
+      S.family = f.id;
+      buildLegal(); update();
+    });
+    box.append(lab);
+  });
+}
+
+function buildCriteria() {
+  const box = $("criteria");
+  DATA.criteria.forEach(function (c) {
+    const row = h("div", {class: "crit"});
+    row.append(h("div", {class: "name", id: "cn_" + c.id}, c.name), h("div", {class: "small"}, c.q));
+    const tri = h("div", {class: "tri", role: "radiogroup", "aria-labelledby": "cn_" + c.id});
+    radioGroup(tri, "crit_" + c.id, DATA.verdicts, null, function (v) { S.verdict[c.id] = v; update(); });
+    row.append(tri);
+    const note = h("input", {type: "text", "aria-label": "Note on " + c.name, placeholder: "note (optional)"});
+    note.addEventListener("input", function () { S.note[c.id] = note.value.trim(); update(); });
+    row.append(note);
+    box.append(row);
+  });
+}
+
+function highRisk() {
+  return DATA.questions.a3.options.some(function (o) { return S.multi[o]; });
+}
+
+function activeQuestions() {
+  if (!S.family) return [];
+  if (hardStop()) return ["emo"];
+  return DATA.byFamily[S.family].filter(function (id) {
+    return !DATA.questions[id].onlyIfHighRisk || highRisk();
+  });
+}
+
+function buildLegal() {
+  const box = $("legal");
+  box.replaceChildren();
+  activeQuestions().forEach(function (id) {
+    const q = DATA.questions[id];
+    const card = h("div", {class: "legal"});
+    card.append(h("div", {class: "q", id: "q_" + id}, q.text));
+    if (q.info) card.append(h("div", {class: "info"}, q.info));
+    if (q.kind === "choice") {
+      const tri = h("div", {class: "tri", role: "radiogroup", "aria-labelledby": "q_" + id});
+      radioGroup(tri, "q_" + id + "_r", q.options, S.ans[id], function (v) { S.ans[id] = v; buildLegal(); update(); });
+      card.append(tri);
+      if (q.stopIf && q.stopIf.indexOf(S.ans[id]) >= 0) card.append(h("div", {class: "stop", role: "alert"}, q.stop));
+      if (q.followIf && q.followIf.indexOf(S.ans[id]) >= 0) {
+        const fid = "f_" + id;
+        card.append(h("label", {for: fid, class: "info", style: "display:block;margin-top:6px;font-weight:650"}, q.follow));
+        const ta = h("textarea", {id: fid});
+        ta.value = S.follow[id] || "";
+        ta.addEventListener("input", function () { S.follow[id] = ta.value.trim(); update(); });
+        card.append(ta);
+      }
+    } else if (q.kind === "multi") {
+      q.options.concat([q.none]).forEach(function (o, i) {
+        const cid = "m_" + id + "_" + i;
+        const cb = h("input", {type: "checkbox", id: cid});
+        cb.checked = !!S.multi[o];
+        cb.addEventListener("change", function () {
+          S.multi[o] = cb.checked;
+          if (o === q.none && cb.checked) q.options.forEach(function (x) { S.multi[x] = false; });
+          if (o !== q.none && cb.checked) S.multi[q.none] = false;
+          buildLegal(); update();
+        });
+        card.append(h("label", {for: cid, class: "card", style: "margin:6px 0"}, cb, o));
+      });
+    } else {
+      const ta = h("textarea", {"aria-labelledby": "q_" + id});
+      ta.value = S.ans[id] || "";
+      ta.addEventListener("input", function () { S.ans[id] = ta.value.trim(); update(); });
+      card.append(ta);
+    }
+    box.append(card);
+  });
+}
+
+function hardStop() {
+  return S.family === "class" && S.ans.emo === "Yes";
+}
+
+function buildDecisions() {
+  const box = $("decisions");
+  box.replaceChildren();
+  const opts = hardStop() ? ["Decline"] : DATA.decisions;
+  if (hardStop()) S.decision = "Decline";
+  radioGroup(box, "decision", opts, S.decision, function (v) { S.decision = v; update(); });
+}
+
+function missing() {
+  const m = [];
+  if (!S.family) m.push("a job family (step 1)");
+  if (!val("tool")) m.push("the tool (step 2)");
+  if (!val("task")) m.push("the task (step 2)");
+  if (hardStop()) {
+    // The prohibition is the whole answer: the record only has to say what
+    // was declined and when it will be looked at again.
+    if (!val("review")) m.push("a review date (step 5)");
+    return m;
+  }
+  activeQuestions().forEach(function (id) {
+    const q = DATA.questions[id];
+    const short = q.text.split(" — ")[0].split("?")[0];
+    if (q.kind === "choice") {
+      if (!S.ans[id]) m.push("an answer to: " + short);
+      else if (q.followIf && q.followIf.indexOf(S.ans[id]) >= 0 && !S.follow[id]) m.push("the follow-up to: " + short);
+    } else if (q.kind === "multi") {
+      if (!q.options.concat([q.none]).some(function (o) { return S.multi[o]; })) m.push("an answer to: " + short);
+    } else if (!S.ans[id]) m.push("an answer to: " + short);
+  });
+  if (!S.decision) m.push("a decision (step 5)");
+  if (S.decision && S.decision !== "Adopt" && !val("conditions")) m.push("the conditions or reason (step 5)");
+  if (!val("review")) m.push("a review date (step 5)");
+  return m;
+}
+
+function answerText(id) {
+  const q = DATA.questions[id];
+  if (q.kind === "multi") {
+    const picked = q.options.concat([q.none]).filter(function (o) { return S.multi[o]; });
+    return picked.length ? picked.join("; ") : "—";
+  }
+  let a = S.ans[id] || "—";
+  if (q.kind === "choice" && q.followIf && q.followIf.indexOf(S.ans[id]) >= 0) a += " — " + (S.follow[id] || "(follow-up not answered)");
+  return a;
+}
+
+function familyName() {
+  const f = DATA.families.filter(function (x) { return x.id === S.family; })[0];
+  return f ? f.name + " (" + f.stakes + ")" : "—";
+}
+
+function cell(s) { return String(s || "").replace(/\|/g, "\\|").replace(/\n+/g, " "); }
+
+function markdown() {
+  const today = new Date().toISOString().slice(0, 10);
+  let md = "# Tool decision record\n\n";
+  md += "- **Tool:** " + (val("tool") || "—") + "\n- **Task:** " + (val("task") || "—").replace(/\n+/g, " ") +
+    "\n- **Job family:** " + familyName() + "\n- **Recorded:** " + today + (val("who") ? " by " + val("who") : "") +
+    "\n- **Review by:** " + (val("review") || "—") + "\n\n## Criteria\n\n| Criterion | Verdict | Note |\n| --- | --- | --- |\n";
+  DATA.criteria.forEach(function (c) {
+    md += "| " + c.name + " | " + (S.verdict[c.id] || "not assessed") + " | " + cell(S.note[c.id]) + " |\n";
+  });
+  md += "\n## Legal questions\n\n";
+  activeQuestions().forEach(function (id) {
+    md += "- **" + DATA.questions[id].text + "**  \n  " + answerText(id).replace(/\n+/g, " ") + "\n";
+  });
+  if (hardStop()) md += "\n> " + DATA.questions.emo.stop + "\n";
+  md += "\n## Decision\n\n**" + (S.decision || "—") + ".** " + (val("conditions") || "").replace(/\n+/g, " ") + "\n";
+  const unclear = DATA.criteria.filter(function (c) { return S.verdict[c.id] === "unclear"; });
+  if (unclear.length) md += "\nOpen before the review date: " + unclear.map(function (c) { return c.name.toLowerCase(); }).join(", ") + ".\n";
+  md += "\n_Made with the Workshop 4 tool triage page. Nothing was sent anywhere; this record exists only where you saved it._\n";
+  return md;
+}
+
+function renderRecord() {
+  const rec = $("rec");
+  const today = new Date().toISOString().slice(0, 10);
+  const table = h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Criterion"), h("th", {}, "Verdict"), h("th", {}, "Note"))));
+  const tb = h("tbody");
+  DATA.criteria.forEach(function (c) {
+    tb.append(h("tr", {}, h("td", {}, c.name), h("td", {}, S.verdict[c.id] || "not assessed"), h("td", {}, S.note[c.id] || "")));
+  });
+  table.append(tb);
+  const legal = h("ul");
+  activeQuestions().forEach(function (id) {
+    legal.append(h("li", {}, h("b", {}, DATA.questions[id].text), h("br"), answerText(id)));
+  });
+  rec.replaceChildren(
+    h("h3", {}, "Tool decision record"),
+    h("div", {class: "small"}, "Recorded " + today + (val("who") ? " by " + val("who") : "") + " · review by " + (val("review") || "—")),
+    h("p", {}, h("b", {}, "Tool: "), val("tool") || "—", h("br"), h("b", {}, "Task: "), val("task") || "—", h("br"),
+      h("b", {}, "Job family: "), familyName()),
+    h("h4", {}, "Criteria"), h("div", {class: "tw"}, table),
+    h("h4", {}, "Legal questions"), activeQuestions().length ? legal : h("p", {class: "small"}, "None yet — pick a job family."),
+    hardStop() ? h("div", {class: "stop"}, DATA.questions.emo.stop) : null,
+    h("h4", {}, "Decision"), h("p", {}, h("b", {}, (S.decision || "—") + ". "), val("conditions")));
+}
+
+function update() {
+  buildDecisions();
+  const m = missing(), gate = $("gate");
+  if (m.length) {
+    const ul = h("ul");
+    m.forEach(function (x) { ul.append(h("li", {}, x)); });
+    gate.replaceChildren(h("div", {class: "need"}, "Before this can be exported, it still needs:", ul));
+  } else {
+    gate.replaceChildren(h("div", {class: "ready"}, "Complete. Export it, and send it to whoever will hold you to the review date."));
+  }
+  ["dl", "copy", "print"].forEach(function (id) { $(id).disabled = m.length > 0; });
+  renderRecord();
+  $("md").value = markdown();
+}
+
+function say(msg) {
+  const s = $("status");
+  s.textContent = msg;
+  setTimeout(function () { if (s.textContent === msg) s.textContent = ""; }, 4000);
+}
+
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], {type: type}));
+  const a = h("a", {href: url, download: name});
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  say("If nothing downloaded, copy the text at the bottom instead.");
+}
+
+$("dl").addEventListener("click", function () {
+  const slug = (val("tool") || "tool").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  download("decision_record_" + slug + ".md", markdown(), "text/markdown");
+});
+$("copy").addEventListener("click", function () {
+  const ta = $("md");
+  const done = function () { say("Copied."); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(ta.value).then(done, function () { ta.select(); document.execCommand("copy"); done(); });
+  } else { ta.select(); document.execCommand("copy"); done(); }
+});
+$("print").addEventListener("click", function () { window.print(); });
+["tool", "task", "conditions", "review", "who"].forEach(function (id) { $(id).addEventListener("input", update); });
+
+/* Rebuilding a section replaces the control that had focus. Put focus back
+   on its replacement, so keyboard users are not thrown to the top. */
+function keepFocus(fn) {
+  return function () {
+    const id = document.activeElement && document.activeElement.id;
+    fn.apply(this, arguments);
+    const el = id && document.getElementById(id);
+    if (el && el !== document.activeElement) el.focus();
+  };
+}
+buildLegal = keepFocus(buildLegal);
+buildDecisions = keepFocus(buildDecisions);
+
+(function () {
+  const d = new Date(); d.setMonth(d.getMonth() + 6);
+  $("review").value = d.toISOString().slice(0, 10);
+})();
+buildFamilies();
+buildCriteria();
+update();
+</script>
+</body>
+</html>

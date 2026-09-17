@@ -1,0 +1,9 @@
+llmlab 2.0.0 · 2026-09-15T20:41:11 · model gemma3:12b · http://127.0.0.1:11434
+
+lab 1 tokens     6.7 s  The text has 107 characters and was counted as 18 tokens, i.e. 5.94 characters per token. The on-screen approximation gives 30 tokens, a deviation of 67% from t
+lab 2 context   29.1 s  The prompt comprised 4211 tokens as reported by the server. With a window of 8,192 tokens the answer was correct ('15 January 2027'). With a window of 1024 toke
+lab 3 vary      15.9 s  At temperature 0 with seed 42, 4 requests produced 1 distinct output. At temperature 0.8 without a seed, 4 requests produced 4 distinct outputs. Only the first 
+lab 4 steer     15.5 s  Checked against the five rules, run A passed 3, run B passed 5 and run C passed 5. Runs B and C differ by at most one check. The rules had an effect; their posi
+lab 5 ground     8.9 s  Run A (no source) gave an answer without 2027. Run B (with source) gave an answer containing 2027. Only the grounded answer contains the date from the source. B
+lab 6 ladder   131.3 s  Stage 1 (request only) passed 4/9 checks. Stage 2 (stored instruction with module information) passed 9/9 checks. Stage 3 classified 4 emails (information: 3, e
+lab 7 route      0.0 s  The requests in this session were processed on this computer. The route determines the data-protection obligations listed above; the AI Act obligations apply re

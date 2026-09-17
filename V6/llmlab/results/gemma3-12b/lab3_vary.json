@@ -1,0 +1,167 @@
+{
+  "lab": "vary",
+  "title": "Temperature and seed: reproducibility of outputs",
+  "aim": "To compare how many distinct outputs identical requests produce at temperature 0 with a fixed seed and at a higher temperature without a seed.",
+  "background": [
+    "A language model generates text one token at a time. For each position it computes a probability for every token in its vocabulary; a sampling procedure then selects one token.",
+    "Temperature rescales these probabilities before sampling. At temperature 0 the most probable token is always selected, so the output is determined by the input. At higher temperatures, less probable tokens are selected more often and repeated requests yield different outputs. The seed initialises the random number generator used for sampling; with the same seed, settings, model version and software, the sampling is repeatable.",
+    "Chat interfaces generally use a temperature above 0 and do not expose the seed. The same request can therefore yield different feedback or different assessments of the same text, and an earlier output cannot be reproduced. Even at temperature 0, identical outputs are only expected on the same model version, software and hardware."
+  ],
+  "procedure": [
+    "The prompt is sent n times at temperature 0 with seed 42 (parameter 'n').",
+    "The same prompt is sent n times at a higher temperature without a seed (parameter 'temperature').",
+    "Distinct outputs are counted in each group. Two outputs count as identical only if they match character for character."
+  ],
+  "block": "Block 2D — evaluation; Block 1 — verifiability",
+  "params": {
+    "n": 4,
+    "temperature": 0.8,
+    "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\""
+  },
+  "materials": [
+    {
+      "label": "Prompt (identical in all runs)",
+      "text": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\""
+    }
+  ],
+  "runs": [
+    {
+      "text": "While you correctly highlight the benefits of formative assessment and cite Black and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes is a significant leap and needs further justification and nuance.",
+      "prompt_tokens": 83,
+      "output_tokens": 39,
+      "seconds": 5.66,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 1 · temperature 0.0, seed 42",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 42
+      }
+    },
+    {
+      "text": "While you correctly highlight the benefits of formative assessment and cite Black and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes is a significant leap and needs further justification and nuance.",
+      "prompt_tokens": 83,
+      "output_tokens": 39,
+      "seconds": 1.44,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 2 · temperature 0.0, seed 42",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 42
+      }
+    },
+    {
+      "text": "While you correctly highlight the benefits of formative assessment and cite Black and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes is a significant leap and needs further justification and nuance.",
+      "prompt_tokens": 83,
+      "output_tokens": 39,
+      "seconds": 1.42,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 3 · temperature 0.0, seed 42",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 42
+      }
+    },
+    {
+      "text": "While you correctly highlight the benefits of formative assessment and cite Black and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes is a significant leap and needs further justification and nuance.",
+      "prompt_tokens": 83,
+      "output_tokens": 39,
+      "seconds": 1.42,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 4 · temperature 0.0, seed 42",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 42
+      }
+    },
+    {
+      "text": "While you accurately highlight the benefits of formative assessment and cite Black and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes is a significant leap and needs more nuanced justification.",
+      "prompt_tokens": 83,
+      "output_tokens": 37,
+      "seconds": 1.36,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 1 · temperature 0.8, no seed",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.8,
+        "seed": null
+      }
+    },
+    {
+      "text": "While you've correctly identified a key benefit of formative assessment and referenced Black & Wiliam, consider exploring the nuances of implementing weekly quizzes instead of final exams – it's a significant shift that requires more justification.",
+      "prompt_tokens": 83,
+      "output_tokens": 46,
+      "seconds": 1.66,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 2 · temperature 0.8, no seed",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.8,
+        "seed": null
+      }
+    },
+    {
+      "text": "While you correctly highlight the benefits of formative assessment and cite Black and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes is a significant leap that needs further justification and exploration of potential drawbacks.",
+      "prompt_tokens": 83,
+      "output_tokens": 43,
+      "seconds": 1.58,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 3 · temperature 0.8, no seed",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.8,
+        "seed": null
+      }
+    },
+    {
+      "text": "While you correctly highlight the benefits of formative assessment and cite Black and Wiliam, your concluding suggestion to replace final exams with weekly quizzes is a significant leap and requires more nuanced justification.",
+      "prompt_tokens": 83,
+      "output_tokens": 38,
+      "seconds": 1.39,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Run 4 · temperature 0.8, no seed",
+      "prompt": "A student submitted the following paragraph in an essay on assessment. Write one sentence of feedback on it.\n\nParagraph: \"Formative assessment improves learning because students receive information about their progress while they can still act on it. Black and Wiliam (1998) showed this in their review. Therefore every module should replace its final examination with weekly quizzes.\"",
+      "system": "",
+      "settings": {
+        "temperature": 0.8,
+        "seed": null
+      }
+    }
+  ],
+  "reading": "At temperature 0 with seed 42, 4 requests produced 1 distinct output. At temperature 0.8 without a seed, 4 requests produced 4 distinct outputs. Only the first configuration allows an output to be reproduced by repeating the request.",
+  "simulated": false
+}

@@ -1,0 +1,79 @@
+llmlab 2.0.0 · 2026-09-15T20:41:11 · model gemma3:12b · http://127.0.0.1:11434
+
+========================================================================================
+  Context window: text beyond the limit
+  Block 3.1 — terminology
+========================================================================================
+  Aim: To test whether a model can answer a question when the passage that contains the
+  answer lies outside its context window, and whether the answer indicates that
+  information is missing.
+
+  Results
+
+  --------------------------------------------------------------------------------------
+  [Window 8,192 tokens]   4211 prompt tokens · 9 output tokens · 19.78 s · date found
+    settings: num_ctx 8192, temperature 0.0, seed 7
+    user message:
+      Examination regulations, module EDU-204 (fictitious excerpt)
+
+      § 1 Submission
+      The portfolio must be submitted via the learning platform by 12:00 on 15 January
+      2027. Late submissions are graded as failed unless the examination office has
+      granted an extension.
+
+      § 2 Attendance
+      Attendance at seminars is expected but not recorded. Students who miss more than
+      three sessions should contact the module team to discuss how to cover the
+      material.
+
+      § 3 Academic integrity
+      Submitted work must be the student's own. Sources, including generative AI tools,
+      are acknowledged according to the faculty's citation guidelines. Suspected
+      breaches are referred to the examination board.
+      [... 352 lines omitted; use --full to print everything ...]
+      § 121 Accessibility
+      Students with a disability or chronic illness may apply for compensation for
+      disadvantages. Applications are handled confidentially by the examination office.
+
+      Question: According to the regulations above, by which date must the portfolio be
+      submitted? Answer with the date only.
+    output:
+      15 January 2027
+
+  --------------------------------------------------------------------------------------
+  [Window 1024 tokens]   1027 prompt tokens · 14 output tokens · 9.27 s · date not found
+    settings: num_ctx 1024, temperature 0.0, seed 7
+    user message:
+      Examination regulations, module EDU-204 (fictitious excerpt)
+
+      § 1 Submission
+      The portfolio must be submitted via the learning platform by 12:00 on 15 January
+      2027. Late submissions are graded as failed unless the examination office has
+      granted an extension.
+
+      § 2 Attendance
+      Attendance at seminars is expected but not recorded. Students who miss more than
+      three sessions should contact the module team to discuss how to cover the
+      material.
+
+      § 3 Academic integrity
+      Submitted work must be the student's own. Sources, including generative AI tools,
+      are acknowledged according to the faculty's citation guidelines. Suspected
+      breaches are referred to the examination board.
+      [... 352 lines omitted; use --full to print everything ...]
+      § 121 Accessibility
+      Students with a disability or chronic illness may apply for compensation for
+      disadvantages. Applications are handled confidentially by the examination office.
+
+      Question: According to the regulations above, by which date must the portfolio be
+      submitted? Answer with the date only.
+    output:
+      The provided text does not specify a submission date for the portfolio.
+
+  --------------------------------------------------------------------------------------
+  Interpretation: The prompt comprised 4211 tokens as reported by the server. With a
+  window of 8,192 tokens the answer was correct ('15 January 2027'). With a window of
+  1024 tokens the answer was incorrect ('The provided text does not specify a submission
+  date for the'). The narrow answer indicated that information was missing. It could not
+  know which text had been removed; the statement refers to the text it received.
+

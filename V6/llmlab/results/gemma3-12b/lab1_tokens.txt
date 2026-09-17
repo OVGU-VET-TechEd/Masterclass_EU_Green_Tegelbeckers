@@ -1,0 +1,51 @@
+llmlab 2.0.0 · 2026-09-15T20:41:11 · model gemma3:12b · http://127.0.0.1:11434
+
+========================================================================================
+  Tokens: what the model receives
+  Block 3.1 — terminology
+========================================================================================
+  Aim: To measure into how many tokens a text is divided, how this differs between an
+  English and a German sentence of the same meaning, and how many tokens the chat
+  template adds.
+
+  Results
+
+  --------------------------------------------------------------------------------------
+  [Text as counted by the model]   18 text tokens + 10 template tokens · 1 output tokens · 5.19 s
+    settings: max_tokens 1
+    user message:
+      Assessment criteria are agreed at programme level. Bewertungskriterien werden auf
+      Programmebene vereinbart.
+    approximate segmentation: Asse | ssme | nt | crit | eria | are | agre | ed | at |
+    prog | ramm | e | level | . | Bewe | rtun | gskr | iter | ien | werd | en | auf |
+    Prog | ramm | eben | e | vere | inba | rt | .
+    output:
+      This
+
+  --------------------------------------------------------------------------------------
+  [English sentence]   8 text tokens + 10 template tokens · 1 output tokens · 0.26 s
+    settings: max_tokens 1
+    user message:
+      Assessment criteria are agreed at programme level.
+    approximate segmentation: Asse | ssme | nt | crit | eria | are | agre | ed | at |
+    prog | ramm | e | level | .
+    output:
+      Okay
+
+  --------------------------------------------------------------------------------------
+  [German sentence]   10 text tokens + 11 template tokens · 1 output tokens · 0.26 s
+    settings: max_tokens 1
+    user message:
+      Bewertungskriterien werden auf Programmebene vereinbart.
+    approximate segmentation: Bewe | rtun | gskr | iter | ien | werd | en | auf | Prog |
+    ramm | eben | e | vere | inba | rt | .
+    output:
+      Das
+
+  --------------------------------------------------------------------------------------
+  Interpretation: The text has 107 characters and was counted as 18 tokens, i.e. 5.94
+  characters per token. The on-screen approximation gives 30 tokens, a deviation of 67%
+  from the model's count. The model received 28 tokens in total: 18 for the text and 10
+  added by the chat template. Counted separately, the English sentence (7 words) took 8
+  tokens and the German sentence (5 words) took 10 tokens, 25% more.
+

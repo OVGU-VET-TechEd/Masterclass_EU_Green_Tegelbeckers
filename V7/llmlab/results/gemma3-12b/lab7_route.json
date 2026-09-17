@@ -1,0 +1,46 @@
+{
+  "lab": "route",
+  "title": "Deployment route and legal obligations",
+  "aim": "To identify where the requests of this session were processed and which legal obligations depend on that deployment route.",
+  "background": [
+    "llmlab sends each request over HTTP to a model server. In the default configuration the server runs on the same computer and is addressed through the loopback interface (127.0.0.1), which other computers cannot reach. On this route the prompt and the output do not leave the computer.",
+    "Data protection law distinguishes processing by the institution itself from processing by a service provider on its behalf (GDPR Art. 28), and it regulates transfers to third countries. A local route avoids the processor relationship and the transfer. It does not remove the need for a lawful basis for processing personal data (GDPR Art. 6).",
+    "Obligations under the AI Act attach to the use of an AI system, not to its hosting: the AI literacy duty (Art. 4), transparency duties (Art. 50) and the classification of certain uses in education as high-risk (Annex III point 3) apply regardless of where the model runs."
+  ],
+  "procedure": [
+    "The endpoint of the active backend is read and checked for a loopback address.",
+    "The request format of this backend is shown with a short example.",
+    "The obligations are listed according to the route."
+  ],
+  "block": "Block 2 — hosting and legal framework",
+  "params": {},
+  "materials": [
+    {
+      "label": "Request format of the active backend (POST http://127.0.0.1:11434/api/generate)",
+      "text": "{\n  \"model\": \"gemma3:12b\",\n  \"prompt\": \"Example user message\",\n  \"stream\": false,\n  \"options\": {\n    \"temperature\": 0.0,\n    \"num_predict\": 300,\n    \"seed\": 42\n  },\n  \"system\": \"Example system prompt\"\n}"
+    }
+  ],
+  "runs": [
+    {
+      "text": "Endpoint: http://127.0.0.1:11434\nLoopback: yes\nModel: gemma3:12b",
+      "prompt_tokens": null,
+      "output_tokens": null,
+      "seconds": 0.0,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434",
+      "simulated": false,
+      "notes": [
+        "AI Act Art. 4: the deploying organisation takes measures to ensure sufficient AI literacy of its staff. Applies on every route.",
+        "AI Act Art. 50: transparency towards persons who interact with an AI system or receive certain generated content. Applies on every route.",
+        "AI Act Annex III point 3: AI systems used to decide on admission, to evaluate learning outcomes, to assign educational level or to monitor examinations are high-risk. Applies on every route.",
+        "GDPR: no transfer to a processor takes place on this route, so no processing agreement under Art. 28 is required. A lawful basis for processing personal data (Art. 6) is still required."
+      ],
+      "label": "Active route",
+      "prompt": null,
+      "system": "",
+      "settings": {}
+    }
+  ],
+  "reading": "The requests in this session were processed on this computer. The route determines the data-protection obligations listed above; the AI Act obligations apply regardless of the route.",
+  "simulated": false
+}

@@ -1,0 +1,33 @@
+llmlab 2.0.0 · 2026-09-15T20:41:11 · model gemma3:12b · http://127.0.0.1:11434
+
+========================================================================================
+  Deployment route and legal obligations
+  Block 2 — hosting and legal framework
+========================================================================================
+  Aim: To identify where the requests of this session were processed and which legal
+  obligations depend on that deployment route.
+
+  Results
+
+  --------------------------------------------------------------------------------------
+  [Active route]
+    output:
+      Endpoint: http://127.0.0.1:11434
+      Loopback: yes
+      Model: gemma3:12b
+    · AI Act Art. 4: the deploying organisation takes measures to ensure sufficient AI
+    literacy of its staff. Applies on every route.
+    · AI Act Art. 50: transparency towards persons who interact with an AI system or
+    receive certain generated content. Applies on every route.
+    · AI Act Annex III point 3: AI systems used to decide on admission, to evaluate
+    learning outcomes, to assign educational level or to monitor examinations are high-
+    risk. Applies on every route.
+    · GDPR: no transfer to a processor takes place on this route, so no processing
+    agreement under Art. 28 is required. A lawful basis for processing personal data
+    (Art. 6) is still required.
+
+  --------------------------------------------------------------------------------------
+  Interpretation: The requests in this session were processed on this computer. The
+  route determines the data-protection obligations listed above; the AI Act obligations
+  apply regardless of the route.
+

@@ -1,0 +1,155 @@
+{
+  "lab": "tokens",
+  "title": "Tokens: what the model receives",
+  "aim": "To measure into how many tokens a text is divided, how this differs between an English and a German sentence of the same meaning, and how many tokens the chat template adds.",
+  "background": [
+    "Language models do not process words or characters but tokens. A tokenizer divides the input into units taken from a fixed vocabulary: frequent words are usually a single token, less frequent words are split into several subword units, and spaces and punctuation form part of tokens. The vocabulary is built from the training data. Languages that are less represented in that data are therefore divided, on average, into more tokens per word.",
+    "Token counts have three practical consequences. The context window is measured in tokens. Hosted services charge per token. Processing time increases with the number of tokens.",
+    "Chat models receive the user's text inside a template that marks the roles (system, user, assistant) with special tokens. Some models also insert a default system prompt. These tokens are not visible in a chat interface, but they occupy the context window."
+  ],
+  "procedure": [
+    "The text is sent to the model with output limited to one token. The server reports how many prompt tokens it processed, including the chat template.",
+    "On the Ollama route, the same text is sent again in raw mode, which bypasses the chat template. The difference between the two counts is the template overhead.",
+    "The segmentation shown on screen is a local approximation (words longer than five characters are split every four characters). It is not the model's tokenizer and is shown for comparison only.",
+    "With the default text, the English and the German sentence are also counted separately."
+  ],
+  "block": "Block 3.1 — terminology",
+  "params": {
+    "text": ""
+  },
+  "materials": [
+    {
+      "label": "Text sent to the model (both sentences together)",
+      "text": "Assessment criteria are agreed at programme level. Bewertungskriterien werden auf Programmebene vereinbart."
+    },
+    {
+      "label": "English sentence, counted separately",
+      "text": "Assessment criteria are agreed at programme level."
+    },
+    {
+      "label": "German sentence, counted separately",
+      "text": "Bewertungskriterien werden auf Programmebene vereinbart."
+    }
+  ],
+  "runs": [
+    {
+      "text": "This",
+      "prompt_tokens": 18,
+      "output_tokens": 1,
+      "seconds": 5.19,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "wrapper_tokens": 10,
+      "label": "Text as counted by the model",
+      "prompt": "Assessment criteria are agreed at programme level. Bewertungskriterien werden auf Programmebene vereinbart.",
+      "system": "",
+      "settings": {
+        "max_tokens": 1
+      },
+      "chips": [
+        "Asse",
+        "ssme",
+        "nt",
+        "crit",
+        "eria",
+        "are",
+        "agre",
+        "ed",
+        "at",
+        "prog",
+        "ramm",
+        "e",
+        "level",
+        ".",
+        "Bewe",
+        "rtun",
+        "gskr",
+        "iter",
+        "ien",
+        "werd",
+        "en",
+        "auf",
+        "Prog",
+        "ramm",
+        "eben",
+        "e",
+        "vere",
+        "inba",
+        "rt",
+        "."
+      ]
+    },
+    {
+      "text": "Okay",
+      "prompt_tokens": 8,
+      "output_tokens": 1,
+      "seconds": 0.26,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "wrapper_tokens": 10,
+      "label": "English sentence",
+      "prompt": "Assessment criteria are agreed at programme level.",
+      "system": "",
+      "settings": {
+        "max_tokens": 1
+      },
+      "chips": [
+        "Asse",
+        "ssme",
+        "nt",
+        "crit",
+        "eria",
+        "are",
+        "agre",
+        "ed",
+        "at",
+        "prog",
+        "ramm",
+        "e",
+        "level",
+        "."
+      ]
+    },
+    {
+      "text": "Das",
+      "prompt_tokens": 10,
+      "output_tokens": 1,
+      "seconds": 0.26,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "wrapper_tokens": 11,
+      "label": "German sentence",
+      "prompt": "Bewertungskriterien werden auf Programmebene vereinbart.",
+      "system": "",
+      "settings": {
+        "max_tokens": 1
+      },
+      "chips": [
+        "Bewe",
+        "rtun",
+        "gskr",
+        "iter",
+        "ien",
+        "werd",
+        "en",
+        "auf",
+        "Prog",
+        "ramm",
+        "eben",
+        "e",
+        "vere",
+        "inba",
+        "rt",
+        "."
+      ]
+    }
+  ],
+  "reading": "The text has 107 characters and was counted as 18 tokens, i.e. 5.94 characters per token. The on-screen approximation gives 30 tokens, a deviation of 67% from the model's count. The model received 28 tokens in total: 18 for the text and 10 added by the chat template. Counted separately, the English sentence (7 words) took 8 tokens and the German sentence (5 words) took 10 tokens, 25% more.",
+  "simulated": false
+}

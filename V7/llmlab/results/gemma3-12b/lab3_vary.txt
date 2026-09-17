@@ -1,0 +1,146 @@
+llmlab 2.0.0 · 2026-09-15T20:41:11 · model gemma3:12b · http://127.0.0.1:11434
+
+========================================================================================
+  Temperature and seed: reproducibility of outputs
+  Block 2D — evaluation; Block 1 — verifiability
+========================================================================================
+  Aim: To compare how many distinct outputs identical requests produce at temperature 0
+  with a fixed seed and at a higher temperature without a seed.
+
+  Results
+
+  --------------------------------------------------------------------------------------
+  [Run 1 · temperature 0.0, seed 42]   83 prompt tokens · 39 output tokens · 5.66 s
+    settings: temperature 0.0, seed 42
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you correctly highlight the benefits of formative assessment and cite Black
+      and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes
+      is a significant leap and needs further justification and nuance.
+
+  --------------------------------------------------------------------------------------
+  [Run 2 · temperature 0.0, seed 42]   83 prompt tokens · 39 output tokens · 1.44 s
+    settings: temperature 0.0, seed 42
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you correctly highlight the benefits of formative assessment and cite Black
+      and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes
+      is a significant leap and needs further justification and nuance.
+
+  --------------------------------------------------------------------------------------
+  [Run 3 · temperature 0.0, seed 42]   83 prompt tokens · 39 output tokens · 1.42 s
+    settings: temperature 0.0, seed 42
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you correctly highlight the benefits of formative assessment and cite Black
+      and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes
+      is a significant leap and needs further justification and nuance.
+
+  --------------------------------------------------------------------------------------
+  [Run 4 · temperature 0.0, seed 42]   83 prompt tokens · 39 output tokens · 1.42 s
+    settings: temperature 0.0, seed 42
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you correctly highlight the benefits of formative assessment and cite Black
+      and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes
+      is a significant leap and needs further justification and nuance.
+
+  --------------------------------------------------------------------------------------
+  [Run 1 · temperature 0.8, no seed]   83 prompt tokens · 37 output tokens · 1.36 s
+    settings: temperature 0.8, seed None
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you accurately highlight the benefits of formative assessment and cite Black
+      and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes
+      is a significant leap and needs more nuanced justification.
+
+  --------------------------------------------------------------------------------------
+  [Run 2 · temperature 0.8, no seed]   83 prompt tokens · 46 output tokens · 1.66 s
+    settings: temperature 0.8, seed None
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you've correctly identified a key benefit of formative assessment and
+      referenced Black & Wiliam, consider exploring the nuances of implementing weekly
+      quizzes instead of final exams – it's a significant shift that requires more
+      justification.
+
+  --------------------------------------------------------------------------------------
+  [Run 3 · temperature 0.8, no seed]   83 prompt tokens · 43 output tokens · 1.58 s
+    settings: temperature 0.8, seed None
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you correctly highlight the benefits of formative assessment and cite Black
+      and Wiliam, your conclusion suggesting replacing final exams with weekly quizzes
+      is a significant leap that needs further justification and exploration of
+      potential drawbacks.
+
+  --------------------------------------------------------------------------------------
+  [Run 4 · temperature 0.8, no seed]   83 prompt tokens · 38 output tokens · 1.39 s
+    settings: temperature 0.8, seed None
+    user message:
+      A student submitted the following paragraph in an essay on assessment. Write one
+      sentence of feedback on it.
+
+      Paragraph: "Formative assessment improves learning because students receive
+      information about their progress while they can still act on it. Black and Wiliam
+      (1998) showed this in their review. Therefore every module should replace its
+      final examination with weekly quizzes."
+    output:
+      While you correctly highlight the benefits of formative assessment and cite Black
+      and Wiliam, your concluding suggestion to replace final exams with weekly quizzes
+      is a significant leap and requires more nuanced justification.
+
+  --------------------------------------------------------------------------------------
+  Interpretation: At temperature 0 with seed 42, 4 requests produced 1 distinct output.
+  At temperature 0.8 without a seed, 4 requests produced 4 distinct outputs. Only the
+  first configuration allows an output to be reproduced by repeating the request.
+

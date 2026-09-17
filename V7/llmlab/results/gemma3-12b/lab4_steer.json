@@ -1,0 +1,170 @@
+{
+  "lab": "steer",
+  "title": "Rules in the request or in the system prompt",
+  "aim": "To compare the output for one task when the rules are absent, included in the user message, or supplied as a system prompt.",
+  "background": [
+    "Chat models distinguish messages by role. The system prompt is set before the conversation and applies to every subsequent request; user messages contain the individual requests. Custom instructions, custom GPTs, Gems and comparable features store a system prompt so that it need not be retyped. In the five stages used in this workshop, a stored instruction of this kind is called a skill prompt (stage 2).",
+    "Whether a model follows rules more reliably from the system prompt than from the user message depends on the model and its training. Independently of that, a system prompt applies to every request in a session or tool, whereas rules typed into a request apply only to that request.",
+    "To make compliance measurable, five of the rules are implemented as automatic checks (check_feedback in llmlab/checks.py). The checks are text-pattern tests, for example whether a passage stands in quotation marks or whether the last line ends with a question mark. They can misjudge individual outputs."
+  ],
+  "procedure": [
+    "Run A sends the task alone.",
+    "Run B sends the rules followed by the task, both in the user message.",
+    "Run C sends the rules as the system prompt and the task as the user message.",
+    "All runs use temperature 0 and seed 11. Each output is checked against the five rules listed under materials."
+  ],
+  "block": "Block 3 — stage 2, the skill prompt",
+  "params": {
+    "task": "Comment on this sentence from a first-year lab report: 'The results were quite good and matched what we expected.'"
+  },
+  "materials": [
+    {
+      "label": "Rules (used in runs B and C)",
+      "text": "You comment on undergraduate scientific writing. You address the writing, never the writer. You quote the specific words at issue. You give at most two points and end with one question the student can answer without further reading. You do not rewrite the sentence."
+    },
+    {
+      "label": "Task",
+      "text": "Comment on this sentence from a first-year lab report: 'The results were quite good and matched what we expected.'"
+    },
+    {
+      "label": "Automatic checks",
+      "text": "- quotes the words at issue: passes if a passage of at least three characters stands in quotation marks\n- two points at most: counts list items; if there are none, ordinal words (first, second, ...); otherwise paragraphs\n- ends with one question: passes if the last line ends with a question mark and contains no other\n- does not rewrite the text: fails on phrases such as 'could say', 'revised version', 'instead, write'\n- addresses the writing, not the writer: fails if 'you', 'your', 'the student', 'the writer' or 'the author' occurs before the closing question"
+    }
+  ],
+  "runs": [
+    {
+      "text": "Okay, here's a breakdown of why that sentence (\"The results were quite good and matched what we expected.\") is problematic for a first-year lab report, and how to improve it. I'll give a few options for revisions, ranging from minor tweaks to more substantial changes.  I'll also explain the *why* behind the feedback.\n\n**Why the Original Sentence is Weak**\n\n*   **Vague and Subjective (\"quite good\"):** \"Quite good\" is a subjective assessment. What does \"good\" *mean* in the context of this experiment? It doesn't provide any specific information.  Lab reports need to be objective and data-driven.\n*   **Lacks Specificity:** \"Matched what we expected\" is also vague. What *were* your expectations?  You need to refer back to your hypothesis or predicted outcome.",
+      "prompt_tokens": 34,
+      "output_tokens": 180,
+      "seconds": 6.28,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "A · task only",
+      "prompt": "Comment on this sentence from a first-year lab report: 'The results were quite good and matched what we expected.'",
+      "system": "",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 11
+      },
+      "checks": [
+        {
+          "id": "quoted",
+          "rule": "quotes the words at issue",
+          "ok": true
+        },
+        {
+          "id": "points",
+          "rule": "two points at most",
+          "ok": true
+        },
+        {
+          "id": "question",
+          "rule": "ends with one question",
+          "ok": false
+        },
+        {
+          "id": "no_rewrite",
+          "rule": "does not rewrite the text",
+          "ok": true
+        },
+        {
+          "id": "writing",
+          "rule": "addresses the writing, not the writer",
+          "ok": false
+        }
+      ]
+    },
+    {
+      "text": "This sentence needs refinement. The phrase \"quite good\" is vague and lacks precision expected in scientific writing. Instead of subjective assessments, focus on objective observations. Similarly, \"matched what we expected\" doesn't explain *how* the results aligned with expectations.\n\nSpecifically, consider: \"The results were quite good and matched what we expected.\"\n\nHere's what to focus on:\n\n1.  Replace subjective language (\"quite good\") with specific, measurable observations.\n2.  Elaborate on the nature of the match between results and expectations.\n\n\n\nCan you identify a specific numerical value or trend from your data that supports your claim that the results were positive?",
+      "prompt_tokens": 85,
+      "output_tokens": 137,
+      "seconds": 5.05,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "B · rules and task in the user message",
+      "prompt": "You comment on undergraduate scientific writing. You address the writing, never the writer. You quote the specific words at issue. You give at most two points and end with one question the student can answer without further reading. You do not rewrite the sentence.\n\nComment on this sentence from a first-year lab report: 'The results were quite good and matched what we expected.'",
+      "system": "",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 11
+      },
+      "checks": [
+        {
+          "id": "quoted",
+          "rule": "quotes the words at issue",
+          "ok": true
+        },
+        {
+          "id": "points",
+          "rule": "two points at most",
+          "ok": true
+        },
+        {
+          "id": "question",
+          "rule": "ends with one question",
+          "ok": true
+        },
+        {
+          "id": "no_rewrite",
+          "rule": "does not rewrite the text",
+          "ok": true
+        },
+        {
+          "id": "writing",
+          "rule": "addresses the writing, not the writer",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "text": "This sentence needs refinement. The phrase \"The results were quite good\" is vague and lacks precision expected in scientific writing. Instead of subjective assessments, focus on describing the data itself. Similarly, \"matched what we expected\" doesn't explain *how* the results aligned with expectations; it simply states an agreement.\n\nConsider this: The sentence uses evaluative language (\"quite good\") and lacks specific detail (\"matched what we expected\").\n\nCan you identify a specific numerical value or trend from your results that supports your claim of agreement with expectations?",
+      "prompt_tokens": 90,
+      "output_tokens": 110,
+      "seconds": 4.13,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "C · rules as system prompt, task as user message",
+      "prompt": "Comment on this sentence from a first-year lab report: 'The results were quite good and matched what we expected.'",
+      "system": "You comment on undergraduate scientific writing. You address the writing, never the writer. You quote the specific words at issue. You give at most two points and end with one question the student can answer without further reading. You do not rewrite the sentence.",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 11
+      },
+      "checks": [
+        {
+          "id": "quoted",
+          "rule": "quotes the words at issue",
+          "ok": true
+        },
+        {
+          "id": "points",
+          "rule": "two points at most",
+          "ok": true
+        },
+        {
+          "id": "question",
+          "rule": "ends with one question",
+          "ok": true
+        },
+        {
+          "id": "no_rewrite",
+          "rule": "does not rewrite the text",
+          "ok": true
+        },
+        {
+          "id": "writing",
+          "rule": "addresses the writing, not the writer",
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "reading": "Checked against the five rules, run A passed 3, run B passed 5 and run C passed 5. Runs B and C differ by at most one check. The rules had an effect; their position had little effect. The difference that remains is persistence: the system prompt applies to the next request without being repeated.",
+  "simulated": false
+}

@@ -1,0 +1,2370 @@
+{
+  "lab": "ladder",
+  "title": "Five stages of prompting: answering student emails",
+  "aim": "To apply the five stages of prompting to one administrative task and to record, for each stage, what is produced, what is checked and what remains for a person to decide.",
+  "background": [
+    "Task. The module team of a (fictitious) module, EDU-204, receives emails from students. Most concern dates, rooms or materials and can be answered from the module information. Requests for extensions and grade changes are decided by the examination office, not by the module team. Requests about other students must not be answered. The inbox contains seven emails, one of them in German.",
+    "Stage 1, prompt. A single request in a chat window. The model has no module information, and nothing is stored after the exchange.",
+    "Stage 2, skill prompt. A stored instruction contains the reply rules and the module information. Each email is still pasted and handled individually, and nobody checks the output systematically.",
+    "Stage 3, harness. A program applies the same procedure to a folder of emails: it classifies each email, drafts a reply using the handling rule for its category, writes the reply to a file with a record of how it was produced, and sorts it into 'ready' or 'review'. At this stage the routing depends on the category alone. A harness is justified when one procedure is applied to many inputs and has to be documented.",
+    "Stage 4, loop. Every draft is tested by nine automatic checks. Failed checks are returned to the model with a revision request, up to a fixed number of rounds. A reply is placed in 'ready' only if it passes all checks, belongs to a category approved for automatic handling and contains no open question.",
+    "Stage 5, wiki. A Markdown file is read at the start of each run and extended at the end. The harness records lessons derived from failed checks and questions the sources could not answer. People answer open questions in the section 'Approved answers', which later runs use as a source. The model does not change; the file does, and it can be read, corrected and versioned."
+  ],
+  "procedure": [
+    "Stage 1: email 02_extension.txt is sent with the request 'Answer this email:'. No system prompt.",
+    "Stage 2: the same email is sent as the user message; the system prompt contains the specification and the module information.",
+    "Stage 3: the first n emails of the inbox (parameter 'emails') are processed. Per email: one classification request, then one drafting request with the system prompt from stage 2. The nine checks are evaluated for comparison but not used for routing.",
+    "Stage 4: the stage-3 drafts pass through the check-and-revise loop (parameter 'rounds', counting the first draft). Routing now uses the checks.",
+    "Stage 5: a wiki is compiled from stage 4 (lessons from failed first drafts; open questions). The lab then adds the entry from example_approved_answer.md under 'Approved answers', in place of a decision by the module team, and processes the same emails again with the wiki. The categories from stage 3 are reused.",
+    "All requests use temperature 0 and seed 42 (stages 1 and 2: seed 5)."
+  ],
+  "block": "Block 3 — the five stages of prompting",
+  "params": {
+    "stage": "all",
+    "emails": 7,
+    "rounds": 3
+  },
+  "materials": [
+    {
+      "label": "Specification (spec.md)",
+      "text": "# Specification: replies to student emails, module EDU-204\n\nYou draft replies to emails that students send to the module team of EDU-204\nResearch Methods in Education.\n\nRules:\n\n1. Use only information from the reference documents and the approved answers.\n   Do not add dates, times, rooms, procedures or names that are not stated there.\n2. If the reference documents and the approved answers do not answer a question,\n   write exactly this sentence: \"The module team will confirm this separately.\"\n   In a German reply, write: \"Das Modulteam bestätigt dies gesondert.\"\n3. The module team does not decide on deadline extensions, illness or grades.\n   Do not grant, promise or suggest such a decision. Name the examination office\n   (pruefungsamt@example.edu) as the body that decides.\n4. Do not give any information about other students.\n5. Do not repeat matriculation numbers or other personal identifiers.\n6. Reply in the language of the email.\n7. Open with a salutation that uses the student's name if it is given. Close\n   with \"Kind regards,\" (German: \"Mit freundlichen Grüßen\") followed by\n   \"EDU-204 module team\" on its own line.\n8. Write at most 150 words. Do not write a subject line.\n9. Answer the question the email asks. If the email asks several questions,\n   answer each of them.\n10. Copy names of courses, folders, rooms and addresses exactly as written in\n    the reference documents. Do not translate them."
+    },
+    {
+      "label": "Reference document (context/module_information.md)",
+      "text": "# EDU-204 Research Methods in Education — module information, winter term 2026/27\n\nFictitious data, written for the llmlab exercise.\n\n## 1 Contact and office hours\n\nModule team: edu204@example.edu. Office hours: Tuesdays 14:00–15:30, room\nG40-212, or by video call on request. Emails are answered within three working\ndays.\n\n## 2 Assessment\n\nThe module is assessed by a portfolio (60 %) and a written examination (40 %).\n\n- Portfolio submission deadline: 15 January 2027, 12:00, via the learning\n  platform. Each student submits the portfolio personally from their own account.\n- Written examination: 9 February 2027, 10:00–12:00, lecture hall H3.\n- Resit examination: 30 March 2027, 10:00–12:00, room G40-B05.\n- Registration for the written examination is required and closes on\n  12 December 2026 in the campus portal.\n\n## 3 Extensions and illness\n\nExtensions to the portfolio deadline are granted only by the examination office\n(pruefungsamt@example.edu), not by the module team. The application must be\nsubmitted before the deadline and, in the case of illness, include a medical\ncertificate. Students who are ill on the day of the examination submit a medical\ncertificate to the examination office within three working days.\n\n## 4 Grades and review\n\nResults are published in the campus portal by 2 March 2027. Students can inspect\ntheir marked examination in the review session on 5 March 2027, 13:00–15:00,\nroom G40-212. Requests to change a grade are submitted in writing to the\nexamination office within one month of publication. The module team does not\ndiscuss grades by email.\n\n## 5 Course materials\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\".\nThe reading list is in the folder \"Week 0\".\n\n## 6 Data protection\n\nThe module team does not confirm or discuss the enrolment, registration, grades\nor circumstances of any student with another person."
+    },
+    {
+      "label": "Categories (task.json)",
+      "text": "- information (automatic if checks pass): asks for a date, a room, a registration procedure or course material of the module Handling: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n- extension (automatic if checks pass): asks for a deadline extension or reports an illness that affects a deadline or an examination Handling: State that the examination office decides on extensions and illness, give its address and say what the application must contain. Do not decide, promise or suggest an outcome.\n- grade (automatic if checks pass): questions or contests a mark or a grade Handling: Do not discuss the grade. Name the review session and the written procedure with the examination office.\n- third_party (reviewed by a person): asks about another student or asks to act on behalf of another student Handling: Give no information about the other student. State that each student must contact the module team personally.\n- other (reviewed by a person): anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument) Handling: Confirm receipt and state that a member of the module team will reply personally. Do not answer the question itself."
+    },
+    {
+      "label": "Inbox (inputs/)",
+      "text": "=== 01_exam_date.txt\nSubject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481\n\n=== 02_extension.txt\nSubject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077\n\n=== 03_slides.txt\nSubject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei\n\n=== 04_literaturliste.txt\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\n=== 05_grade.txt\nSubject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815\n\n=== 06_flatmate.txt\nSubject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi\n\n=== 07_sample_size.txt\nSubject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer"
+    },
+    {
+      "label": "Classification prompt (step 1)",
+      "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\n<email>\n\nAnswer with the category name only."
+    },
+    {
+      "label": "Drafting prompt (step 2; system prompt = specification + reference document)",
+      "text": "Category: {label} ({description})\nHandling rule for this category: {handling}\n\nEmail:\n\n{email}\n\nWrite the reply. Output only the reply text."
+    },
+    {
+      "label": "Revision prompt (stage 4)",
+      "text": "Category: {label}\n\nEmail:\n\n{email}\n\nYour draft reply:\n\n{draft}\n\nThe draft did not pass these checks:\n{failures}\n\nRevise the reply so that it passes these checks. Keep everything that is correct. Output only the revised reply."
+    },
+    {
+      "label": "Automatic checks (llmlab/checks.py)",
+      "text": "- opens with a salutation and closes with the signature in the reply's language: the first line starts with Dear, Hello, Hi, Sehr geehrte, Liebe, Hallo or Guten Tag; the last three lines contain the signature and a closing in the language of the reply (e.g. 'Kind regards' or 'Mit freundlichen Grüßen')\n- stays within the word limit: counts words; passes at or below the limit set in task.json\n- addresses the subject of the email: takes the content words of the subject line (e.g. 'slides' in 'Slides for next week') and passes if at least one of them occurs in the reply; required only for categories handled automatically, and not for a reply that states the open-question sentence\n- every date appears in the reference documents or in the email: extracts dates such as '9 February', 'February 9' or '09.02.2027' and compares day and month with the dates in the sources\n- quoted names match the sources exactly: every passage in quotation marks (course, folder or room names) must occur verbatim in the reference documents, the approved answers or the email\n- makes no decision reserved for the examination office: fails on a sentence with 'I' or 'we' and a verb such as grant, extend, approve, change or raise without a negation, or on phrases such as 'your extension has been granted'\n- names the examination office: required for the categories extension and grade; passes if 'examination office' or 'Prüfungsamt' occurs\n- replies in the language of the email: counts frequent German and English function words in email and reply\n- repeats no matriculation number: fails if a number with six to eight digits occurs"
+    },
+    {
+      "label": "Approved answer inserted at stage 5 (example_approved_answer.md)",
+      "text": "Slides: the slides for each session are uploaded to the learning platform (course \"EDU-204 2026/27\") by 18:00 on the day before the session."
+    }
+  ],
+  "runs": [
+    {
+      "text": "Okay, here are a few options for replying to Amira's email, ranging from more formal to slightly more casual. Choose the one that best suits your relationship with her and the overall tone of your institution. **Please read the notes at the end of each option before sending!**\n\n**Option 1: Formal & Detailed**\n\nSubject: Re: Portfolio deadline - illness\n\nDear Amira,\n\nThank you for informing us of your situation. We are very sorry to hear you have been unwell.\n\nWe understand that illness can significantly impact your ability to complete assignments. We have received your notification regarding your doctor's certificate and will be happy to extend the portfolio deadline by one week, until [New Deadline Date - e.g., January 19th, 2024].\n\nPlease do send the medical certificate as you offered, so we can keep it on file.\n\nWe wish you a speedy recovery and hope you are feeling better soon. Please do not hesitate to contact us if you have any further questions.\n\nSincerely,\n\n[Your Name/Department Name]\n[Your Title/Position]\n\n**Notes for Option 1:**\n\n*   **Replace `[New Deadline Date]` with the actual new deadline.**  Calculate this carefully.\n*   **Replace `[Your Name/Department Name]` and `[Your Title/Position]` with your appropriate details.**\n*   This is the safest option if you need to maintain a very formal record.\n*   It explicitly acknowledges the medical certificate and requests it.\n\n**Option",
+      "prompt_tokens": 103,
+      "output_tokens": 320,
+      "seconds": 19.52,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [
+        "For the checks, the category 'extension' was assigned manually; stage 1 has no classification step."
+      ],
+      "label": "Stage 1 · prompt",
+      "prompt": "Answer this email:\n\nSubject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077",
+      "system": "",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 5
+      },
+      "artefact": "None; the exchange remains in the chat window.",
+      "checks": [
+        {
+          "id": "frame",
+          "rule": "opens with a salutation and closes with the signature in the reply's language",
+          "ok": false,
+          "applies": true,
+          "detail": "no salutation in first line: Okay, here are a few options for replying to Amira; no signature in last lines; no English closing"
+        },
+        {
+          "id": "length",
+          "rule": "no more than 150 words",
+          "ok": false,
+          "applies": true,
+          "detail": "222 words"
+        },
+        {
+          "id": "topic",
+          "rule": "addresses the subject of the email",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "dates",
+          "rule": "every date appears in the reference documents or in the email",
+          "ok": false,
+          "applies": true,
+          "detail": "not in any source: 19 January"
+        },
+        {
+          "id": "quoted",
+          "rule": "quoted names match the sources exactly",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "decision",
+          "rule": "makes no decision reserved for the examination office",
+          "ok": false,
+          "applies": true,
+          "detail": "We have received your notification regarding your doctor's certificate and will be happy to extend the portfolio deadline by one week, until [New Deadline Date - e.g., January 19th, 2024]."
+        },
+        {
+          "id": "referral",
+          "rule": "names the examination office",
+          "ok": false,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "language",
+          "rule": "replies in the language of the email",
+          "ok": true,
+          "applies": true,
+          "detail": "email en, reply en"
+        },
+        {
+          "id": "identifiers",
+          "rule": "repeats no matriculation number",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "text": "Dear Amira Haddad,\n\nThe module team does not grant deadline extensions. Please submit an application to the examination office (pruefungsamt@example.edu) before the deadline, including your medical certificate.\n\nKind regards,\nEDU-204 module team",
+      "prompt_tokens": 982,
+      "output_tokens": 56,
+      "seconds": 14.91,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "simulated": false,
+      "notes": [],
+      "label": "Stage 2 · skill prompt",
+      "prompt": "Subject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077",
+      "system": "# Specification: replies to student emails, module EDU-204\n\nYou draft replies to emails that students send to the module team of EDU-204\nResearch Methods in Education.\n\nRules:\n\n1. Use only information from the reference documents and the approved answers.\n   Do not add dates, times, rooms, procedures or names that are not stated there.\n2. If the reference documents and the approved answers do not answer a question,\n   write exactly this sentence: \"The module team will confirm this separately.\"\n   In a German reply, write: \"Das Modulteam bestätigt dies gesondert.\"\n3. The module team does not decide on deadline extensions, illness or grades.\n   Do not grant, promise or suggest such a decision. Name the examination office\n   (pruefungsamt@example.edu) as the body that decides.\n4. Do not give any information about other students.\n5. Do not repeat matriculation numbers or other personal identifiers.\n6. Reply in the language of the email.\n7. Open with a salutation that uses the student's name if it is given. Close\n   with \"Kind regards,\" (German: \"Mit freundlichen Grüßen\") followed by\n   \"EDU-204 module team\" on its own line.\n8. Write at most 150 words. Do not write a subject line.\n9. Answer the question the email asks. If the email asks several questions,\n   answer each of them.\n10. Copy names of courses, folders, rooms and addresses exactly as written in\n    the reference documents. Do not translate them.\n\nReference documents:\n\n# EDU-204 Research Methods in Education — module information, winter term 2026/27\n\nFictitious data, written for the llmlab exercise.\n\n## 1 Contact and office hours\n\nModule team: edu204@example.edu. Office hours: Tuesdays 14:00–15:30, room\nG40-212, or by video call on request. Emails are answered within three working\ndays.\n\n## 2 Assessment\n\nThe module is assessed by a portfolio (60 %) and a written examination (40 %).\n\n- Portfolio submission deadline: 15 January 2027, 12:00, via the learning\n  platform. Each student submits the portfolio personally from their own account.\n- Written examination: 9 February 2027, 10:00–12:00, lecture hall H3.\n- Resit examination: 30 March 2027, 10:00–12:00, room G40-B05.\n- Registration for the written examination is required and closes on\n  12 December 2026 in the campus portal.\n\n## 3 Extensions and illness\n\nExtensions to the portfolio deadline are granted only by the examination office\n(pruefungsamt@example.edu), not by the module team. The application must be\nsubmitted before the deadline and, in the case of illness, include a medical\ncertificate. Students who are ill on the day of the examination submit a medical\ncertificate to the examination office within three working days.\n\n## 4 Grades and review\n\nResults are published in the campus portal by 2 March 2027. Students can inspect\ntheir marked examination in the review session on 5 March 2027, 13:00–15:00,\nroom G40-212. Requests to change a grade are submitted in writing to the\nexamination office within one month of publication. The module team does not\ndiscuss grades by email.\n\n## 5 Course materials\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\".\nThe reading list is in the folder \"Week 0\".\n\n## 6 Data protection\n\nThe module team does not confirm or discuss the enrolment, registration, grades\nor circumstances of any student with another person.",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 5
+      },
+      "artefact": "A stored instruction: specification and module information.",
+      "checks": [
+        {
+          "id": "frame",
+          "rule": "opens with a salutation and closes with the signature in the reply's language",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "length",
+          "rule": "no more than 150 words",
+          "ok": true,
+          "applies": true,
+          "detail": "34 words"
+        },
+        {
+          "id": "topic",
+          "rule": "addresses the subject of the email",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "dates",
+          "rule": "every date appears in the reference documents or in the email",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "quoted",
+          "rule": "quoted names match the sources exactly",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "decision",
+          "rule": "makes no decision reserved for the examination office",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "referral",
+          "rule": "names the examination office",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        },
+        {
+          "id": "language",
+          "rule": "replies in the language of the email",
+          "ok": true,
+          "applies": true,
+          "detail": "email en, reply en"
+        },
+        {
+          "id": "identifiers",
+          "rule": "repeats no matriculation number",
+          "ok": true,
+          "applies": true,
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "text": "7 emails processed: 5 routed to 'ready', 2 to 'review'.",
+      "prompt_tokens": null,
+      "output_tokens": null,
+      "seconds": 0.0,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434",
+      "simulated": false,
+      "notes": [
+        "Command for the full inbox, with files written: python -m llmlab harness --task student_emails --out out"
+      ],
+      "label": "Stage 3 · harness",
+      "prompt": null,
+      "system": "# Specification: replies to student emails, module EDU-204\n\nYou draft replies to emails that students send to the module team of EDU-204\nResearch Methods in Education.\n\nRules:\n\n1. Use only information from the reference documents and the approved answers.\n   Do not add dates, times, rooms, procedures or names that are not stated there.\n2. If the reference documents and the approved answers do not answer a question,\n   write exactly this sentence: \"The module team will confirm this separately.\"\n   In a German reply, write: \"Das Modulteam bestätigt dies gesondert.\"\n3. The module team does not decide on deadline extensions, illness or grades.\n   Do not grant, promise or suggest such a decision. Name the examination office\n   (pruefungsamt@example.edu) as the body that decides.\n4. Do not give any information about other students.\n5. Do not repeat matriculation numbers or other personal identifiers.\n6. Reply in the language of the email.\n7. Open with a salutation that uses the student's name if it is given. Close\n   with \"Kind regards,\" (German: \"Mit freundlichen Grüßen\") followed by\n   \"EDU-204 module team\" on its own line.\n8. Write at most 150 words. Do not write a subject line.\n9. Answer the question the email asks. If the email asks several questions,\n   answer each of them.\n10. Copy names of courses, folders, rooms and addresses exactly as written in\n    the reference documents. Do not translate them.\n\nReference documents:\n\n# EDU-204 Research Methods in Education — module information, winter term 2026/27\n\nFictitious data, written for the llmlab exercise.\n\n## 1 Contact and office hours\n\nModule team: edu204@example.edu. Office hours: Tuesdays 14:00–15:30, room\nG40-212, or by video call on request. Emails are answered within three working\ndays.\n\n## 2 Assessment\n\nThe module is assessed by a portfolio (60 %) and a written examination (40 %).\n\n- Portfolio submission deadline: 15 January 2027, 12:00, via the learning\n  platform. Each student submits the portfolio personally from their own account.\n- Written examination: 9 February 2027, 10:00–12:00, lecture hall H3.\n- Resit examination: 30 March 2027, 10:00–12:00, room G40-B05.\n- Registration for the written examination is required and closes on\n  12 December 2026 in the campus portal.\n\n## 3 Extensions and illness\n\nExtensions to the portfolio deadline are granted only by the examination office\n(pruefungsamt@example.edu), not by the module team. The application must be\nsubmitted before the deadline and, in the case of illness, include a medical\ncertificate. Students who are ill on the day of the examination submit a medical\ncertificate to the examination office within three working days.\n\n## 4 Grades and review\n\nResults are published in the campus portal by 2 March 2027. Students can inspect\ntheir marked examination in the review session on 5 March 2027, 13:00–15:00,\nroom G40-212. Requests to change a grade are submitted in writing to the\nexamination office within one month of publication. The module team does not\ndiscuss grades by email.\n\n## 5 Course materials\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\".\nThe reading list is in the folder \"Week 0\".\n\n## 6 Data protection\n\nThe module team does not confirm or discuss the enrolment, registration, grades\nor circumstances of any student with another person.",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 42
+      },
+      "artefact": "One reply file per email with a provenance header, sorted into ready/ and review/, and a log.",
+      "table": {
+        "columns": [
+          "email",
+          "language",
+          "category",
+          "route",
+          "reason",
+          "checks (not used)"
+        ],
+        "rows": [
+          [
+            "01_exam_date.txt",
+            "en",
+            "information",
+            "ready",
+            "category handled automatically; reply not checked",
+            "9/9"
+          ],
+          [
+            "02_extension.txt",
+            "en",
+            "extension",
+            "ready",
+            "category handled automatically; reply not checked",
+            "9/9"
+          ],
+          [
+            "03_slides.txt",
+            "en",
+            "information",
+            "ready",
+            "category handled automatically; reply not checked",
+            "8/9"
+          ],
+          [
+            "04_literaturliste.txt",
+            "de",
+            "information",
+            "ready",
+            "category handled automatically; reply not checked",
+            "8/9"
+          ],
+          [
+            "05_grade.txt",
+            "en",
+            "grade",
+            "ready",
+            "category handled automatically; reply not checked",
+            "9/9"
+          ],
+          [
+            "06_flatmate.txt",
+            "en",
+            "third_party",
+            "review",
+            "category 'third_party' is always reviewed by a person",
+            "9/9"
+          ],
+          [
+            "07_sample_size.txt",
+            "en",
+            "other",
+            "review",
+            "category 'other' is always reviewed by a person",
+            "9/9"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "label": "01_exam_date.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "information  → category: information"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nSubject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Jonas Becker,\n\nThe written examination takes place on 9 February 2027, from 10:00–12:00, in lecture hall H3.\n\nRegistration for the written examination is required and closes on 12 December 2026 in the campus portal.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "43 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "02_extension.txt · extension · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "extension  → category: extension"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: extension (asks for a deadline extension or reports an illness that affects a deadline or an examination)\nHandling rule for this category: State that the examination office decides on extensions and illness, give its address and say what the application must contain. Do not decide, promise or suggest an outcome.\n\nEmail:\n\nSubject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Amira Haddad,\n\nExtensions to the portfolio deadline are granted only by the examination office (pruefungsamt@example.edu), not by the module team. The application must be submitted before the deadline and, in the case of illness, include a medical certificate.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "46 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "03_slides.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "information  → category: information"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nSubject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 8/9)",
+              "text": "Dear Chen Wei,\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\". The reading list is in the folder \"Week 0\".\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "30 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": false,
+              "applies": true,
+              "detail": "none of these subject words in the reply: slides"
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "04_literaturliste.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Betreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "information  → category: information"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 8/9)",
+              "text": "Sehr geehrte Frau Schmidt,\n\ndie Readings für das Modul EDU-204 finden Sie auf der Lernplattform im Kurs \"EDU-204 2026/27\". Die Leseliste befindet sich im Ordner \"Week 0\".\n\nDie Sprechstunde des Modulteams findet dienstags von 14:00 bis 15:30 in Raum G40-212 oder auf Anfrage per Videoanruf statt.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": false,
+              "applies": true,
+              "detail": "no German closing"
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "54 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email de, reply de"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "05_grade.txt · grade · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "grade  → category: grade"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: grade (questions or contests a mark or a grade)\nHandling rule for this category: Do not discuss the grade. Name the review session and the written procedure with the examination office.\n\nEmail:\n\nSubject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Tomasz Nowak,\n\nThe module team does not discuss grades by email. You can inspect your marked examination in the review session on 5 March 2027, 13:00–15:00, room G40-212. Requests to change a grade are submitted in writing to the examination office (pruefungsamt@example.edu) within one month of publication.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "58 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "06_flatmate.txt · third_party · review",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "third_party  → category: third_party"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: third_party (asks about another student or asks to act on behalf of another student)\nHandling rule for this category: Give no information about the other student. State that each student must contact the module team personally.\n\nEmail:\n\nSubject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Sofia Rossi,\n\nThe module team does not confirm or discuss the enrolment, registration, grades or circumstances of any student with another person. Each student must contact the module team personally.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "36 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "07_sample_size.txt · other · review",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "other  → category: other"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: other (anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument))\nHandling rule for this category: Confirm receipt and state that a member of the module team will reply personally. Do not answer the question itself.\n\nEmail:\n\nSubject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Noah Fischer,\n\nThank you for your email. A member of the module team will reply personally to your question.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "25 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "text": "5 replies passed all checks as first drafts and 7 after the loop; 2 revision requests were sent.",
+      "prompt_tokens": null,
+      "output_tokens": null,
+      "seconds": 0.0,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434",
+      "simulated": false,
+      "notes": [
+        "Command for the full inbox: python -m llmlab harness --task student_emails --out out --loop 3"
+      ],
+      "label": "Stage 4 · loop",
+      "prompt": null,
+      "system": "# Specification: replies to student emails, module EDU-204\n\nYou draft replies to emails that students send to the module team of EDU-204\nResearch Methods in Education.\n\nRules:\n\n1. Use only information from the reference documents and the approved answers.\n   Do not add dates, times, rooms, procedures or names that are not stated there.\n2. If the reference documents and the approved answers do not answer a question,\n   write exactly this sentence: \"The module team will confirm this separately.\"\n   In a German reply, write: \"Das Modulteam bestätigt dies gesondert.\"\n3. The module team does not decide on deadline extensions, illness or grades.\n   Do not grant, promise or suggest such a decision. Name the examination office\n   (pruefungsamt@example.edu) as the body that decides.\n4. Do not give any information about other students.\n5. Do not repeat matriculation numbers or other personal identifiers.\n6. Reply in the language of the email.\n7. Open with a salutation that uses the student's name if it is given. Close\n   with \"Kind regards,\" (German: \"Mit freundlichen Grüßen\") followed by\n   \"EDU-204 module team\" on its own line.\n8. Write at most 150 words. Do not write a subject line.\n9. Answer the question the email asks. If the email asks several questions,\n   answer each of them.\n10. Copy names of courses, folders, rooms and addresses exactly as written in\n    the reference documents. Do not translate them.\n\nReference documents:\n\n# EDU-204 Research Methods in Education — module information, winter term 2026/27\n\nFictitious data, written for the llmlab exercise.\n\n## 1 Contact and office hours\n\nModule team: edu204@example.edu. Office hours: Tuesdays 14:00–15:30, room\nG40-212, or by video call on request. Emails are answered within three working\ndays.\n\n## 2 Assessment\n\nThe module is assessed by a portfolio (60 %) and a written examination (40 %).\n\n- Portfolio submission deadline: 15 January 2027, 12:00, via the learning\n  platform. Each student submits the portfolio personally from their own account.\n- Written examination: 9 February 2027, 10:00–12:00, lecture hall H3.\n- Resit examination: 30 March 2027, 10:00–12:00, room G40-B05.\n- Registration for the written examination is required and closes on\n  12 December 2026 in the campus portal.\n\n## 3 Extensions and illness\n\nExtensions to the portfolio deadline are granted only by the examination office\n(pruefungsamt@example.edu), not by the module team. The application must be\nsubmitted before the deadline and, in the case of illness, include a medical\ncertificate. Students who are ill on the day of the examination submit a medical\ncertificate to the examination office within three working days.\n\n## 4 Grades and review\n\nResults are published in the campus portal by 2 March 2027. Students can inspect\ntheir marked examination in the review session on 5 March 2027, 13:00–15:00,\nroom G40-212. Requests to change a grade are submitted in writing to the\nexamination office within one month of publication. The module team does not\ndiscuss grades by email.\n\n## 5 Course materials\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\".\nThe reading list is in the folder \"Week 0\".\n\n## 6 Data protection\n\nThe module team does not confirm or discuss the enrolment, registration, grades\nor circumstances of any student with another person.",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 42,
+        "rounds": 3
+      },
+      "artefact": "A log of every round: checks, revision prompt, revised reply.",
+      "table": {
+        "columns": [
+          "email",
+          "category",
+          "checks per round",
+          "route",
+          "reason"
+        ],
+        "rows": [
+          [
+            "01_exam_date.txt",
+            "information",
+            "9/9",
+            "ready",
+            "category handled automatically; all checks passed"
+          ],
+          [
+            "02_extension.txt",
+            "extension",
+            "9/9",
+            "ready",
+            "category handled automatically; all checks passed"
+          ],
+          [
+            "03_slides.txt",
+            "information",
+            "8/9 → 9/9",
+            "review",
+            "the sources do not answer the question (open question)"
+          ],
+          [
+            "04_literaturliste.txt",
+            "information",
+            "8/9 → 9/9",
+            "ready",
+            "category handled automatically; all checks passed"
+          ],
+          [
+            "05_grade.txt",
+            "grade",
+            "9/9",
+            "ready",
+            "category handled automatically; all checks passed"
+          ],
+          [
+            "06_flatmate.txt",
+            "third_party",
+            "9/9",
+            "review",
+            "category 'third_party' is always reviewed by a person"
+          ],
+          [
+            "07_sample_size.txt",
+            "other",
+            "9/9",
+            "review",
+            "category 'other' is always reviewed by a person"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "label": "01_exam_date.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "information  → category: information"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nSubject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Jonas Becker,\n\nThe written examination takes place on 9 February 2027, from 10:00–12:00, in lecture hall H3.\n\nRegistration for the written examination is required and closes on 12 December 2026 in the campus portal.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "43 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "02_extension.txt · extension · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "extension  → category: extension"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: extension (asks for a deadline extension or reports an illness that affects a deadline or an examination)\nHandling rule for this category: State that the examination office decides on extensions and illness, give its address and say what the application must contain. Do not decide, promise or suggest an outcome.\n\nEmail:\n\nSubject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Amira Haddad,\n\nExtensions to the portfolio deadline are granted only by the examination office (pruefungsamt@example.edu), not by the module team. The application must be submitted before the deadline and, in the case of illness, include a medical certificate.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "46 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "03_slides.txt · information · review",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "information  → category: information"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nSubject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 8/9)",
+              "text": "Dear Chen Wei,\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\". The reading list is in the folder \"Week 0\".\n\nKind regards,\nEDU-204 module team"
+            },
+            {
+              "label": "Round 2 · revision prompt",
+              "text": "Category: information\n\nEmail:\n\nSubject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei\n\nYour draft reply:\n\nDear Chen Wei,\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\". The reading list is in the folder \"Week 0\".\n\nKind regards,\nEDU-204 module team\n\nThe draft did not pass these checks:\n- addresses the subject of the email. Answer the question the email asks, using the sources only; if the sources do not contain the answer, write the sentence for open questions instead of promising or inventing anything. (found: none of these subject words in the reply: slides)\n\nRevise the reply so that it passes these checks. Keep everything that is correct. Output only the revised reply."
+            },
+            {
+              "label": "Round 2 · revised reply (checks 9/9)",
+              "text": "Dear Chen Wei,\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\". The reading list is in the folder \"Week 0\". The module team will confirm this separately.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "37 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "04_literaturliste.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Betreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "information  → category: information"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 8/9)",
+              "text": "Sehr geehrte Frau Schmidt,\n\ndie Readings für das Modul EDU-204 finden Sie auf der Lernplattform im Kurs \"EDU-204 2026/27\". Die Leseliste befindet sich im Ordner \"Week 0\".\n\nDie Sprechstunde des Modulteams findet dienstags von 14:00 bis 15:30 in Raum G40-212 oder auf Anfrage per Videoanruf statt.\n\nKind regards,\nEDU-204 module team"
+            },
+            {
+              "label": "Round 2 · revision prompt",
+              "text": "Category: information\n\nEmail:\n\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\nYour draft reply:\n\nSehr geehrte Frau Schmidt,\n\ndie Readings für das Modul EDU-204 finden Sie auf der Lernplattform im Kurs \"EDU-204 2026/27\". Die Leseliste befindet sich im Ordner \"Week 0\".\n\nDie Sprechstunde des Modulteams findet dienstags von 14:00 bis 15:30 in Raum G40-212 oder auf Anfrage per Videoanruf statt.\n\nKind regards,\nEDU-204 module team\n\nThe draft did not pass these checks:\n- opens with a salutation and closes with the signature in the reply's language. Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen Grüßen') and the signature on its own line. (found: no German closing)\n\nRevise the reply so that it passes these checks. Keep everything that is correct. Output only the revised reply."
+            },
+            {
+              "label": "Round 2 · revised reply (checks 9/9)",
+              "text": "Sehr geehrte Frau Schmidt,\n\ndie Readings für das Modul EDU-204 finden Sie auf der Lernplattform im Kurs \"EDU-204 2026/27\". Die Leseliste befindet sich im Ordner \"Week 0\".\n\nDie Sprechstunde des Modulteams findet dienstags von 14:00 bis 15:30 in Raum G40-212 oder auf Anfrage per Videoanruf statt.\n\nMit freundlichen Grüßen,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "55 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email de, reply de"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "05_grade.txt · grade · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "grade  → category: grade"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: grade (questions or contests a mark or a grade)\nHandling rule for this category: Do not discuss the grade. Name the review session and the written procedure with the examination office.\n\nEmail:\n\nSubject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Tomasz Nowak,\n\nThe module team does not discuss grades by email. You can inspect your marked examination in the review session on 5 March 2027, 13:00–15:00, room G40-212. Requests to change a grade are submitted in writing to the examination office (pruefungsamt@example.edu) within one month of publication.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "58 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "06_flatmate.txt · third_party · review",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "third_party  → category: third_party"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: third_party (asks about another student or asks to act on behalf of another student)\nHandling rule for this category: Give no information about the other student. State that each student must contact the module team personally.\n\nEmail:\n\nSubject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Sofia Rossi,\n\nThe module team does not confirm or discuss the enrolment, registration, grades or circumstances of any student with another person. Each student must contact the module team personally.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "36 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "07_sample_size.txt · other · review",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer"
+            },
+            {
+              "label": "Step 1 · classification prompt",
+              "text": "Classify the email below into exactly one of these categories.\n\n- information: asks for a date, a room, a registration procedure or course material of the module\n- extension: asks for a deadline extension or reports an illness that affects a deadline or an examination\n- grade: questions or contests a mark or a grade\n- third_party: asks about another student or asks to act on behalf of another student\n- other: anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument)\n\nEmail:\n\nSubject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer\n\nAnswer with the category name only."
+            },
+            {
+              "label": "Step 1 · model answer",
+              "text": "other  → category: other"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: other (anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument))\nHandling rule for this category: Confirm receipt and state that a member of the module team will reply personally. Do not answer the question itself.\n\nEmail:\n\nSubject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Noah Fischer,\n\nThank you for your email. A member of the module team will reply personally to your question.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "25 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "text": "The wiki contained 2 lessons and 1 approved answer. With it, 6 of 7 first drafts passed all checks (stage 4: 5) and 5 replies were routed to 'ready' (stage 4: 4).",
+      "prompt_tokens": null,
+      "output_tokens": null,
+      "seconds": 0.0,
+      "model": "gemma3:12b",
+      "endpoint": "http://127.0.0.1:11434",
+      "simulated": false,
+      "notes": [
+        "The entry under 'Approved answers' was inserted by the lab from example_approved_answer.md. In the harness, only people write to this section.",
+        "Command: python -m llmlab harness --task student_emails --out out --loop 3 --wiki wiki.md (run it twice, and add an approved answer to wiki.md between the runs)."
+      ],
+      "label": "Stage 5 · wiki",
+      "prompt": null,
+      "system": "# Specification: replies to student emails, module EDU-204\n\nYou draft replies to emails that students send to the module team of EDU-204\nResearch Methods in Education.\n\nRules:\n\n1. Use only information from the reference documents and the approved answers.\n   Do not add dates, times, rooms, procedures or names that are not stated there.\n2. If the reference documents and the approved answers do not answer a question,\n   write exactly this sentence: \"The module team will confirm this separately.\"\n   In a German reply, write: \"Das Modulteam bestätigt dies gesondert.\"\n3. The module team does not decide on deadline extensions, illness or grades.\n   Do not grant, promise or suggest such a decision. Name the examination office\n   (pruefungsamt@example.edu) as the body that decides.\n4. Do not give any information about other students.\n5. Do not repeat matriculation numbers or other personal identifiers.\n6. Reply in the language of the email.\n7. Open with a salutation that uses the student's name if it is given. Close\n   with \"Kind regards,\" (German: \"Mit freundlichen Grüßen\") followed by\n   \"EDU-204 module team\" on its own line.\n8. Write at most 150 words. Do not write a subject line.\n9. Answer the question the email asks. If the email asks several questions,\n   answer each of them.\n10. Copy names of courses, folders, rooms and addresses exactly as written in\n    the reference documents. Do not translate them.\n\nReference documents:\n\n# EDU-204 Research Methods in Education — module information, winter term 2026/27\n\nFictitious data, written for the llmlab exercise.\n\n## 1 Contact and office hours\n\nModule team: edu204@example.edu. Office hours: Tuesdays 14:00–15:30, room\nG40-212, or by video call on request. Emails are answered within three working\ndays.\n\n## 2 Assessment\n\nThe module is assessed by a portfolio (60 %) and a written examination (40 %).\n\n- Portfolio submission deadline: 15 January 2027, 12:00, via the learning\n  platform. Each student submits the portfolio personally from their own account.\n- Written examination: 9 February 2027, 10:00–12:00, lecture hall H3.\n- Resit examination: 30 March 2027, 10:00–12:00, room G40-B05.\n- Registration for the written examination is required and closes on\n  12 December 2026 in the campus portal.\n\n## 3 Extensions and illness\n\nExtensions to the portfolio deadline are granted only by the examination office\n(pruefungsamt@example.edu), not by the module team. The application must be\nsubmitted before the deadline and, in the case of illness, include a medical\ncertificate. Students who are ill on the day of the examination submit a medical\ncertificate to the examination office within three working days.\n\n## 4 Grades and review\n\nResults are published in the campus portal by 2 March 2027. Students can inspect\ntheir marked examination in the review session on 5 March 2027, 13:00–15:00,\nroom G40-212. Requests to change a grade are submitted in writing to the\nexamination office within one month of publication. The module team does not\ndiscuss grades by email.\n\n## 5 Course materials\n\nReadings are provided on the learning platform in the course \"EDU-204 2026/27\".\nThe reading list is in the folder \"Week 0\".\n\n## 6 Data protection\n\nThe module team does not confirm or discuss the enrolment, registration, grades\nor circumstances of any student with another person.\n\nApproved answers (written by the module team; use them as reference documents):\n- Slides: the slides for each session are uploaded to the learning platform (course \"EDU-204 2026/27\") by 18:00 on the day before the session.\n\nLessons recorded from earlier runs:\n- Answer the question the email asks, using the sources only; if the sources do not contain the answer, write the sentence for open questions instead of promising or inventing anything.\n- Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen Grüßen') and the signature on its own line.",
+      "settings": {
+        "temperature": 0.0,
+        "seed": 42,
+        "rounds": 3
+      },
+      "artefact": "wiki.md: a Markdown file with lessons, open questions and approved answers, read by every later run.",
+      "files": [
+        {
+          "name": "wiki.md after stage 4 (entries written by the harness)",
+          "text": "# Wiki: Replies to student emails, module EDU-204\n\nThe harness reads this file at the start of every run and adds entries at the end.\n\n- 'Lessons from failed checks' is written by the harness. Each line is added to\n  the instructions of later runs. Edit or delete lines as required.\n- 'Open questions' is written by the harness. It lists emails the sources could\n  not answer. Delete an entry once it has been answered.\n- 'Approved answers' is written by people only. Each line is used as a reference\n  document in later runs. The harness never writes to this section.\n\n## Lessons from failed checks\n\n- Answer the question the email asks, using the sources only; if the sources do not contain the answer, write the sentence for open questions instead of promising or inventing anything.\n- Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen Grüßen') and the signature on its own line.\n\n## Open questions\n\n- 03_slides.txt: \"Slides for next week\"\n\n## Approved answers\n\n"
+        },
+        {
+          "name": "wiki.md as read by stage 5 (approved answer added, answered question removed)",
+          "text": "# Wiki: Replies to student emails, module EDU-204\n\nThe harness reads this file at the start of every run and adds entries at the end.\n\n- 'Lessons from failed checks' is written by the harness. Each line is added to\n  the instructions of later runs. Edit or delete lines as required.\n- 'Open questions' is written by the harness. It lists emails the sources could\n  not answer. Delete an entry once it has been answered.\n- 'Approved answers' is written by people only. Each line is used as a reference\n  document in later runs. The harness never writes to this section.\n\n## Lessons from failed checks\n\n- Answer the question the email asks, using the sources only; if the sources do not contain the answer, write the sentence for open questions instead of promising or inventing anything.\n- Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen Grüßen') and the signature on its own line.\n\n## Open questions\n\n\n## Approved answers\n\n- Slides: the slides for each session are uploaded to the learning platform (course \"EDU-204 2026/27\") by 18:00 on the day before the session.\n"
+        }
+      ],
+      "table": {
+        "columns": [
+          "email",
+          "category",
+          "first draft: stage 4",
+          "first draft: stage 5",
+          "route: stage 4",
+          "route: stage 5"
+        ],
+        "rows": [
+          [
+            "01_exam_date.txt",
+            "information",
+            "9/9",
+            "9/9",
+            "ready",
+            "ready"
+          ],
+          [
+            "02_extension.txt",
+            "extension",
+            "9/9",
+            "9/9",
+            "ready",
+            "ready"
+          ],
+          [
+            "03_slides.txt",
+            "information",
+            "8/9",
+            "9/9",
+            "review",
+            "ready"
+          ],
+          [
+            "04_literaturliste.txt",
+            "information",
+            "8/9",
+            "8/9",
+            "ready",
+            "ready"
+          ],
+          [
+            "05_grade.txt",
+            "grade",
+            "9/9",
+            "9/9",
+            "ready",
+            "ready"
+          ],
+          [
+            "06_flatmate.txt",
+            "third_party",
+            "9/9",
+            "9/9",
+            "review",
+            "review"
+          ],
+          [
+            "07_sample_size.txt",
+            "other",
+            "9/9",
+            "9/9",
+            "review",
+            "review"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "label": "01_exam_date.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nSubject: Date of the written exam\n\nDear module team,\n\nI could not find the date of the written exam for EDU-204. When and where does\nit take place, and do I have to register for it separately?\n\nKind regards,\nJonas Becker\nMatriculation number 229481\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Jonas Becker,\n\nThe written examination takes place on 9 February 2027, from 10:00–12:00, in lecture hall H3. Registration is required and closes on 12 December 2026 in the campus portal.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "39 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "02_extension.txt · extension · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: extension (asks for a deadline extension or reports an illness that affects a deadline or an examination)\nHandling rule for this category: State that the examination office decides on extensions and illness, give its address and say what the application must contain. Do not decide, promise or suggest an outcome.\n\nEmail:\n\nSubject: Portfolio deadline - illness\n\nHello,\n\nI have had influenza since last week and my doctor has signed me off until\n12 January. I will not be able to finish my portfolio by the deadline. Could you\nplease extend the deadline for me by one week? I can send you the medical\ncertificate.\n\nThank you very much,\nAmira Haddad\nMatriculation number 231077\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Amira Haddad,\n\nExtensions to the portfolio deadline are granted only by the examination office (pruefungsamt@example.edu), not by the module team. The application must be submitted before the deadline and, in the case of illness, include a medical certificate.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "46 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "03_slides.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nSubject: Slides for next week\n\nDear EDU-204 team,\n\nwill the slides for next week's session be available before the session? I would\nlike to print them and take notes on them.\n\nBest wishes,\nChen Wei\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Chen Wei,\n\nThe slides for each session are uploaded to the learning platform (course \"EDU-204 2026/27\") by 18:00 on the day before the session.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "32 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "04_literaturliste.txt · information · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Betreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: information (asks for a date, a room, a registration procedure or course material of the module)\nHandling rule for this category: Answer from the reference documents and the approved answers. If they do not contain the answer, write the sentence for open questions given in the specification.\n\nEmail:\n\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 8/9)",
+              "text": "Sehr geehrte Frau Schmidt,\n\ndie Readings für EDU-204 finden Sie auf der Lernplattform im Kurs \"EDU-204 2026/27\". Die Leseliste befindet sich im Ordner \"Week 0\".\n\nUnsere Sprechstunden finden dienstags von 14:00 bis 15:30 in Raum G40-212 oder auf Anfrage per Videoanruf statt.\n\nKind regards,\nEDU-204 module team"
+            },
+            {
+              "label": "Round 2 · revision prompt",
+              "text": "Category: information\n\nEmail:\n\nBetreff: Literaturliste und Sprechstunde\n\nSehr geehrtes Modulteam,\n\nwo finde ich die Literaturliste für EDU-204? Außerdem möchte ich fragen, wann\nIhre Sprechstunde ist, da ich Fragen zu meinem Portfolio habe.\n\nViele Grüße\nLea Schmidt\n\nYour draft reply:\n\nSehr geehrte Frau Schmidt,\n\ndie Readings für EDU-204 finden Sie auf der Lernplattform im Kurs \"EDU-204 2026/27\". Die Leseliste befindet sich im Ordner \"Week 0\".\n\nUnsere Sprechstunden finden dienstags von 14:00 bis 15:30 in Raum G40-212 oder auf Anfrage per Videoanruf statt.\n\nKind regards,\nEDU-204 module team\n\nThe draft did not pass these checks:\n- opens with a salutation and closes with the signature in the reply's language. Open with a salutation; close with 'Kind regards,' (German: 'Mit freundlichen Grüßen') and the signature on its own line. (found: no German closing)\n\nRevise the reply so that it passes these checks. Keep everything that is correct. Output only the revised reply."
+            },
+            {
+              "label": "Round 2 · revised reply (checks 9/9)",
+              "text": "Sehr geehrte Frau Schmidt,\n\ndie Readings für EDU-204 finden Sie auf der Lernplattform im Kurs \"EDU-204 2026/27\". Die Leseliste befindet sich im Ordner \"Week 0\".\n\nUnsere Sprechstunden finden dienstags von 14:00 bis 15:30 in Raum G40-212 oder auf Anfrage per Videoanruf statt.\n\nMit freundlichen Grüßen,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "51 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email de, reply de"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "05_grade.txt · grade · ready",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: grade (questions or contests a mark or a grade)\nHandling rule for this category: Do not discuss the grade. Name the review session and the written procedure with the examination office.\n\nEmail:\n\nSubject: My exam grade\n\nDear module team,\n\nI received a 3.3 for the written exam and I believe my answer to question 4\ndeserved more points. Could you please look at it again and raise my grade? I\nneed at least a 3.0 for my scholarship.\n\nBest regards,\nTomasz Nowak\nMatriculation number 228815\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Tomasz Nowak,\n\nThe module team does not discuss grades by email. You can inspect your marked examination in the review session on 5 March 2027, 13:00–15:00, room G40-212. Requests to change a grade are submitted in writing to the examination office (pruefungsamt@example.edu) within one month of publication.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "58 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "06_flatmate.txt · third_party · review",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: third_party (asks about another student or asks to act on behalf of another student)\nHandling rule for this category: Give no information about the other student. State that each student must contact the module team personally.\n\nEmail:\n\nSubject: Question about a fellow student\n\nHi,\n\nmy flatmate Tim Wagner is also in EDU-204 and is currently abroad. Can you tell\nme whether he is registered for the exam? He also asked me to submit his\nportfolio for him. Is that possible?\n\nThanks,\nSofia Rossi\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Sofia Rossi,\n\nThe module team does not confirm or discuss the enrolment, registration, grades or circumstances of any student with another person. Each student must contact the module team personally.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "36 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        },
+        {
+          "label": "07_sample_size.txt · other · review",
+          "blocks": [
+            {
+              "label": "Email",
+              "text": "Subject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer"
+            },
+            {
+              "label": "Step 2 · drafting prompt (user message)",
+              "text": "Category: other (anything else, in particular questions about the content, method or quality of the student's own work (e.g. research design, sample size, argument))\nHandling rule for this category: Confirm receipt and state that a member of the module team will reply personally. Do not answer the question itself.\n\nEmail:\n\nSubject: Sample size for my portfolio study\n\nDear module team,\n\nfor the empirical part of my portfolio I have interviewed 12 teachers. Is this\nsample large enough, or should I conduct more interviews before I start the\nanalysis?\n\nBest regards,\nNoah Fischer\n\nWrite the reply. Output only the reply text."
+            },
+            {
+              "label": "Step 2 · draft (checks 9/9)",
+              "text": "Dear Noah Fischer,\n\nThank you for your email. A member of the module team will reply personally to your question.\n\nKind regards,\nEDU-204 module team"
+            }
+          ],
+          "checks": [
+            {
+              "id": "frame",
+              "rule": "opens with a salutation and closes with the signature in the reply's language",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "length",
+              "rule": "no more than 150 words",
+              "ok": true,
+              "applies": true,
+              "detail": "25 words"
+            },
+            {
+              "id": "topic",
+              "rule": "addresses the subject of the email",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "dates",
+              "rule": "every date appears in the reference documents or in the email",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "quoted",
+              "rule": "quoted names match the sources exactly",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "decision",
+              "rule": "makes no decision reserved for the examination office",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            },
+            {
+              "id": "referral",
+              "rule": "names the examination office",
+              "ok": true,
+              "applies": false,
+              "detail": ""
+            },
+            {
+              "id": "language",
+              "rule": "replies in the language of the email",
+              "ok": true,
+              "applies": true,
+              "detail": "email en, reply en"
+            },
+            {
+              "id": "identifiers",
+              "rule": "repeats no matriculation number",
+              "ok": true,
+              "applies": true,
+              "detail": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reading": "Stage 1 (request only) passed 4/9 checks. Stage 2 (stored instruction with module information) passed 9/9 checks. Stage 3 classified 7 emails (information: 3, extension: 1, grade: 1, third_party: 1, other: 1). Routing by category placed 5 in 'ready'; evaluated afterwards, 2 of these failed at least one check. At stage 4, 5 of 7 first drafts passed all checks and 7 of 7 did after up to 3 rounds. 4 replies were routed to 'ready'. At stage 5 the wiki held 2 lessons, 1 open question written by the harness, and 1 approved answer. First drafts passing all checks rose from 5 to 6, and replies routed to 'ready' from 4 to 5. The checks are text-pattern tests. A reply in 'ready' has passed these tests; this does not establish that its content is correct.",
+  "simulated": false
+}
