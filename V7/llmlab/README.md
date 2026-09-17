@@ -16,6 +16,22 @@ or, in simulated mode, to no service at all.
 
 ---
 
+## Quick setup
+
+`setup_llmlab.py` in the folder above (`V7/`) runs the installation steps below
+one after another: it checks Python, finds or starts Ollama, offers to download
+the model, verifies the result with `python -m llmlab check` and can open the
+browser interface. It asks before it changes anything.
+
+```bash
+cd path/to/V7
+python setup_llmlab.py            # guided setup
+python setup_llmlab.py --check    # report only, change nothing
+python setup_llmlab.py --help     # options: --model, --simulated, --install, --test, --start
+```
+
+On macOS and Linux the command may be `python3`.
+
 ## Installation
 
 1. Check the Python version: `python --version`.
@@ -28,7 +44,8 @@ or, in simulated mode, to no service at all.
 
 3. Download the repository
    <https://github.com/OVGU-VET-TechEd/Masterclass_EU_Green_Tegelbeckers> as a
-   ZIP file, unpack it and open the folder `V6/llmlab`.
+   ZIP file, unpack it and open the folder `V7/llmlab`. Alternatively, unpack
+   `V7/llmlab_v7_backup.zip` (the lab folder with the setup script).
 
 Run without installation:
 
@@ -206,10 +223,10 @@ dedicated GPU this takes several minutes.
 ## Running the exercises from the terminal
 
 Open a terminal (macOS: *Terminal*; Windows: *PowerShell*; Linux: any shell)
-and change to the folder `V6/llmlab`:
+and change to the folder `V7/llmlab`:
 
 ```bash
-cd path/to/Masterclass_EU_Green_Tegelbeckers/V6/llmlab
+cd path/to/Masterclass_EU_Green_Tegelbeckers/V7/llmlab
 python --version                 # 3.9 or later; on macOS and Linux possibly `python3`
 python -m llmlab check           # which model service and model will be used
 ```
@@ -263,6 +280,11 @@ saved JSON results and adds an interactive result panel below each lab
 description (buttons that reveal the model output, tabs, drop-down lists for
 the settings, stages and emails, step-by-step view of revisions). Simulated
 results are refused unless `--allow-simulated` is given.
+
+**Note for version 7.** `masterclass_ai_in_teaching_v7_labs.html` was derived
+from the v6 results page and shortened by hand (key points with *Read more*,
+no quizzes). The script still builds the v6 layout; it needs
+`../masterclass_ai_in_teaching_v6.html`, which is in the `V6` folder, not in `V7`.
 
 ```bash
 python scripts/run_all_labs.py --model gemma3:12b --out-dir results/gemma3-12b

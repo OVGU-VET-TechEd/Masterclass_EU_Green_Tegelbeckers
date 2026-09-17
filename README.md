@@ -1,180 +1,85 @@
-# llmlab
+# AI in Teaching: Tools, Strategies and Reflection
 
-Seven exercises that put claims from **Workshop 4 — AI in Teaching: Tools,
-Strategies and Reflection** in front of a model running on the participant's
-own machine.
+**Workshop 4** of the EU GREEN WP2 Training Lab — a 90-minute masterclass for
+teaching staff in higher education, with seven lab exercises that run on a
+language model on the participant's own computer.
 
-The session asserts a number of things: that a token is not a word, that
-material outside the context window is silently absent, that fluency is not
-evidence of grounding, that the rung of the prompting ladder you work at
-decides what survives the term. Those are checkable claims. This tool makes
-each of them checkable in about ninety seconds — and when a run does not show
-the claim, it says so rather than asserting it anyway.
-
-No third-party packages. Python 3.9 or later. Windows, macOS and Linux.
-Nothing is sent anywhere: llmlab talks to a model service on the loopback
-address, or to nothing at all.
+**Current version: [V7](V7/)** (September 2026). Earlier versions are kept for
+reference in `V4/`, `V5/` and `V6/`; the `llmlab/` folder and
+`masterclass_ai_in_teaching_v3.html` in the repository root are from version 3
+and are no longer maintained.
 
 ---
 
-## Install
+## Version 7 at a glance
 
-Pick whichever suits the room.
-
-**Unzip and run** — no installation, no privileges:
-
-```bash
-python run.py                    # opens the browser interface
-python -m llmlab check           # what is installed and reachable
-```
-
-**Install as a command:**
-
-```bash
-pip install .                    # or: pip install -e .  while editing
-llmlab check
-llmlab serve
-```
-
-**In VS Code:** open this folder, press <kbd>F5</kbd>, choose *llmlab · open
-the browser interface*. Three run configurations are already defined in
-`.vscode/launch.json`.
-
----
-
-## The model
-
-llmlab looks for a model service in this order and uses the first that
-answers.
-
-| Route | Where it looks | Set it with |
+| File | What it is | Use it |
 | --- | --- | --- |
-| Ollama | `http://127.0.0.1:11434` | `LLMLAB_OLLAMA` |
-| OpenAI-compatible server (llama.cpp, LM Studio, vLLM) | `http://127.0.0.1:8080/v1` | `LLMLAB_OPENAI` |
-| Simulated | nothing runs | `--backend simulated` |
+| [`V7/masterclass_ai_in_teaching_v7_labs.html`](V7/masterclass_ai_in_teaching_v7_labs.html) | Live page: six blocks as key points with *Read more*, and interactive results of all seven labs (gemma3:12b) | On the projector during the session; self-contained, works offline |
+| [`V7/workshop4_ai_in_teaching_v7.md`](V7/workshop4_ai_in_teaching_v7.md) | LiaScript self-study course: full text, reference lab results, a quiz per block and a final quiz | Self-study, preparation and follow-up; [open in LiaScript](https://liascript.github.io/course/?https://raw.githubusercontent.com/OVGU-VET-TechEd/Masterclass_EU_Green_Tegelbeckers/refs/heads/main/V7/workshop4_ai_in_teaching_v7.md) |
+| [`V7/pages/`](V7/pages/) | Readiness self-check, tool triage and decision record, 90-day plan | Opened from links in the page and the course |
+| [`V7/llmlab/`](V7/llmlab/) | The seven lab exercises (Python 3.9+, no third-party packages) | In a terminal or browser beside the page |
+| [`V7/setup_llmlab.py`](V7/setup_llmlab.py) | Guided setup for the lab | Run once before the session |
+| `V7/Masterclass_AI_in_Teaching_v7_complete.zip` | Everything in `V7/` in one archive | Download and unpack for offline use |
+| `V7/llmlab_v7_backup.zip` | The lab folder and the setup script only | Send to participants; backup of the lab |
+| [`V7/REFERENCES.md`](V7/REFERENCES.md) | Bibliography | For sending to people |
+| [`RUN_OF_SHOW.md`](RUN_OF_SHOW.md) | Minute-by-minute plan for facilitators | Before and during the session; not participant-facing |
 
-Workshop 3 already installed Ollama and pulled a Gemma model, so most
-participants need nothing further. llmlab looks for `gemma3:4b` first and, if
-that is not there, uses whichever Gemma model is installed — `gemma:2b`,
-`gemma3:12b`, `gemma4` all work. With no Gemma at all it takes the smallest
-text model it finds, and never a vision or embedding model.
-
-```bash
-ollama pull gemma3:4b         # only if you have no Gemma yet; runs on an 8 GB machine
-python -m llmlab check        # the last line says which model will be used
-```
-
-To choose a model yourself, add `--model <name>` to any command, or set
-`LLMLAB_MODEL` for the session. The labs were tested on Gemma 3 12B and
-Llama 3.1 8B. Models differ, and that is part of the point: lab 5 in
-particular gives a different result on each, and says which one you got.
-
-**On the simulated route.** If no service answers, llmlab does not stop. It
-assembles the text itself and says so on every screen and in every export.
-The structure of each result stays true — temperature 0 really is stable, the
-narrow window really does lose the code word — but the wording is scaffolding,
-not model output. This exists so that one broken laptop does not remove one
-participant from the exercise. It is labelled everywhere precisely because
-the session teaches people to ask which numbers on a screen are real.
+Online (after the repository is published on GitHub Pages):
+<https://ovgu-vet-teched.github.io/Masterclass_EU_Green_Tegelbeckers/V7/masterclass_ai_in_teaching_v7_labs.html>
 
 ---
 
-## The seven
+## Lab setup in three commands
 
-| # | Command | Claim it tests | Session block |
+Requirements: Python 3.9 or later; for model output, [Ollama](https://ollama.com)
+and one small model (about 3 GB). Without Ollama the exercises run in simulated
+mode, and every result is marked as simulated.
+
+```bash
+cd V7
+python setup_llmlab.py          # guided: checks Python, finds or starts Ollama, offers the model download
+cd llmlab
+python run.py                   # browser interface
+```
+
+`python setup_llmlab.py --check` reports without changing anything;
+`--help` lists the options (`--model`, `--simulated`, `--install`, `--test`,
+`--start`). On macOS and Linux the command may be `python3`.
+
+Manual route, without the setup script:
+
+```bash
+ollama pull gemma3:4b
+cd V7/llmlab
+python -m llmlab check          # which service and model will be used
+python -m llmlab all            # all seven exercises in the terminal
+```
+
+Details on every exercise, the email task, the automatic checks and the
+parameters: [`V7/llmlab/README.md`](V7/llmlab/README.md).
+
+## The seven exercises
+
+| # | Command | What it shows | Block |
 | --- | --- | --- | --- |
-| 1 | `llmlab lab tokens` | A token is not a word, and the gap is measurable | 3.1 |
-| 2 | `llmlab lab context` | Material outside the window is absent, and absence is silent | 3.1 |
-| 3 | `llmlab lab vary` | Reproducibility is a setting, and the default is not it | 2D, 1 |
-| 4 | `llmlab lab steer` | A standing instruction beats a better-worded request — because it stays, not because it writes better | 3.2 |
-| 5 | `llmlab lab ground` | A grounded and an ungrounded answer can read the same | 1 |
-| 6 | `llmlab lab ladder` | The rung decides what you still have next term | 3.2, 3.4 |
-| 7 | `llmlab lab route` | Local hosting answers one obligation and not the others | 2 |
+| 1 | `python -m llmlab lab tokens` | Token count; English and German compared; chat-template overhead | 3 |
+| 2 | `python -m llmlab lab context` | Text outside the context window is removed without notice | 3 |
+| 3 | `python -m llmlab lab vary` | Temperature and seed decide whether outputs are reproducible | 3 |
+| 4 | `python -m llmlab lab steer` | Rules absent, in the request, or in the system prompt | 3 |
+| 5 | `python -m llmlab lab ground` | Answers with and without a source read the same | 1 |
+| 6 | `python -m llmlab lab ladder` | The five stages of prompting on replies to student emails | 3 |
+| 7 | `python -m llmlab lab route` | The deployment route and the obligations that depend on it | 2 |
 
-Run all seven back to back with `llmlab all`. Add `--json` to any lab to get
-the raw result for your own materials.
+## Changes in version 7
 
-Every lab prints three things beyond the output: the claim under test, a
-reading of what the numbers mean, and the question to put to the room while
-the result is on screen. The reading is built from the numbers. If the narrow
-window happens to find the code word, or the model declines to answer without
-its source, the reading says the run did not show the claim and what to try
-next.
-
-Three details worth knowing before you run them:
-
-- **Lab 1 counts two things.** The tokens in your text, as the model's own
-  tokenizer counts them, and the tokens the chat template wraps around it —
-  role markers and, on some models, a whole default system prompt. On a short
-  sentence the wrapper can be more than half of what the model receives.
-- **Lab 4 runs three versions:** the bare request, the same rules pasted into
-  the request, and the rules as a standing instruction. The second is the
-  control. If it scores like the third, the words did the work and the
-  standing instruction's advantage is that it stays.
-- **Labs 4 and 6 check the output against the written rules** — quotes the
-  words at issue, two points at most, ends with one question, does not rewrite
-  the text, addresses the writing and not the writer.
-
-### The checks are the part worth reading
-
-The five checks live in `llmlab/labs.py`, in a function called
-`check_feedback`. Each is a line or two, and they are crude on purpose: a
-regular expression that looks for a quotation mark, one that counts bullet
-points, one that looks for "could say" or "revised version". Open the file,
-read one, and argue with it. Then change one and run the lab again.
-
-That is the whole difference between rung three and rung four. At rung three
-the rules are written down, so a person can check them. At rung four the
-checks are written down too, so anyone can run them, disagree with them in
-public, and improve them.
-
-### Rung four, as an actual command
-
-```bash
-llmlab harness --spec examples/feedback_spec.md --inputs examples/inputs --out out
-```
-
-One written specification, one folder of inputs, one output file per input,
-each carrying a header that records the input, the specification, the model,
-the temperature, the seed and the time. Nothing about it is sophisticated.
-That is the argument: the difference between rung one and rung four is not
-cleverness, it is that this leaves a trail somebody else can audit.
-
-Change one rule in `examples/feedback_spec.md`, run it again into a second
-folder, and compare the two outputs file by file.
-
----
-
-## Parameters worth changing live
-
-```bash
-llmlab lab context --set num_ctx=128 --set filler_repeats=60
-llmlab lab vary --set n=5 --set temperature=1.0
-llmlab lab tokens --text "Ihre Prüfungsleistung wurde bewertet."
-llmlab lab ground --model gemma3:12b
-```
-
-The context lab is the one to tune before the session. Raise
-`filler_repeats` or lower `num_ctx` until the narrow window fails on your
-model. The failure is the demonstration; a run where both windows answer
-correctly teaches nothing, and the lab will tell you so.
-
----
-
-## What it deliberately does not do
-
-- It does not store anything. Close the browser and the session is gone.
-- It does not send anything anywhere. The interface loads no fonts, no
-  scripts and no styles from outside this process, which is checked in the
-  test suite rather than promised in a paragraph.
-- It does not evaluate anybody. There is no scoring of people, no profile and
-  no progress record, because a tool used in staff development that quietly
-  measures staff is the thing the session warns about. The rule checks score
-  the model's output, never the person running it.
-- It does not tell you a tool is safe. Lab 7 lists which obligations the
-  local route removes, which is fewer than people expect.
+- The live page shows key points only; the full explanatory text is behind *Read more*.
+- The unpublished draft framework (HETAICF v0.11) and the placement map built on it are removed.
+- Quick checks and the final check moved from the live page to the LiaScript course, which now carries the full text, a quiz for every block and the reference lab results.
+- New: `setup_llmlab.py`, a complete archive and a lab archive.
 
 ## Licence
 
-CC BY 4.0 · EduGreenLabs / OvGU Magdeburg — WP2 Training Lab · EU GREEN
-Alliance. Funded by the European Union.
+Course material: CC BY 4.0 · EduGreenLabs / OvGU Magdeburg — WP2 Training Lab ·
+EU GREEN Alliance. Funded by the European Union. Views expressed are those of
+the authors alone. See also [`LICENSE`](LICENSE).
