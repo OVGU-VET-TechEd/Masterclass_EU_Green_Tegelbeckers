@@ -67,6 +67,21 @@ course contains the same content in more detail, plus the quizzes.
 | 4 | Reflection and the route to Create | Deepen → Create |
 | 5 | 90-day plan, commitment, summary | Create (preparation) |
 
+The assignment of blocks to levels is this course's own. The level names, block
+titles, curricular goals (CG), learning objectives (LO) and contextual
+activities cited below are taken from UNESCO (2024), Aspect 5 *AI for
+professional development*:
+
+| Level | Competency block | Contextual activities named by UNESCO |
+| --- | --- | --- |
+| Acquire | 5.1 AI enabling lifelong professional learning | awareness of teachers' basic rights and obligations in the AI era · self-assessment of readiness for teaching in the AI era · human-directed use of AI to open professional learning horizons |
+| Deepen | 5.2 AI to enhance organizational learning | autonomous upskilling and peer coaching · using data analytics for self-regulated professional development · generative AI simulations for professional development · human-controlled uses of AI for collaborative professional development |
+| Create | 5.3 AI to support professional transformation | human–AI hybrid coach for teachers · AI-enhanced design of training programmes · communities for the co-creation of AI tools, pedagogical innovations or ethical rules |
+
+The Create block is titled *AI to support professional transformation* in
+UNESCO's overview table and *AI to support professional development* in the
+detailed specification.
+
 ### Requirements for the lab
 
 The lab is a Python package, `llmlab` (folder `V7/llmlab`). Python 3.9 or later,
@@ -104,9 +119,9 @@ direction of the effects is what matters.
 --{{0}}--
 Target group, outcomes and structure of the course.
 
-> **UNESCO AI CFT, Aspect 5.1 — Acquire.** Awareness of teachers' rights and
-> obligations in the AI era. Each block of this course is assigned to a level
-> of Aspect 5.
+> **UNESCO AI CFT, 5.1 — Acquire.** Awareness of teachers' basic rights and
+> obligations in the AI era (contextual activity). Each block of this course is
+> assigned to a level of Aspect 5.
 
 ### Target group
 
@@ -152,8 +167,9 @@ Eight statements, about three minutes. For each statement, select the level
 that describes current practice: **Not yet**, **Acquire**, **Deepen** or
 **Create**. The page returns a profile and names the two largest gaps; the
 90-day plan in Block 5 is based on them. No data is transmitted or stored; the
-result can be exported. In Aspect 5, self-assessment of readiness is the
-activity named for the Acquire level.
+result can be exported. In UNESCO block 5.1 (Acquire), *self-assessment of
+readiness for teaching in the AI era* is one of three contextual activities
+(see also CG5.1.2).
 
 <iframe src="https://ovgu-vet-teched.github.io/Masterclass_EU_Green_Tegelbeckers/V7/pages/p1_self_check.html" width="100%" height="640"
  style="border:1px solid #ddd;border-radius:8px"></iframe>
@@ -193,7 +209,9 @@ What happens when llmlab cannot reach a model service?
 A competence framework describes competences at defined levels. Used for
 self-assessment, it identifies competences that are not yet developed.
 
-> **Aspect 5.1 — Acquire.** Self-assessment of readiness for teaching in the AI era.
+> **UNESCO AI CFT, 5.1 — Acquire.** Assess the gap between own and required AI
+> competencies (LO5.1.2); understand risks of data bias and of competence
+> atrophy (CG5.1.4).
 
 A competence framework describes competences at defined levels. Used for
 self-assessment, it identifies **specific competences that are not yet
@@ -203,8 +221,8 @@ developed** and thus gives a professional development plan a defined subject.
 
 | Framework | Target group | Content |
 | --- | --- | --- |
-| **UNESCO AI CFT** (2024) | school teachers | 5 aspects × 3 levels; Aspect 5 structures this course |
-| **AILit** (2026, OECD/EC) | primary and secondary **learners** | AI literacy that incoming students can be expected to have |
+| **UNESCO AI CFT** (2024) | all teachers; higher education not specifically | 5 aspects × 3 levels = 15 competency blocks; Aspect 5 structures this course |
+| **AILit** (2026, OECD/EC) | primary and secondary **learners** | 4 domains; levels Basic, Intermediate, Advanced; AI literacy that incoming students can be expected to have |
 | **DigCompEdu** (2017) | educators, EU | 22 competences, A1 to C2; predates generative systems |
 | **DigComp 2.2** (2022) | citizens | adds examples concerning AI systems |
 | **ICT-CFT** (2018, UNESCO) | teachers | origin of the three-level structure |
@@ -213,13 +231,18 @@ developed** and thus gives a professional development plan a defined subject.
 
 **UNESCO AI CFT.** Miao & Cukurova, *AI competency framework for teachers*.
 Five aspects, each described at three levels. Aspect 5, *AI for professional
-development*, structures this course. The framework was written for school
-teachers; UNESCO names adaptation to the local context as the intended route of
-implementation. It is licensed CC BY-SA; this course paraphrases and attributes
+development*, structures this course. The framework is addressed to all
+teachers and does not address higher education specifically. UNESCO describes
+it as a reference framework to help shape national, state-level or
+institutional AI competency frameworks and training programmes for teachers. It is licensed CC BY-SA; this course paraphrases and attributes
 it rather than reproducing its wording, because the course is licensed CC BY.
 
-**AILit.** *Empowering Learners for the Age of AI*, based on DigComp, UNESCO,
-AI4K12 and Digital Promise. For higher education it describes the AI literacy
+**AILit.** *Empowering Learners for the Age of AI* (OECD / European Union,
+2026). Four domains: engaging with, creating with, managing and designing AI.
+Learner expectations describe progressions from **Basic** to **Intermediate**
+and **Advanced**; the levels do not correspond to specific ages or grades. The
+framework builds on DigComp, the UNESCO AI competency frameworks for students
+and teachers, the Digital Promise framework, AI4K12, ETS and aiEDU. For higher education it describes the AI literacy
 that incoming students can be expected to have been taught.
 
 **DigCompEdu.** The European reference framework for the digital competence of
@@ -253,12 +276,12 @@ professions.
 | --- | --- | --- | --- |
 | ICT-CFT 2018 | acquisition | deepening | creation |
 | UNESCO AI CFT 2024 | **Acquire** | **Deepen** | **Create** |
-| AILit 2026 | three-level progression, learner-facing | | |
+| AILit 2026 | Basic | Intermediate | Advanced |
 | DigCompEdu 2017 | A1 · A2 | B1 · B2 | C1 · C2 |
 
 ### The gap
 
-The frameworks address learners, school teachers, citizens or educators in
+The frameworks address learners, teachers in general, citizens or educators in
 general. The higher-education teaching role — with research obligations,
 examination regulations, academic freedom and doctoral supervision — is covered
 by these frameworks only in part.
@@ -386,6 +409,12 @@ submits finished work without having practised the underlying skill. The
 deficit becomes visible later, for example in oral examinations or in
 subsequent modules.
 
+The design decides which way it goes. Studies of unstructured chatbot use in
+physics report little reflection and lower performance. Kestin et al. (2025),
+who cite these studies, found higher learning gains with a tutor built to guide
+students through their own steps (see 3.4). Their advice: avoid AI where
+students are likely to use it to bypass critical thinking.
+
 ### Embedded positions
 
 Model outputs contain positions on contested questions of a discipline, on what
@@ -469,8 +498,9 @@ Why is the gap between the frameworks and the higher-education teaching role pra
     [( )] The frameworks predate generative systems and cannot describe them.
     *******************************************************************
     The frameworks are largely compatible, as their shared three-level
-    structure shows. They differ in target group. UNESCO names adaptation to
-    context as the route of implementation.
+    structure shows. They differ in target group. UNESCO describes its
+    framework as a reference for shaping national, state-level or
+    institutional frameworks.
     *******************************************************************
 
 Which framework is addressed to institutions rather than to individual teaching staff?
@@ -542,8 +572,9 @@ According to Ferdman (2026), which measure addresses deskilling?
 Tools are grouped by area of use. The four areas differ in the consequences of
 an error for students.
 
-> **Aspect 5.1 → 5.2 — Acquire to Deepen.** The transition consists in assessing
-> tools by the obligations their use entails rather than by their functions.
+> **UNESCO AI CFT, 5.1 → 5.2 — Acquire to Deepen.** Know AI tools for
+> professional use (LO5.1.3) and evaluate their risks to rights and data privacy
+> (LO5.2.4).
 
 Tools are grouped by **area of use** rather than by provider. The four areas
 differ in the consequences of an error for students.
@@ -605,17 +636,37 @@ material before use, the risk in this area is comparatively low.
 
 ### In-class
 
-Live captioning and translation improve accessibility; their quality decreases
-with background noise, unfamiliar accents and technical vocabulary. They should
-be announced as an aid and not used as a record.
-
-Attendance tracking, engagement scoring and participation analytics also belong
-to this area. Once their results are used to assess students, they become
-evaluation tools.
+**Captioning and translation.** Live captioning and translation improve
+accessibility, for example for students with hearing impairments or those
+following in a second language. Their quality decreases with background noise,
+unfamiliar accents and technical vocabulary. Announce them as an aid and do not
+treat the output as an authoritative record — not as minutes, exam instructions
+or evidence. A cloud service processes the voices of everyone in the room,
+which is personal data; use the institutional or a local route.
 
 <div style="border:1px solid #8a3324;border-left:5px solid #8a3324;border-radius:0 10px 10px 0;background:#fbe9e6;padding:12px 16px;margin:16px 0;color:#6d2a1e;">
-<strong>Prohibition</strong><br>Systems that infer emotions from faces, voices or posture in education are prohibited under Art. 5(1)(f) AI Act. Consent does not make a prohibited practice lawful.
+<strong>Prohibition</strong><br>Art. 5(1)(f) AI Act prohibits AI systems that infer the emotions of people in education institutions, except for medical or safety reasons. The Commission's guidelines on prohibited practices (2025) limit the prohibition to inferences from biometric data — faces, voices, posture, gestures. The label does not matter: an "engagement" score that infers emotional states from camera or microphone input is covered. Inferring sentiment from written text is not. Consent does not make a prohibited practice lawful.
 </div>
+
+**Attendance and participation analytics.** Counting log-ins, submissions or
+poll responses is not emotion inference and not prohibited; data protection
+rules apply. Attendance by face recognition processes biometric data, which
+GDPR Art. 9 permits only under narrow exceptions; a check-in without biometrics
+serves the same purpose.
+
+**From in-class to evaluation.** The area is defined by the use, not by the
+tool. Once analytics results are used to assess students, the evaluation area
+applies: Annex III point 3 (high-risk obligations from 2 December 2027) and
+GDPR Art. 22. A prohibited system does not become permissible by moving to
+another area.
+
+| Practice | Legal status |
+| --- | --- |
+| live captions, translation | permitted; personal data if processed externally |
+| poll responses, log-in counts | permitted; GDPR applies |
+| attendance by face recognition | biometric data, GDPR Art. 9 — narrow exceptions only |
+| "engagement" score from faces, voices or posture | **prohibited**, Art. 5(1)(f) |
+| any of the permitted analytics used to assess students | high-risk (Annex III point 3), GDPR Art. 22 |
 
 ### Evaluation
 
@@ -703,7 +754,7 @@ Five provisions and one amended date.
 | Provision | Content | Applies since |
 | --- | --- | --- |
 | **Art. 4 AI Act** | AI literacy of staff | Feb 2025 · not deferred |
-| **Art. 5(1)(f) AI Act** | prohibition of emotion inference in workplace and education | Feb 2025 · not deferred |
+| **Art. 5(1)(f) AI Act** | prohibition of emotion inference from biometric data in workplace and education | Feb 2025 · not deferred |
 | **Art. 50 AI Act** | transparency towards people | 2 Aug 2026 · not deferred |
 | **Art. 14 AI Act** | human oversight of high-risk systems | with the high-risk obligations |
 | **Annex III point 3 AI Act** | education uses listed as high-risk | **2 Dec 2027** (deferred) |
@@ -711,7 +762,9 @@ Five provisions and one amended date.
 - **Art. 4 — AI literacy.** The deploying organisation, for teaching purposes
   the institution, takes measures to ensure sufficient AI literacy of its staff.
 - **Art. 5(1)(f) — prohibited practice.** Inferring the emotions of a person in
-  the workplace or in education, except for medical or safety reasons.
+  the workplace or in education, except for medical or safety reasons. The
+  Commission's guidelines (2025) limit it to inferences from biometric data
+  such as faces, voices or posture; sentiment inferred from text is not covered.
 - **Art. 50 — transparency.** Persons must be informed when they interact with
   an AI system or receive certain artificially generated content. If a chatbot
   answers students' questions about a module, the deploying institution is
@@ -872,7 +925,7 @@ examination office.
 
 ## 2.8 · Quiz — Block 2
 
-A supplier offers a lecture-hall system that identifies students who appear disengaged. Which response is correct?
+A supplier offers a lecture-hall system that uses camera images to identify students who appear bored or disengaged. Which response is correct?
 
     [( )] Carry out a data protection impact assessment and proceed if it is positive.
     [( )] Use it only with explicit consent of the students.
@@ -883,6 +936,20 @@ A supplier offers a lecture-hall system that identifies students who appear dise
     consent or impact assessments. The deferral to December 2027 concerns
     Annex III high-risk obligations, not the prohibitions, which have
     applied since February 2025.
+    *******************************************************************
+
+Which of these in-class uses falls under the Art. 5(1)(f) prohibition?
+
+    [( )] Live captioning of a lecture.
+    [( )] Counting how many students answered a poll.
+    [(X)] A score of students' attention and mood computed from webcam images.
+    [( )] Analysing the sentiment of written course evaluations.
+    *******************************************************************
+    The prohibition covers emotion inference from biometric data such as
+    faces, voices or posture. Captions and poll counts infer no emotions;
+    sentiment in written text is not biometric data. Using poll or
+    participation data to assess students would, however, bring Annex III
+    point 3 and GDPR Art. 22 into play.
     *******************************************************************
 
 Which statement about the date of 2 December 2027 is correct?
@@ -966,8 +1033,9 @@ NotebookLM answers with a citation to the uploaded lecture notes. What does the 
 Six technical terms, each with a direct consequence for decisions in teaching,
 and five stages of prompting applied to one example.
 
-> **Aspect 5.2 — Deepen.** Autonomous upskilling and peer coaching. The content
-> of this block can be passed on to colleagues directly.
+> **UNESCO AI CFT, 5.2 — Deepen.** Autonomous upskilling and peer coaching
+> (contextual activity). The content of this block can be passed on to
+> colleagues directly.
 
 ## 3.1 · Six terms and their consequences
 
@@ -1142,6 +1210,12 @@ Gems, and as `SKILL.md` files in agent tools (published as an open standard in
 December 2025). For most teaching staff this stage has the most immediate
 practical use. It does not check replies systematically and does not record
 which reply was produced with which instruction.
+
+*Limit:* in a study of an AI physics tutor, a carefully written system prompt
+could not keep the tutor to the order of a multi-part problem — it occasionally
+discussed parts out of sequence. The platform had to impose the sequence, and
+pre-written step-by-step solutions were supplied for accuracy (Kestin et al.,
+2025). That is the step from stage 2 to stage 3, combined with grounding.
 
 ### Stage 3 — Harness
 
@@ -1348,7 +1422,7 @@ told: generated consultation responses are labelled as generated. Art. 4
 concerns the staff who deploy such tools and are required to be able to explain
 them.
 
-## 3.4 · Three positions from the literature
+## 3.4 · Positions and evidence from the literature
 
 **AI as an instrument of reflection.** Instead of asking a system to improve a
 draft, the instruction asks it to examine the draft: state the claim of a
@@ -1373,6 +1447,65 @@ shows the typical weaknesses of such material and that concrete recommendations
 are rare. Two criteria follow for evaluating any material, including this
 course: whether it states what to do in practice, and whether generated parts
 are identifiable.
+
+### Evidence: structured AI tutoring (Kestin et al., 2025)
+
+**The study.** A randomised controlled trial with a crossover design in
+Harvard's largest introductory physics course (N = 194, autumn 2023). Every
+student had one lesson with a custom AI tutor at home and one active-learning
+lesson in class — on two different topics in consecutive weeks, with a pre-test
+before and a post-test after each lesson. Content and worksheets were identical;
+the in-class introductions were live, the AI group saw them as videos. The
+in-class lessons were not passive lectures but well-established active learning
+(peer instruction with staff support).
+
+**The result.**
+
+| Measure | AI tutor | Active-learning class |
+| --- | --- | --- |
+| Median post-test score (baseline 2.75) | **4.5** | 3.5 |
+| Time on learning | median **49 min** (70 % under 60) | 60 min |
+| Engagement (1–5) | **4.1** | 3.6 |
+| Motivation (1–5) | **3.4** | 3.1 |
+| Enjoyment, growth mindset | comparable | comparable |
+
+The difference in post-test scores was highly significant (p < 10⁻⁸); the
+authors estimate an effect size of 0.73 to 1.3 standard deviations after
+correcting for a ceiling effect. Time on task did not correlate with scores:
+students who found the class too fast took longer with the tutor, those who
+found it too slow took less.
+
+**What was built in.** The authors name seven practices from the teaching
+literature and show how each was implemented. Mapped to the five stages of this
+course:
+
+| Practice | How it was implemented | Stage in this course |
+| --- | --- | --- |
+| active learning, cognitive-load management, growth mindset | guidelines in the tutor's system prompt | 2 · skill prompt |
+| scaffolding multi-part problems | the platform leads through each part in order, because the prompt alone did not | 3 · harness |
+| accurate explanations and feedback | expert-written step-by-step solutions in the prompt | grounding |
+| timely, targeted feedback; self-pacing | the tutor answers on demand, the student sets the pace | — (the advantage over a class) |
+
+**Limits the authors state.** One course at one university, two lessons, GPT-4;
+learning objectives at the understanding, applying and analysing levels; high-
+quality instructional videos; question-specific prompts written by experienced
+instructors; several months to develop the tutor platform (preparing one lesson
+then took a few days). They do not claim the result for tasks requiring complex
+synthesis or higher-order critical thinking, and they advise against replacing
+in-class teaching: the tutor should bring all students to a level at which
+class time can go to problem solving, projects and group work.
+
+**For this course.**
+
+- The result is an argument for *designed* use, not for handing students a
+  chatbot. The comparison studies the authors cite, with unstructured use, went
+  the other way.
+- It supports the five-stage view: the effect came from a stored instruction,
+  a fixed procedure and supplied sources — not from better wording.
+- A tutor that students use is subject to **Art. 50** (they must know they
+  interact with an AI system). If its output counts towards a grade, **Annex
+  III point 3** applies. In the study, students received participation credit
+  only, and the tests did not affect grades.
 
 ## 3.5 · Quiz — Block 3
 
@@ -1421,6 +1554,31 @@ At stage 3 of the email example, the reply to email 02 promises an extension and
     decision check detects the sentence; the reply is revised or, if the
     check still fails, routed to review. At stage 5 the model does not
     change; only the wiki file does.
+    *******************************************************************
+
+In the study by Kestin et al. (2025), why did the tutor platform lead students through each part of a problem in a fixed order?
+
+    [( )] Because students asked for a fixed order.
+    [(X)] Because the system prompt alone could not reliably keep the tutor to the sequence of a multi-part problem.
+    [( )] Because the ethics committee required it.
+    [( )] Because GPT-4 cannot process more than one question at a time.
+    *******************************************************************
+    The authors report that the tutor occasionally discussed parts out of
+    sequence or parts not yet relevant. A procedure imposed by the program —
+    stage 3 in this course — solved what the instruction could not.
+    *******************************************************************
+
+Which conclusion does the study by Kestin et al. (2025) support?
+
+    [( )] Students learn more when they use a general chatbot at home instead of attending class.
+    [( )] AI tutoring outperforms active learning for all kinds of learning objectives.
+    [(X)] A tutor designed with pedagogical guidelines, a fixed sequence and expert solutions produced higher learning gains than an active-learning class, for introductory material.
+    [( )] In-class teaching can be replaced by AI tutors.
+    *******************************************************************
+    The effect was obtained with a purpose-built tutor on objectives at the
+    understanding, applying and analysing levels. The authors exclude
+    higher-order synthesis from the claim and recommend using the tutor to
+    prepare class time, not to replace it.
     *******************************************************************
 
 Which of the following is a stage-2 artefact (skill prompt)?
@@ -1475,22 +1633,26 @@ The construction simulation labels its concrete and strain values as virtual. Wh
 --{{0}}--
 Levels reached by the course and levels that require further work.
 
-> **Aspect 5.2 → 5.3 — Deepen to Create.** Human-controlled uses of AI for
-> collaborative professional development, moving towards AI-enhanced design of
-> training programmes.
+> **UNESCO AI CFT, 5.2 → 5.3 — Deepen to Create.** From *human-controlled uses of
+> AI for collaborative professional development* towards *AI-enhanced design of
+> training programmes* (contextual activities).
 
 This block states which levels the course reaches and which require further
 work.
 
 | Level | Content | Status |
 | --- | --- | --- |
-| **Acquire** | rights and obligations · readiness self-assessment · human-directed use | reached in the course |
-| **Deepen** | autonomous upskilling · peer coaching · collaborative development | begun in two places |
-| **Create** | hybrid coach · programme design · communities of co-creation | not reached in 90 minutes |
+| **Acquire** | rights and obligations · readiness self-assessment · human-directed use | largely reached in the course |
+| **Deepen** | autonomous upskilling and peer coaching · data analytics · AI simulations · collaborative development | prepared, not practised |
+| **Create** | hybrid coach · design of training programmes · communities of co-creation | not reached in 90 minutes |
 
-**Conditions of the Create level.** Create requires other people, a review cycle
-and a published artefact. A period of about ninety days is realistic; the plan
-in Block 5 is designed for this period.
+(Activities as named by UNESCO, 2024, abbreviated.)
+
+**What the Create activities have in common.** They involve others: an AI coach
+that teachers also use to help their peers, training programmes validated by
+master trainers, communities for co-creation. This course's estimate is that
+about ninety days are needed to begin; the plan in Block 5 is designed for this
+period.
 
 ## 4.1 · Three reflection questions
 
@@ -1518,16 +1680,91 @@ the legal provision or the principle that changes the assessment, so that the
 conclusion can be communicated to colleagues.
 
 **Question 3 — Who else should be informed?**
-Name one person and one piece of information. In Aspect 5, peer coaching is the
-activity named for the Deepen level.
+Name one person and one piece of information. In UNESCO block 5.2 (Deepen),
+peer coaching is named in the activity *autonomous upskilling and peer coaching*.
 
-## 4.2 · Levels covered
+## 4.2 · Thinking about thinking
+
+--{{0}}--
+Deciding whether to accept an AI output is an act of monitoring and evaluating
+one's own thinking. University teaching rarely trains that.
+
+**Metacognition** is the knowledge *and regulation* of one's own thinking
+(Flavell, 1976). It has two parts:
+
+- **Knowledge of cognition** — what I know, what a task requires, which
+  strategies exist, and when and why to use them.
+- **Regulation of cognition** — *planning* before, *monitoring* during and
+  *evaluating* after a task.
+
+Metacognitive ability correlates modestly with academic performance in higher
+education (r ≈ .15–.20, comparable to intrinsic motivation), and intervention
+studies show that it can be developed through teaching.
+
+### The theory–practice gap in higher education
+
+Dennis & Somerville (2023) surveyed 72 academics in scientific disciplines at a
+UK research-intensive university and interviewed five of them.
+
+- Only **37.5 %** had heard of metacognition, most of them only vaguely; their
+  definitions stressed *understanding* one's thinking, not *regulating* it.
+- **All** used at least two of 16 metacognitive supportive practices (MSPs),
+  but none taught metacognition explicitly, and the practices were rarely
+  scaffolded so that students could transfer them.
+- Practices building **knowledge of the subject** were used most, then
+  **evaluation**; **analysis** and **monitoring** less; **strategic knowledge**
+  least.
+- Academics **holding or working towards a teaching qualification** used
+  significantly more practices, earlier in their careers, and more of the
+  monitoring and evaluation kind. Without a qualification, use grew only with
+  years of experience.
+- Some practices served the teacher rather than the student — for example,
+  asking "do you understand?" to decide whether to move on.
+
+| Category | Practices (examples) | Use |
+| --- | --- | --- |
+| Knowledge and understanding of the discipline | identify prior knowledge; separate key from less important information; articulate understanding | most frequent |
+| Analysis of discipline content | concept maps; predict–observe–explain; explaining reasoning in groups; ConcepTests (poll, discuss, re-poll) | less frequent |
+| Metacognitive monitoring | checklists and prompts; indicating confidence in answers; peer and self-assessment; think-alouds by students or staff | less frequent |
+| Metacognitive evaluation | evaluating alternative approaches; reflection on studying | second most frequent |
+| Strategic knowledge | explicitly categorising thinking, e.g. with Bloom's taxonomy | least frequent |
+
+The authors recommend staff development that explains the concepts, shows how
+to build them into teaching, and supports implementation through **communities
+of practice** — and writing metacognitive skills into learning outcomes rather
+than offering a bolt-on study-skills course.
+
+### The link to AI
+
+The study predates generative AI; the connection is drawn in this course.
+
+- **Automation complacency** and **sycophancy** (1.3) are failures of
+  monitoring: the output is not checked, or the check is done with the system
+  that produced it.
+- **Deskilling** removes the knowledge that monitoring needs.
+- The practices that train monitoring and evaluation are the ones a student
+  needs to judge AI output.
+
+| Before AI use | During | After |
+| --- | --- | --- |
+| state an own answer and a confidence rating | predict what the system will say; compare | evaluate an alternative approach; note what to do differently next time |
+| name what the task is meant to practise (Bloom level) | think aloud while checking one output | self- or peer-assess against the criteria, not against the AI's verdict |
+
+The labs of this course follow the predict–observe–explain pattern: every
+reference run asks for a prediction first.
+
+**Try it.** Take one task in your module where students use AI. Add one
+monitoring practice (a confidence rating before the AI is consulted) and one
+evaluation practice (a two-sentence comparison of their answer with the AI's).
+Write both into the task description.
+
+## 4.3 · Levels covered
 
 | Aspect 5 level | Covered by the course | Not covered |
 | --- | --- | --- |
-| **Acquire** (5.1) | Rights and obligations with legal references; readiness self-assessment; human-directed use examined on a local model (`python -m llmlab all`). | Complete if the [self-check](pages/p1_self_check.html) was carried out. |
-| **Deepen** (5.2) | Begun in two places: the tool decision record and the stage-2 skill prompt, both of which can be reviewed and passed on. | No peer coaching; no use of data on one's own practice to guide development. |
-| **Create** (5.3) | Described with one example and planned over ninety days. | **Not attempted.** Requires a community, a review cycle and a published artefact. |
+| **Acquire** (5.1) | Rights and obligations with legal references; readiness self-assessment ([self-check](pages/p1_self_check.html)). | The third activity, *human-directed use of AI to open professional learning horizons* (finding peers and resources, avoiding information cocoons), is not practised. |
+| **Deepen** (5.2) | Prepared: a tool decision record and a stage-2 skill prompt that can be passed on to peers. | No peer coaching; no data analytics on one's own development; no generative AI simulations. |
+| **Create** (5.3) | Described with one example and planned over ninety days. | **Not attempted.** Its activities involve peers, communities and validated programmes. |
 
 ### 90-day plan
 
@@ -1541,18 +1778,43 @@ added, and the plan can be exported as a calendar file.
 
 If the page does not load, [open the plan page in a separate tab](https://ovgu-vet-teched.github.io/Masterclass_EU_Green_Tegelbeckers/V7/pages/p3_cpd_plan.html).
 
-## 4.3 · Quiz — Block 4
+## 4.4 · Quiz — Block 4
 
 Why is the Create level not reached in a 90-minute session?
 
     [( )] It requires programming skills that take longer than 90 minutes to acquire.
     [( )] It is reserved for staff in formal educational development roles.
     [( )] It applies only to institutions with an approved AI strategy.
-    [(X)] Its activities require other people, a review cycle and a published artefact.
+    [(X)] Its activities involve other people: coaching peers, validated training programmes, co-creation communities.
     *******************************************************************
     Hybrid coaching, designing training for others and co-creating with a
     community involve other people over time. The limitation is social and
     temporal rather than technical.
+    *******************************************************************
+
+What did Dennis & Somerville (2023) find about academics' use of metacognitive supportive practices?
+
+    [( )] Most academics taught metacognition explicitly.
+    [( )] Academics rarely used any metacognitive practices.
+    [(X)] All used some practices, but mainly for subject knowledge rather than for monitoring and evaluating one's own thinking.
+    [( )] Practice use depended mainly on the discipline taught.
+    *******************************************************************
+    Every respondent used at least two of 16 practices, yet none taught
+    metacognition explicitly. Regulatory practices — confidence ratings,
+    self-assessment, think-alouds — were used less than knowledge-focused
+    ones. Discipline did not predict use; a teaching qualification did.
+    *******************************************************************
+
+A student accepts an AI-generated explanation without checking it against the lecture notes. Which part of metacognition is missing?
+
+    [( )] Declarative knowledge of the subject.
+    [(X)] Regulation — specifically monitoring.
+    [( )] Motivation.
+    [( )] Strategic knowledge of Bloom's taxonomy.
+    *******************************************************************
+    Monitoring is checking one's understanding or an output while working.
+    A matching practice is to state an own answer and a confidence rating
+    before consulting the system, then compare.
     *******************************************************************
 
 Which is a suitable answer to reflection question 1?
@@ -1584,8 +1846,8 @@ A colleague uses no AI at all and says none of this applies to them. Which reply
 --{{0}}--
 The plan is limited to two development areas.
 
-> **Aspect 5.3 — Create, preparation.** AI-enhanced design of training
-> programmes: a dated list of tasks.
+> **UNESCO AI CFT, 5.3 — Create, preparation.** Goal setting (LO5.3.2) as a
+> dated plan.
 
 The plan is limited to two development areas. Plans with many areas are
 frequently discontinued within a few weeks, which is then attributed to the
@@ -1597,15 +1859,17 @@ person rather than to the scope of the plan.
    4.0; tool examples can be replaced with those used locally, the legal panel
    remains valid. About one afternoon of adaptation, 90 minutes of delivery.
 2. **Mentor one colleague.** One person, four meetings over a term, with the aim
-   that the colleague completes a tool decision record independently. This is
-   the activity named for Deepen.
+   that the colleague completes a tool decision record independently. Peer
+   coaching is named in a Deepen activity (5.2).
 3. **Publish one artefact** — a task specification, rubric, decision record,
    skill prompt or small simulation — openly licensed, with version history and
    attribution.
 4. **Establish a practice group** of at least three people with regular
    meetings, for the joint development of tools, methods or rules. The result is
    a documented set of decisions with dates and reasons, from which a policy can
-   later be derived.
+   later be derived. Communities of practice are one of the elements Dennis &
+   Somerville (2023) recommend for staff development; a practice group is the
+   place to try metacognitive practices with AI tasks and compare results.
 
 ### Written commitment
 
@@ -1628,6 +1892,8 @@ person it names.
 - Copyright in student work is not resolved by anonymisation.
 - The five stages of prompting differ in what is retained, which steps are automated and which artefacts require review; automatic checks approximate rules and do not establish correctness.
 - Deskilling is a structural problem; countermeasures change the environment.
+- AI tutoring helped learning when it was designed — stored pedagogy, a fixed procedure, supplied solutions — not when students used a chatbot unguided.
+- Judging AI output is metacognitive monitoring and evaluation; teaching should train it explicitly.
 - Tools, strategies and reflection build on one another.
 
 ### Further reading and self-study route
@@ -1747,6 +2013,8 @@ link are marked as such.
 1. ZHQ, FH Aachen (2026). *KI als Reflexionsinstrument im wissenschaftlichen Arbeiten.* <https://zhq-blog.fh-aachen.de/kompetenzen-studierende/ki-als-reflexionsinstrument-im-wissenschaftlichen-arbeiten/>
 1. Hochschulforum Digitalisierung (2026). *Warum KI-Agenten das Ende klassischer Onlinetests einleiten.* <https://hochschulforumdigitalisierung.de/ki-agenten-in-onlinetests/>
 1. Moodle (2026). *Feldnotizen: Wenn KI-Agenten in der Klasse auftauchen.* Practitioner field notes. <https://moodle.com/de/nachrichten/feldnotizen-wenn-ki-agenten-in-der-klasse-auftauchen/>
+1. Kestin, G., Miller, K., Klales, A., Milbourne, T. & Ponti, G. (2025). *AI tutoring outperforms in-class active learning: an RCT introducing a novel research-based design in an authentic educational setting.* *Scientific Reports* 15, 17458. Randomised crossover trial (N = 194) of a structured AI tutor in introductory physics. <https://doi.org/10.1038/s41598-025-97652-6>
+1. Dennis, J. L. & Somerville, M. P. (2023). *Supporting thinking about thinking: examining the metacognition theory-practice gap in higher education.* *Higher Education* 86, 99–117. Survey of 72 academics on metacognitive supportive practices. <https://doi.org/10.1007/s10734-022-00904-x>
 1. Wampfler, P. (2026). *Wissenschaftliches Schreiben und KI — wie ein fundamentales Missverständnis die Lehrentwicklung blockiert.* <https://schulesocialmedia.com/2026/06/16/wissenschaftliches-schreiben-und-ki-wie-ein-fundamentales-missverstandnis-die-lehrentwicklung-blockiert/>
 1. Lehrwende (2026). *Lehrwende — Hochschulbildung im Zeitalter generativer KI.* Its companion material (slides, podcasts) is AI-generated. <https://lehrwende.de/>
 1. twillo (2026). *Handlungsempfehlungen für Hochschullehrende zum Einsatz von Künstlicher Intelligenz.* OER, German. <https://www.twillo.de/edu-sharing/components/render/27d39f95-eada-4cec-939f-95eada0cec80>
@@ -1812,7 +2080,9 @@ page shows key points only; reference results of all seven lab exercises
 (gemma3:12b) added; content previously only on the live page added (Reference
 Framework 2.0, confirmation and anchoring, embedded positions, transcription and
 translation, required competences for the teaching artefact, legal
-classification of the example).
+classification of the example); evidence on structured AI tutoring (Kestin et
+al., 2025) and on metacognition in higher-education teaching (Dennis &
+Somerville, 2023) added, with quiz questions.
 
 **Companion files:** `masterclass_ai_in_teaching_v7_labs.html` (live version
 with lab results) · `llmlab/` (the seven lab exercises) · `pages/` (self-check,

@@ -62,6 +62,8 @@ protect them from it.
 
 ## Teaching practice, didactics and commentary
 
+1. Kestin, G., Miller, K., Klales, A., Milbourne, T. & Ponti, G. (2025). *AI tutoring outperforms in-class active learning: an RCT introducing a novel research-based design in an authentic educational setting.* *Scientific Reports* 15, 17458. Randomised crossover trial (N = 194) of a structured AI tutor in introductory physics. <https://doi.org/10.1038/s41598-025-97652-6>
+1. Dennis, J. L. & Somerville, M. P. (2023). *Supporting thinking about thinking: examining the metacognition theory-practice gap in higher education.* *Higher Education* 86, 99–117. Survey of 72 academics on metacognitive supportive practices. <https://doi.org/10.1007/s10734-022-00904-x>
 1. Krommer, A. (2026). *KI-Feedback. Oder: die Entscheidung zwischen Skylla und Charybdis.* The feedback dilemma: automated feedback that is either too generic to help or too specific to be defensible. <https://axelkrommer.com/2026/07/25/ki-feedback-oder-die-entscheidung-zwischen-skylla-und-charybdis/>
 1. ZML, Karlsruher Institut für Technologie (2026). *Didaktische Chatbot-Typen — Beispiele für Ihren Einsatz.* A typology rather than a tool list; the useful shape for a departmental conversation. <https://www.zml.kit.edu/didaktische-chatbots.php>
 1. ZHQ, FH Aachen (2026). *KI als Reflexionsinstrument im wissenschaftlichen Arbeiten.* <https://zhq-blog.fh-aachen.de/kompetenzen-studierende/ki-als-reflexionsinstrument-im-wissenschaftlichen-arbeiten/>
